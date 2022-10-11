@@ -24,7 +24,7 @@ pipeline {
     }
 
     environment {
-        PROJECT_NAME = "wordpress-plugin_template"
+        PROJECT_NAME = "lasntg-plugin_template"
         REPO_NAME = "fioru-software/$PROJECT_NAME"
         GITHUB_API_URL = "https://api.github.com/repos/$REPO_NAME"
         GITHUB_TOKEN = credentials('jenkins-github-personal-access-token')
@@ -34,9 +34,9 @@ pipeline {
         CONTAINER_NAME = "${PROJECT_NAME}_wordpress_1"
         SITE_URL = 'localhost:8080'
         SITE_TITLE = 'WordPress'
-        WP_PLUGINS = 'hello-dolly'
-        WP_THEME = 'twentytwentytwo'
-        WP_PLUGIN = "wordpress-plugin"
+        WP_PLUGINS = 'groups woocommerce advanced-custom-fields user-role-editor convergewoocommerce wp-mail-smtp'
+        WP_THEME = 'storefront'
+        WP_PLUGIN = "example-plugin"
         ADMIN_USERNAME = 'admin'
         ADMIN_PASSWORD = 'secret'
         ADMIN_EMAIL = 'wordpress@example.com'

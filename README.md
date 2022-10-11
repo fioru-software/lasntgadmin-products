@@ -1,4 +1,4 @@
-# WordPress plugin template
+# LASNTG WordPress plugin template
 
 Please see [WordPress plugin developer handbook](https://developer.wordpress.org/plugins/) for detailed info. 
 
@@ -14,7 +14,6 @@ SITE_TITLE=WordPress
 WP_PLUGIN=example-plugin # this plugin
 WP_PLUGINS=groups woocommerce advanced-custom-fields user-role-editor convergewoocommerce wp-mail-smtp
 WP_THEME=storefront
-WP_PLUGIN=lasntg-plugin_template
 ADMIN_USERNAME=admin
 ADMIN_PASSWORD=secret
 ADMIN_EMAIL=admin@example.com
@@ -23,9 +22,8 @@ ADMIN_EMAIL=admin@example.com
 Build images and run WordPress.
 
 ```sh
-# build image.
-# override Dockerfile ARG's by appending --build-arg USER_ID=1000 to command
-docker-compose build
+# build Docker image
+docker-compose build # optionally override Dockerfile build arguments by appending --build-arg USER_ID=$(id -u)
 # start container
 docker-compose up wordpress 
 ```
@@ -39,6 +37,15 @@ composer install
 composer all
 ```
 
-Most WordPress conding convention errors can be fixed using `composer fix`
+__Note:__ Most WordPress coding convention errors can be automatically fixed by running `composer fix`
 
 Visit [http://localhost:8080/wp-login.php](localhost:8080/wp-login.php)
+
+## Plugins
+
+- [Groups Documentation](https://docs.itthinx.com/document/groups/)
+- [WooCommerce Developer Resources](https://developer.woocommerce.com/)
+- [Evalon WooCommerce Payment Gateway](https://developer.elavon.com/na/docs/converge/1.0.0/integration-guide/shopping_carts/woocommerce_installation_guide)
+- [Advanced Custom Fields](https://www.advancedcustomfields.com/resources)
+- [WooCommerce Storefront Theme](https://woocommerce.com/documentation/themes/storefront/)
+- [WP Mail SMTP](https://wpmailsmtp.com/docs/)

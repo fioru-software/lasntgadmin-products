@@ -40,4 +40,4 @@ COPY --chown=www-data:www-data exports/groups.sql /tmp/groups.sql
 
 USER root
 
-CMD ["sh", "/usr/local/bin/run.sh"]
+CMD "/usr/local/bin/run.sh"

@@ -30,4 +30,6 @@ if runuser -s /bin/sh -c 'wp core is-installed' www-data; then
     fi
 fi
 
-apache2-foreground
+if [ $# -eq 0 ]; then
+    apache2-foreground
+fi

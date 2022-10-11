@@ -1,9 +1,9 @@
 {
-    "name": "fioru/wordpress-plugin_template",
-    "version": "0.0.0",
+    "name": "fioru/lasntg--plugin_template",
+    "version": "0.1.0",
     "type": "wordpress-plugin",
     "extra": {
-        "installer-name": "wordpress-plugin"
+        "installer-name": "example-plugin"
     },
     "scripts": {
       "test": "phpunit --verbose --configuration phpunit.xml.dist --prepend vendor/autoload.php --testdox --colors=always",

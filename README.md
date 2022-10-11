@@ -12,7 +12,7 @@ Create `.env` file.
 SITE_URL=localhost:8080
 SITE_TITLE=WordPress
 WP_PLUGIN=example-plugin # this plugin
-WP_PLUGINS=groups woocommerce advanced-custom-fields user-role-editor convergewoocommerce wp-mail-smtp
+WP_PLUGINS=groups woocommerce advanced-custom-fields user-role-editor wp-mail-smtp
 WP_THEME=storefront
 ADMIN_USERNAME=admin
 ADMIN_PASSWORD=secret

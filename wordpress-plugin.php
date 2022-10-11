@@ -1,3 +1,0 @@
-/**
- * Plugin Name: WordPress plugin
- */

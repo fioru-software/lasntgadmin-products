@@ -39,6 +39,19 @@ define( 'DB_CHARSET', 'utf8' );
 /** The database collate type. Don't change this if in doubt. */
 define( 'DB_COLLATE', '' );
 
+/** SMTP settings */
+define( 'WPMS_ON', true );
+
+// specific configuration settings
+define( 'WPMS_SMTP_HOST', 'smtp.mailtrap.io' );
+define( 'WPMS_SMTP_PORT', 587 );
+define( 'WPMS_SSL', 'tls' );
+define( 'WPMS_SMTP_AUTH', true );
+define( 'WPMS_SMTP_USER', '88041be34d1a29' );
+define( 'WPMS_SMTP_PASS', '63b436fd784ab0' );
+define( 'WPMS_SMTP_AUTOTLS', true );
+define( 'WPMS_MAILER', 'smtp' );
+
 /**#@+
  * Authentication unique keys and salts.
  *

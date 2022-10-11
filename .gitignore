@@ -1,0 +1,12 @@
+*.swp
+secrets.txt
+deployment/**/wp-config.php
+.vscode
+.idea
+.env
+.phpcs.xml.dist
+.phplint-cache
+.phpunit.result.cache
+.travis.yml
+vendor
+node_modules

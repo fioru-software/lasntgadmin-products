@@ -10,6 +10,7 @@
       "lint": "phplint ./ --exclude=vendor",
       "check": "phpcs",
       "fix": "phpcbf",
+      "secure": "security-checker security:check composer.lock",
       "all": [ "@lint", "@check", "@test", "@secure" ]
     },
     "require": {

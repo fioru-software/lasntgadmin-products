@@ -1,3 +1,4 @@
+<?php
 /**
  * Plugin Name:       Example Plugin
  * Plugin URI:        https://github.com/fioru-software/lasntg-plugin_template

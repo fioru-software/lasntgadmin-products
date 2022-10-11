@@ -11,7 +11,7 @@ Create `.env` file.
 ```
 SITE_URL=localhost:8080
 SITE_TITLE=WordPress
-WP_PLUGIN=example # this plugin
+WP_PLUGIN=example-plugin # this plugin
 WP_PLUGINS=groups woocommerce advanced-custom-fields user-role-editor convergewoocommerce wp-mail-smtp
 WP_THEME=storefront
 WP_PLUGIN=lasntg-plugin_template
@@ -35,7 +35,10 @@ Run the tests
 ```sh
 docker exec -ti -u www-data lasntg-plugin_template_wordpress_1 bash
 cd wp-content/plugins/$WP_PLUGIN
+composer install
 composer all
 ```
+
+Most WordPress conding convention errors can be fixed using `composer fix`
 
 Visit [http://localhost:8080/wp-login.php](localhost:8080/wp-login.php)

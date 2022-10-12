@@ -46,7 +46,7 @@ Visit [http://localhost:8080/wp-login.php](localhost:8080/wp-login.php)
 ## React
 
 ```sh
-docker run -u node:node -v $(pwd):/usr/local/src -w /usr/local/src -ti node:lts-alpine ash
+docker run --rm -u node:node -v $(pwd):/usr/local/src -w /usr/local/src -ti node:lts-alpine ash
 npm install
 npm start
 npm build
@@ -54,6 +54,8 @@ npm build
 
 ## Plugins
 
+- [Creating your first WooCommerce extension](https://developer.woocommerce.com/extension-developer-guide/creating-your-first-extension/)
+- [Introduction to WordPress Plugin Development](https://developer.wordpress.org/plugins/intro/)
 - [Tutorial: Adding React Support to a WooCommerce Extension](https://developer.woocommerce.com/2020/11/13/tutorial-adding-react-support-to-a-woocommerce-extension/)
 - [Groups Documentation](https://docs.itthinx.com/document/groups/)
 - [WooCommerce Developer Resources](https://developer.woocommerce.com/)

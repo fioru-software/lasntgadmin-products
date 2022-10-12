@@ -9,12 +9,14 @@
  * Domain Path:       /languages
  */
 
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Register the JS.
  */
 function add_extension_register_script() {
 
-    if ( ! class_exists( 'Automattic\WooCommerce\Admin\Loader' ) || ! \Automattic\WooCommerce\Admin\Loader::is_admin_page() ) {
+    if ( ! class_exists( 'Automattic\WooCommerce\Admin\Loader' ) || ! \Automattic\WooCommerce\Admin\PageController::is_admin_page() ) {
         return;
     }
 

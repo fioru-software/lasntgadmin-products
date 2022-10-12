@@ -4,6 +4,8 @@ Please see [WordPress plugin developer handbook](https://developer.wordpress.org
 
 ## Development
 
+### PHP
+
 Emails will be sent to [Mailtrap Inbox](https://mailtrap.io/). Credentials are available on our [Bitwarden](https://bitwarden.veri.ie).
 
 Create `.env` file.
@@ -11,7 +13,7 @@ Create `.env` file.
 ```
 SITE_URL=localhost:8080
 SITE_TITLE=WordPress
-WP_PLUGIN=example-plugin # this plugin
+WP_PLUGIN=example-plugin
 WP_PLUGINS=groups woocommerce advanced-custom-fields user-role-editor wp-mail-smtp
 WP_THEME=storefront
 ADMIN_USERNAME=admin
@@ -41,8 +43,18 @@ __Note:__ Most WordPress coding convention errors can be automatically fixed by 
 
 Visit [http://localhost:8080/wp-login.php](localhost:8080/wp-login.php)
 
+## React
+
+```sh
+docker run -u node:node -v $(pwd):/usr/local/src -w /usr/local/src -ti node:lts-alpine ash
+npm install
+npm start
+npm build
+```
+
 ## Plugins
 
+- [Tutorial: Adding React Support to a WooCommerce Extension](https://developer.woocommerce.com/2020/11/13/tutorial-adding-react-support-to-a-woocommerce-extension/)
 - [Groups Documentation](https://docs.itthinx.com/document/groups/)
 - [WooCommerce Developer Resources](https://developer.woocommerce.com/)
 - [Evalon WooCommerce Payment Gateway](https://developer.elavon.com/na/docs/converge/1.0.0/integration-guide/shopping_carts/woocommerce_installation_guide)

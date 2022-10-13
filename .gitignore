@@ -23,7 +23,7 @@ wp-cli.local.yml
 *.swp
 *.tar.gz
 *.tgz
-*.zip
+#*.zip
 .idea
 .vscode/*
 !.vscode/tasks.json

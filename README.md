@@ -55,6 +55,7 @@ npm build
 ## Plugins
 
 - [Creating your first WooCommerce extension](https://developer.woocommerce.com/extension-developer-guide/creating-your-first-extension/)
+- [Create your first app with Gutenberg data](https://developer.wordpress.org/block-editor/how-to-guides/data-basics/1-data-basics-setup/)
 - [Introduction to WordPress Plugin Development](https://developer.wordpress.org/plugins/intro/)
 - [Tutorial: Adding React Support to a WooCommerce Extension](https://developer.woocommerce.com/2020/11/13/tutorial-adding-react-support-to-a-woocommerce-extension/)
 - [Groups Documentation](https://docs.itthinx.com/document/groups/)

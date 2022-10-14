@@ -35,6 +35,11 @@ WORKDIR /var/www/html
 RUN wp core download --skip-content --version=$WP_VERSION --locale=$WP_LOCALE --path=/var/www/html; \
     mkdir -p /var/www/html/wp-content/plugins /var/www/html/wp-content/themes
 
+# plugins
+RUN mkdir /tmp/plugins
+COPY --chown=www-data:www-data plugins/* /tmp/plugins/
+RUN for plugin in /tmp/plugins/*.zip; do unzip $plugin -d /var/www/html/wp-content/plugins/; done;
+
 # default groups
 COPY --chown=www-data:www-data exports/groups.sql /tmp/groups.sql
 

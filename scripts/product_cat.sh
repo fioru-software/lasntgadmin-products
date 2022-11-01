@@ -1,6 +1,6 @@
 #! /bin/sh
 
-dir="/var/www/html/wp-content/plugins/$WP_PLUGIN/exports/products"
+dir="/usr/local/src/exports/products"
 parent_file="$dir/parents.txt"
 
 while read -r parent_name; do

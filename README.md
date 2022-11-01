@@ -8,7 +8,9 @@ Please see [WordPress plugin developer handbook](https://developer.wordpress.org
 
 Emails will be sent to [Mailtrap Inbox](https://mailtrap.io/). Credentials are available on our [Bitwarden](https://bitwarden.veri.ie).
 
-Create `.env` file.
+Create `.env` file. 
+
+Add your plugin folder name to the `WP_PLUGIN=` environment variable.
 
 ```
 SITE_URL=localhost:8080
@@ -43,13 +45,32 @@ __Note:__ Most WordPress coding convention errors can be automatically fixed by 
 
 Visit [http://localhost:8080/wp-login.php](localhost:8080/wp-login.php)
 
-## React
+### React
 
 ```sh
 docker run --rm -u node:node -v $(pwd):/usr/local/src -w /usr/local/src -ti node:lts-alpine ash
 npm install
 npm start
 npm build
+```
+
+## Release a version
+
+Update `composer.json` file with appropriate `name`, `version` and `installer-name`.
+
+Update `Version: 0.0.0` of main plugin file, in this case `example-plugin.php`.
+
+Use `git` to commit and push changes to origin.
+
+Use `git` to tag the commit and push it to origin.
+
+```sh
+# list existing tag
+git tag -l
+# tag the commit with appropriate version
+git tag -a 0.1.4
+# push tag as a release
+git push -u origin 0.1.4
 ```
 
 ## Plugins

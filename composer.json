@@ -13,9 +13,6 @@
       "secure": "security-checker security:check composer.lock",
       "all": [ "@lint", "@check", "@test", "@secure" ]
     },
-    "require": {
-        "composer/installers": "2.x-dev"
-    },
     "require-dev": {
         "fakerphp/faker": "^1.19",
         "overtrue/phplint": "^3.0",
@@ -34,5 +31,8 @@
             "dealerdirect/phpcodesniffer-composer-installer": true,
             "composer/installers": true
         }
+    },
+    "require": {
+        "composer/installers": "~2.0"
     }
 }

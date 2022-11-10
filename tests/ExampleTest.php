@@ -1,5 +1,7 @@
 <?php
 
+use Lasntg\Admin\Example;
+
 /**
  * Class SampleTest
  *
@@ -18,8 +20,8 @@ class ExampleTest extends WP_UnitTestCase {
 	/**
 	 * A single example test.
 	 */
-	public function testSample() {
+	public function testSingleton() {
 		// Replace this with some actual testing code.
-		$this->assertTrue( true );
+        $this->assertInstanceOf( Example::class, Example::get_instance());
 	}
 }

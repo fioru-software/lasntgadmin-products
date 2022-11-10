@@ -1,17 +1,30 @@
 {
-    "name": "fioru/lasntg--plugin_template",
-    "version": "0.1.0",
+    "name": "fioru/lasntgadmin-plugin_template",
+    "version": "1.0.0",
     "type": "wordpress-plugin",
     "extra": {
-        "installer-name": "example-plugin"
+        "installer-name": "lasntgadmin-plugin_template"
+    },
+    "autoload": {
+        "psr-4": {
+            "Lasntg\\Admin\\": "lib"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Lasntg\\Admin\\Test\\": "tests/"
+        }
     },
     "scripts": {
       "test": "phpunit --verbose --configuration phpunit.xml.dist --prepend vendor/autoload.php --testdox --colors=always",
       "lint": "phplint ./ --exclude=vendor",
-      "check": "phpcs",
+      "check": "phpcs -ns",
       "fix": "phpcbf",
       "secure": "security-checker security:check composer.lock",
       "all": [ "@lint", "@check", "@test", "@secure" ]
+    },
+    "require": {
+        "composer/installers": "~2.0"
     },
     "require-dev": {
         "fakerphp/faker": "^1.19",
@@ -31,8 +44,5 @@
             "dealerdirect/phpcodesniffer-composer-installer": true,
             "composer/installers": true
         }
-    },
-    "require": {
-        "composer/installers": "~2.0"
     }
 }

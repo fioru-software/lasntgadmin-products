@@ -8,6 +8,7 @@
 	<exclude-pattern>*/vendor/*</exclude-pattern>
 	<exclude-pattern>tests/*</exclude-pattern>
 	<exclude-pattern>config/*</exclude-pattern>
+	<exclude-pattern>build/*</exclude-pattern>
 
     <!-- How to scan -->
 	<!-- Usage instructions: https://github.com/squizlabs/PHP_CodeSniffer/wiki/Usage -->
@@ -20,27 +21,37 @@
 
     !-- Rules: Check PHP version compatibility -->
 	<!-- https://github.com/PHPCompatibility/PHPCompatibility#sniffing-your-code-for-compatibility-with-specific-php-versions -->
-	<config name="testVersion" value="5.6-"/>
+	<config name="testVersion" value="7.4-"/>
 	<!-- https://github.com/PHPCompatibility/PHPCompatibilityWP -->
 	<rule ref="PHPCompatibilityWP"/>
 
 	<!-- Rules: WordPress Coding Standards -->
 	<!-- https://github.com/WordPress-Coding-Standards/WordPress-Coding-Standards -->
 	<!-- https://github.com/WordPress-Coding-Standards/WordPress-Coding-Standards/wiki/Customizable-sniff-properties -->
-	<config name="minimum_supported_wp_version" value="4.6"/>
+	<config name="minimum_supported_wp_version" value="6.0"/>
 
-	<rule ref="WordPress"/>
+	<rule ref="Universal.Arrays">
+		<exclude name="Universal.Arrays.DisallowShortArraySyntax.Found"/>
+	</rule>
+
+	<rule ref="WordPress">
+        <exclude name="WordPress.Files.FileName.NotHyphenatedLowercase"/>
+        <exclude name="WordPress.Files.FileName.InvalidClassFileName"/>
+        <exclude name="WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedNamespaceFound"/>
+    </rule>
 
     <rule ref="Squiz.Commenting">
         <exclude name="Squiz.Commenting.FileComment.MissingPackageTag"/>
         <exclude name="Squiz.Commenting.FileComment.Missing"/>
+        <exclude name="Squiz.Commenting.VariableComment.Missing"/>
+        <exclude name="Squiz.Commenting.FunctionComment.Missing"/>
     </rule>
 
 	<rule ref="WordPress.NamingConventions.PrefixAllGlobals">
 		<properties>
 			<!-- Value: replace the function, class, and variable prefixes used. Separate multiple prefixes with a comma. -->
 			<property name="prefixes" type="array">
-				<element value="VERI"/>
+				<element value="lasntgadmin"/>
 			</property>
 		</properties>
 	</rule>
@@ -49,7 +60,7 @@
 		<properties>
 			<!-- Value: replace the text domain used. -->
             <property name="text_domain" type="array">
-                <element value="veri"/> <!-- Change this value to your theme or plugin slug. -->
+                <element value="lasntgadmin"/> <!-- Change this value to your theme or plugin slug. -->
             </property>
 		</properties>
 	</rule>

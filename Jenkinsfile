@@ -55,7 +55,8 @@ pipeline {
                         sh "docker-compose up -d db"
                         sh "docker run --rm -d -e DB_HOST=$DB_HOST -e SITE_URL=$SITE_URL -e SITE_TITLE=$SITE_TITLE -e WP_PLUGINS='$WP_PLUGINS' -e WP_THEME=$WP_THEME -e WP_PLUGIN=$WP_PLUGIN -e ADMIN_USERNAME=$ADMIN_USERNAME -e ADMIN_PASSWORD=$ADMIN_PASSWORD -e ADMIN_EMAIL=$ADMIN_EMAIL --name $CONTAINER_NAME --network ${PROJECT_NAME}_default ${PROJECT_NAME}_wordpress sleep infinity" 
                         sh "docker cp . $CONTAINER_NAME:/usr/local/src/"
-                        sh "docker exec -t $CONTAINER_NAME /usr/local/bin/run.sh install"
+                        sh "docker exec -t $CONTAINER_NAME /usr/local/src/scripts/install.sh"
+                        sh "docker exec -t $CONTAINER_NAME /usr/local/src/scripts/plugins.sh"
                         sh "docker exec -t -u www-data:www-data -w /var/www/html/wp-content/plugins/$WP_PLUGIN $CONTAINER_NAME composer install"
                         sh "docker exec -t -u www-data:www-data -w /var/www/html/wp-content/plugins/$WP_PLUGIN $CONTAINER_NAME composer all"
                     }

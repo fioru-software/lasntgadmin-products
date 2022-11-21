@@ -45,9 +45,9 @@ function lasntgadmin_quotas_product_tab_data(): void {
 			array(
 				'id'                => '_quotas_field_' . $group->group_id,
 				'label'             => $group->name,
-				'placeholder'       => "Enter the quotas for {$group->name}.",
+				'placeholder'       => __("Leave blank for unlimited quota.", "lasntgadmin"),
 				'desc_tip'          => 'true',
-				'description'       => "Enter the quotas for {$group->name}.",
+				'description'       => __("Leave blank for unlimited quota.", "lasntgadmin"),
 				'value'             => 'add' !== $action ? get_post_meta( $post->ID, '_quotas_field_' . $group->group_id, true ) : 0,
 				'type'              => 'number',
 				'custom_attributes' => array(

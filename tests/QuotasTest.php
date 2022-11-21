@@ -1,6 +1,6 @@
 <?php
 
-use Lasntg\Admin\Example;
+use Lasntg\Admin\Quotas;
 
 /**
  * Class SampleTest
@@ -11,7 +11,7 @@ use Lasntg\Admin\Example;
 /**
  * Example test case.
  */
-class ExampleTest extends WP_UnitTestCase {
+class QuotaUtilTest extends WP_UnitTestCase {
 
     public function set_up() {
         parent::set_up();

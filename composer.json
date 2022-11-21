@@ -1,13 +1,13 @@
 {
-    "name": "fioru/lasntgadmin-plugin_template",
-    "version": "1.0.0",
+    "name": "fioru/lasntgadmin-quotas",
+    "version": "0.0.1",
     "type": "wordpress-plugin",
     "extra": {
-        "installer-name": "lasntgadmin-plugin_template"
+        "installer-name": "lasntgadmin-quotas"
     },
     "autoload": {
         "psr-4": {
-            "Lasntg\\Admin\\": "lib"
+            "Lasntg\\Admin\\Quotas\\": "lib"
         }
     },
     "autoload-dev": {

@@ -5,7 +5,7 @@ namespace Lasntg\Admin\Quotas;
 /**
  * QuotaUtil
  */
-class QuotaUtil {
+class QuotaUtils {
 
 
 	/**

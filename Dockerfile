@@ -3,6 +3,7 @@ FROM php:7-apache
 ARG USER_ID
 ARG WP_VERSION
 ARG WP_LOCALE
+ARG GITHUB_TOKEN
 
 RUN a2enmod rewrite                                                                                                                                                                           
 RUN apt update; \
@@ -26,8 +27,6 @@ COPY --from=composer:2 /usr/bin/composer /usr/local/bin/composer
 
 COPY etc/php/php.ini /usr/local/etc/php/php.ini
 COPY --chown=www-data:www-data config/.htaccess config/wp-config.php /var/www/html/
-COPY scripts/* /usr/local/bin/
-RUN chmod +x /usr/local/bin/*
 
 USER www-data
 WORKDIR /var/www/html
@@ -35,14 +34,15 @@ WORKDIR /var/www/html
 RUN wp core download --skip-content --version=$WP_VERSION --locale=$WP_LOCALE --path=/var/www/html; \
     mkdir -p /var/www/html/wp-content/plugins /var/www/html/wp-content/themes
 
+# composer
+RUN composer config --global --auth github-oauth.github.com ${GITHUB_TOKEN}; \
+    composer config --global --no-plugins allow-plugins.composer/installers true
+
 # plugins
 RUN mkdir /tmp/plugins
 COPY --chown=www-data:www-data plugins/* /tmp/plugins/
-RUN for plugin in /tmp/plugins/*.zip; do unzip $plugin -d /var/www/html/wp-content/plugins/; done;
-
-# default groups
-COPY --chown=www-data:www-data exports/groups.sql /tmp/groups.sql
+RUN for plugin in /tmp/plugins/*.zip; do unzip -q $plugin -d /var/www/html/wp-content/plugins/; done;
 
 USER root
 
-CMD ["/usr/local/bin/run.sh"]
+CMD ["/usr/local/src/scripts/run.sh"]

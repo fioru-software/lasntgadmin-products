@@ -13,6 +13,7 @@ services:
         - .env
       environment:
         - DB_HOST=db
+        - COMPOSER_AUTOLOAD_FILEPATH=/usr/local/src/vendor/autoload.php
       depends_on:
         - db
       volumes:

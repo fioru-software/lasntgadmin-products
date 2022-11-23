@@ -83,9 +83,12 @@ INSERT INTO `wp_groups_group` VALUES
 (30,6,NULL,1,'2022-10-10 14:15:59','Donegal County Council',NULL),
 (31,22,NULL,1,'2022-10-10 14:15:59','Monaghan County Council',NULL),
 (32,25,NULL,1,'2022-10-10 14:15:59','Sligo County Council',NULL);
+<<<<<<< HEAD
 
 -- Private Client
 (33,NULL,NULL,1,'2022-10-10 14:15:59','Private Client',NULL);
+=======
+>>>>>>> master
 
 /*!40000 ALTER TABLE `wp_groups_group` ENABLE KEYS */;
 UNLOCK TABLES;

@@ -1,6 +1,6 @@
 {
     "name": "fioru/lasntgadmin-quotas",
-    "version": "0.0.1",
+    "version": "1.0.1",
     "type": "wordpress-plugin",
     "extra": {
         "installer-name": "lasntgadmin-quotas"

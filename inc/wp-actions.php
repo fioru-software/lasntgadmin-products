@@ -89,12 +89,21 @@ function lasntgadmin_quotas_add_quotas_save( $post_id ): void {
 	}
 }
 
-add_filter( 'woocommerce_product_meta_start', 'lasntgadmin_show_out_of_stock_message' );
+add_filter( 'woocommerce_product_meta_start', 'lasntgadmin_show_out_of_stock_message', 1 );
 function lasntgadmin_show_out_of_stock_message() {
+	global $woocommerce;
+	$items = $woocommerce->cart->get_cart();
+
 	$product_id = get_the_ID();
 	$orders     = QuotaUtil::get_product_quota( $product_id );
 	if ( 0 == $orders ) {
 		echo '<p class="stock out-of-stock">Not in stock</p>';
+	}
+	foreach ( $items as $values ) {
+		$orders = QuotaUtil::get_product_quota( $values['data']->get_id() );
+		if($values['data']->get_id() !== $product_id){
+			echo '<p class="woocommerce-error">You can only add one course to cart.</p>';
+		}
 	}
 }
 add_action( 'woocommerce_before_cart_contents', 'lasntgadmin_show_quota_to_client', 10 );
@@ -114,7 +123,7 @@ function lasntgadmin_show_quota_to_client() {
 	}
 
 	if ( $orders ) {
-		echo wp_kses_post( "<h3>Available quota remaining: $orders</h3>" );
+		echo wp_kses_post( "<p class='woocommerce-info'>Available quota remaining: $orders</p>" );
 	}
 }
 
@@ -130,8 +139,17 @@ function lasntgadmin_stock_filter( $available_text, $product ) {
 add_filter( 'woocommerce_get_availability_text', 'lasntgadmin_stock_filter', 10, 2 );
 add_filter( 'woocommerce_is_purchasable', 'lasntgadmin_product_is_in_stock', 10, 2 );
 function lasntgadmin_product_is_in_stock( $is_in_stock, $product ) {
-	$post_id = $product->get_ID();
-	$orders  = QuotaUtil::get_product_quota( $post_id );
+	global $woocommerce;
+
+	$product_id = $product->get_ID();
+	$orders  = QuotaUtil::get_product_quota( $product_id );
+	$items = $woocommerce->cart->get_cart();
+	foreach ( $items as $values ) {
+		$orders = QuotaUtil::get_product_quota( $values['data']->get_id() );
+		if($values['data']->get_id() !== $product_id){
+			return false;
+		}
+	}
 	return $orders > 0;
 }
 

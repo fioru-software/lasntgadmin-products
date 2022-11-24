@@ -36,7 +36,11 @@ function lasntgadmin_quotas_product_tab_data(): void {
 	$prefix = $wpdb->prefix;
 	$table  = $prefix . 'groups_group';
 
-	$results = $wpdb->get_results( "SELECT name,group_id FROM $table ORDER BY name" ); //phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
+	$results = $wpdb->get_results(
+		$wpdb->prepare(
+			"SELECT name,group_id FROM $table ORDER BY name"
+		)
+	);
 
 	echo '<div id="lasntgadmin_quotas_product_tab_data" class="panel woocommerce_options_panel">';
 	// Get action. For new product it's add.
@@ -77,7 +81,11 @@ function lasntgadmin_quotas_add_quotas_save( $post_id ): void {
 	$prefix = $wpdb->prefix;
 	$table  = $prefix . 'groups_group';
 
-	$results = $wpdb->get_results( "SELECT name,group_id FROM $table ORDER BY name" ); //phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
+	$results = $wpdb->get_results(
+		$wpdb->prepare(
+			"SELECT name,group_id FROM $table ORDER BY name"
+		)
+	);
 	// fields.
 	foreach ( $results as $group ) {
 		if ( ! isset( $_POST[ '_quotas_field_' . $group->group_id ] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
@@ -101,7 +109,7 @@ function lasntgadmin_show_out_of_stock_message() {
 	}
 	foreach ( $items as $values ) {
 		$orders = QuotaUtil::get_product_quota( $values['data']->get_id() );
-		if($values['data']->get_id() !== $product_id){
+		if ( $values['data']->get_id() !== $product_id ) {
 			echo '<p class="woocommerce-error">You can only add one course to cart.</p>';
 		}
 	}
@@ -127,7 +135,6 @@ function lasntgadmin_show_quota_to_client() {
 	}
 }
 
-
 function lasntgadmin_stock_filter( $available_text, $product ) {
 	$post_id = $product->get_ID();
 	$orders  = QuotaUtil::get_product_quota( $post_id );
@@ -142,11 +149,11 @@ function lasntgadmin_product_is_in_stock( $is_in_stock, $product ) {
 	global $woocommerce;
 
 	$product_id = $product->get_ID();
-	$orders  = QuotaUtil::get_product_quota( $product_id );
-	$items = $woocommerce->cart->get_cart();
+	$orders     = QuotaUtil::get_product_quota( $product_id );
+	$items      = $woocommerce->cart->get_cart();
 	foreach ( $items as $values ) {
 		$orders = QuotaUtil::get_product_quota( $values['data']->get_id() );
-		if($values['data']->get_id() !== $product_id){
+		if ( $values['data']->get_id() !== $product_id ) {
 			return false;
 		}
 	}
@@ -183,3 +190,11 @@ function lasntgadmin_quotas_update_cart_validation( $passed, $cart_item_key, $va
 	}
 	return true;
 }
+
+
+function lasntgadmin_add_checkout_orders_to_private( $id ) {
+	error_log( 'Order Checkout for order ' . $id );
+	QuotaUtil::lasntgadmin_add_group( $id );
+}
+
+add_action( 'woocommerce_checkout_order_processed', 'lasntgadmin_add_checkout_orders_to_private', 10, 1 );

@@ -1,20 +1,19 @@
 <?php
 
 namespace Lasntg\Admin\Quotas;
-
+use Groups_Post_Access;
 /**
  * QuotaUtil
  */
 class QuotaUtils {
 
 
-	public static $private_client_group_id = 69;
+	public static $private_client_group_id = 33;
 
 
 	public static function lasntgadmin_add_group( $post_id ) {
 		$group_ids[] = self::$private_client_group_id;
-		error_log( "==== Post Id $post_id === add to groups" );
-		\Groups_Post_Access::update(
+		Groups_Post_Access::update(
 			array(
 				'post_id'     => $post_id,
 				'groups_read' => $group_ids,

@@ -34,7 +34,8 @@ class WaitingListActionsFilters {
 	public static function _enqueu_scripts():void {
 		wp_enqueue_script( 'lasntgadmin-add-to-wishlist' );
 		$wl_nonce = wp_create_nonce( 'lasntgadmin-wl-nonce' );
-		wp_enqueue_script( 'lasntgadmin-wl-js', ( LASNTGADMIN_QUOTAS_ASSETS_DIR_PATH . 'js/lasntgadmin-wl.js' ), array( 'jquery' ), '1.4', true );
+		$assets_dir = untrailingslashit( plugin_dir_url( __FILE__ ) ) . '/../assets/';
+		wp_enqueue_script( 'lasntgadmin-wl-js', ( $assets_dir . 'js/lasntgadmin-wl.js' ), array( 'jquery' ), '1.4', true );
 		wp_localize_script(
 			'lasntgadmin-wl-js',
 			'lasntgadmin_ws_localize',

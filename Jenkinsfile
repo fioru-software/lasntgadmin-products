@@ -24,7 +24,7 @@ pipeline {
     }
 
     environment {
-        PROJECT_NAME = "lasntgadmin-plugin_template"
+        PROJECT_NAME = "lasntgadmin-products"
         REPO_NAME = "fioru-software/$PROJECT_NAME"
         GITHUB_API_URL = "https://api.github.com/repos/$REPO_NAME"
         GITHUB_TOKEN = credentials('jenkins-github-personal-access-token')

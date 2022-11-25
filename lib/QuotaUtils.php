@@ -1,13 +1,26 @@
 <?php
 
 namespace Lasntg\Admin\Quotas;
-
+use Groups_Post_Access;
 /**
  * QuotaUtil
  */
-class QuotaUtil {
+class QuotaUtils {
 
-	public static $private_client_group_id = 69;
+
+	public static $private_client_group_id = 33;
+
+
+	public static function lasntgadmin_add_group( $post_id ) {
+		$group_ids[] = self::$private_client_group_id;
+		Groups_Post_Access::update(
+			array(
+				'post_id'     => $post_id,
+				'groups_read' => $group_ids,
+			)
+		);
+	}
+
 
 	/**
 	 * Get the remaining quota
@@ -27,7 +40,7 @@ class QuotaUtil {
 	 * @param  bool  $check_cart Whether to check in cart and deduct the items.
 	 * @return int
 	 */
-	public static function get_product_quota( $product_id, $check_cart = true ):int {
+	public static function get_product_quota( $product_id, $check_cart = true ): int {
 		global $wpdb, $woocommerce;
 		$already_in_cart = 0;
 		if ( $check_cart ) {
@@ -41,7 +54,7 @@ class QuotaUtil {
 		}
 		$private_client_group_id = self::$private_client_group_id;
 
-		$results   = $wpdb->get_results(
+		$results = $wpdb->get_results(
 			$wpdb->prepare(
 				"
         SELECT *
@@ -50,37 +63,42 @@ class QuotaUtil {
         LEFT JOIN {$wpdb->posts} AS posts ON order_items.order_id = posts.ID
         LEFT JOIN {$wpdb->prefix}postmeta as post_meta ON posts.ID = post_meta.post_id
         WHERE posts.post_type = 'shop_order'
-        AND posts.post_status = 'wc-completed'
+        AND posts.post_status in (%s, %s)
         AND order_items.order_item_type = 'line_item'
         AND order_item_meta.meta_key = '_product_id'
         AND order_item_meta.meta_value = %s
         AND post_meta.meta_value = %s
         AND post_meta.meta_key = 'groups-read'
     ",
-				[ $product_id, $private_client_group_id ]
+				[ 'wc-completed', 'wc-processing', $product_id, $private_client_group_id ]
 			)
 		);
+
 		$order_ids = [];
 		$total     = 0;
 		foreach ( $results as $result ) {
 			$order_ids[] = $result->order_item_id;
 		}
+
 		if ( $order_ids ) {
-			$order_ids = implode( "','", $order_ids );
-			$qty       = $wpdb->get_results(
+			$in_str_arr = array_fill( 0, count( $order_ids ), '%s' );
+			// %s,%s,%s
+			$in_str = join( ',', $in_str_arr );
+
+			$qty = $wpdb->get_results(
 				$wpdb->prepare(
-					"
-			SELECT * FROM {$wpdb->prefix}woocommerce_order_itemmeta
-			WHERE meta_key = '_qty' AND order_item_id IN (%s)
-		",
-					[ $order_ids ]
+					"SELECT * FROM {$wpdb->prefix}woocommerce_order_itemmeta" .
+					" WHERE meta_key = '_qty' AND order_item_id IN (
+                                   %s
+                                )",
+					join( ',', $order_ids )
 				)
 			);
 
 			foreach ( $qty as $item ) {
 				$total += (int) $item->meta_value;
 			}
-		}
+		}//end if
 
 		$private = self::remaining_quota( $product_id, self::$private_client_group_id );
 

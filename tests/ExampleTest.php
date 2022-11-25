@@ -1,6 +1,5 @@
 <?php
 
-
 /**
  * Class SampleTest
  *
@@ -10,7 +9,7 @@
 /**
  * Example test case.
  */
-class QuotaUtilTest extends WP_UnitTestCase {
+class ExampleTest extends WP_UnitTestCase {
 
     public function set_up() {
         parent::set_up();
@@ -19,8 +18,8 @@ class QuotaUtilTest extends WP_UnitTestCase {
 	/**
 	 * A single example test.
 	 */
-	public function testSingleton() {
+	public function testSample() {
 		// Replace this with some actual testing code.
-        $this->assertInstanceOf( Example::class, Example::get_instance());
+		$this->assertTrue( true );
 	}
 }

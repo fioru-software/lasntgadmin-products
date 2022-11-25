@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9885d6c6604daea64cf78c09174b79bb",
+    "content-hash": "db301a3f4092b2e1ff7a44f8fe1f6003",
     "packages": [
         {
             "name": "composer/installers",
@@ -1882,12 +1882,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "2854bdd8a1e8bd3831ee3622c6f0951684d08490"
+                "reference": "586c71b0b4e5e574fb4a5e71f5231b09097737ce"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/2854bdd8a1e8bd3831ee3622c6f0951684d08490",
-                "reference": "2854bdd8a1e8bd3831ee3622c6f0951684d08490",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/586c71b0b4e5e574fb4a5e71f5231b09097737ce",
+                "reference": "586c71b0b4e5e574fb4a5e71f5231b09097737ce",
                 "shasum": ""
             },
             "require": {
@@ -1976,7 +1976,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-11-09T08:31:26+00:00"
+            "time": "2022-11-24T06:07:19+00:00"
         },
         {
             "name": "psr/container",
@@ -3267,12 +3267,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/console.git",
-                "reference": "f2dd071d091edca54ac2ad4acb549be7463af975"
+                "reference": "3042c617e88dd2cf77cd3700c4fe996d1f2edabf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/console/zipball/f2dd071d091edca54ac2ad4acb549be7463af975",
-                "reference": "f2dd071d091edca54ac2ad4acb549be7463af975",
+                "url": "https://api.github.com/repos/symfony/console/zipball/3042c617e88dd2cf77cd3700c4fe996d1f2edabf",
+                "reference": "3042c617e88dd2cf77cd3700c4fe996d1f2edabf",
                 "shasum": ""
             },
             "require": {
@@ -3358,7 +3358,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-11-19T14:44:42+00:00"
+            "time": "2022-11-25T11:06:24+00:00"
         },
         {
             "name": "symfony/deprecation-contracts",

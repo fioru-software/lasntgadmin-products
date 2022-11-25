@@ -114,7 +114,7 @@ class QuotaUtils {
 			$slots_available = $stock;
 		}
 		$total_available = $slots_available - $already_in_cart;
-		
+
 		return $total_available;
 	}
 }

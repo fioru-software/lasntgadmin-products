@@ -4,6 +4,7 @@
  */
 
 namespace Lasntg\Admin\Products;
+
 use wc_order;
 /**
  * Handle all Filters and actions for Waiting List

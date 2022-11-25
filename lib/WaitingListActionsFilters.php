@@ -4,7 +4,7 @@
  */
 
 namespace Lasntg\Admin\Quotas;
-
+use wc_order;
 /**
  * Handle all Filters and actions for Waiting List
  */
@@ -33,7 +33,7 @@ class WaitingListActionsFilters {
 	 */
 	public static function _enqueu_scripts():void {
 		wp_enqueue_script( 'lasntgadmin-add-to-wishlist' );
-		$wl_nonce = wp_create_nonce( 'lasntgadmin-wl-nonce' );
+		$wl_nonce   = wp_create_nonce( 'lasntgadmin-wl-nonce' );
 		$assets_dir = untrailingslashit( plugin_dir_url( __FILE__ ) ) . '/../assets/';
 		wp_enqueue_script( 'lasntgadmin-wl-js', ( $assets_dir . 'js/lasntgadmin-wl.js' ), array( 'jquery' ), '1.4', true );
 		wp_localize_script(
@@ -187,5 +187,25 @@ class WaitingListActionsFilters {
 			]
 		);
 		wp_die();
+	}
+
+	/**
+	 * Associate previous whishlist orders to new customer.
+	 *
+	 * @param  integer $user_id User ID.
+	 * @return void
+	 */
+	public static function associate_order_with_new_customer( int $user_id ):void {
+		$user  = get_user_by( 'id', $user_id );
+		$metas = WaitingListUtils::get_orders_by_meta( $user->user_email );
+
+		if ( ! $metas ) {
+			return;
+		}
+		foreach ( $metas as $meta ) {
+			$order = new wc_order( $meta->post_id );
+			$order->set_customer_id( $user_id );
+			$order->save();
+		}
 	}
 }

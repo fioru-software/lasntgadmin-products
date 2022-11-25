@@ -1,6 +1,7 @@
 <?php
 
 namespace Lasntg\Admin\Quotas;
+
 use Groups_Post_Access;
 /**
  * QuotaUtil
@@ -101,16 +102,23 @@ class QuotaUtils {
 		}//end if
 
 		$private = self::remaining_quota( $product_id, self::$private_client_group_id );
-
+		$product = wc_get_product( $product_id );
+		$stock   = $product->get_stock_quantity();
 		if ( '' === $private ) {
-			$product = wc_get_product( $product_id );
-			$stock   = $product->get_stock_quantity();
 			// if stock is not set return 0.
 			return '' == $stock ? 0 : $stock;
 		}
 		if ( is_numeric( $private ) && 0 == $private ) {
 			return 0;
 		}
-		return ( (int) $private - $total ) - $already_in_cart;
+		// private_allocated - the ones bought.
+		$slots_available = (int) $private - $total;
+		// if the slots that can be assigned is greater than the stock total now is the stock.
+		if ( $slots_available > $stock ) {
+			$slots_available = $stock;
+		}
+		$total_available = $slots_available - $already_in_cart;
+		
+		return $total_available;
 	}
 }

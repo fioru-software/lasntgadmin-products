@@ -97,24 +97,4 @@ class WaitingListUtils {
 		wp_delete_post( $order_id, true );
 		return true;
 	}
-
-	/**
-	 * Associate previous whishlist orders to new customer.
-	 *
-	 * @param  integer $user_id User ID.
-	 * @return void
-	 */
-	public static function associate_order_with_new_customer( int $user_id ):void {
-		$user  = get_user_by( 'id', $user_id );
-		$metas = self::get_orders_by_meta( $user->user_email );
-
-		if ( ! $metas ) {
-			return;
-		}
-		foreach ( $metas as $meta ) {
-			$order = new wc_order( $meta->post_id );
-			$order->set_customer_id( $user_id );
-			$order->save();
-		}
-	}
 }

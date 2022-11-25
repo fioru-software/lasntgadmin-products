@@ -26,7 +26,7 @@ class QuotasActionsFilter {
 
 		// actions.
 		add_action( 'woocommerce_product_data_panels', [ self::class, 'product_tab_data' ], 10, 1 );
-		add_action( 'woocommerce_process_product_meta', [ self::class, 'add_quotas_save' ], 10, 0 );
+		add_action( 'woocommerce_process_product_meta', [ self::class, 'add_quotas_save' ], 10, 1 );
 		add_action( 'woocommerce_before_cart_contents', [ self::class, 'show_quota_to_client' ], 10, 0 );
 		add_action( 'woocommerce_checkout_order_processed', [ self::class, 'add_checkout_orders_to_private' ], 10, 1 );
 	}
@@ -55,9 +55,7 @@ class QuotasActionsFilter {
 		global $post, $wpdb;
 
 		$results = $wpdb->get_results(
-			$wpdb->prepare(
-				"SELECT name,group_id FROM {$wpdb->prefix}groups_group ORDER BY name"
-			)
+			"SELECT name,group_id FROM {$wpdb->prefix}groups_group ORDER BY name"
 		);
 
 		echo '<div id="product_tab_data" class="panel woocommerce_options_panel">';
@@ -96,9 +94,7 @@ class QuotasActionsFilter {
 	public static function add_quotas_save( $post_id ): void {
 		global $wpdb;
 		$results = $wpdb->get_results(
-			$wpdb->prepare(
-				"SELECT name,group_id FROM {$wpdb->prefix}groups_group ORDER BY name"
-			)
+			"SELECT name,group_id FROM {$wpdb->prefix}groups_group ORDER BY name"
 		);
 		// fields.
 		foreach ( $results as $group ) {

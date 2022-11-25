@@ -234,4 +234,3 @@ function lasntgadmin_associate_order_with_new_customer( $user_id ) {
 
 add_action( 'user_register', 'lasntgadmin_associate_order_with_new_customer', 10, 2 );
 
-

@@ -13,10 +13,13 @@
 defined( 'ABSPATH' ) || exit;
 
 require_once getenv( 'COMPOSER_AUTOLOAD_FILEPATH' );
+use Lasntg\Admin\Quotas\QuotasActionsFilter;
+use Lasntg\Admin\Quotas\WaitingListActionsFilters;
 
 define( 'LASNTGADMIN_QUOTAS_DIR_PATH', untrailingslashit( plugin_dir_path( __FILE__ ) ) );
 define( 'LASNTGADMIN_QUOTAS_ASSETS_DIR_PATH', untrailingslashit( plugin_dir_url( __FILE__ ) ) . '/assets/' );
-require LASNTGADMIN_QUOTAS_DIR_PATH . '/lib/QuotaUtils.php';
-require LASNTGADMIN_QUOTAS_DIR_PATH . '/inc/wp-actions.php';
-require LASNTGADMIN_QUOTAS_DIR_PATH . '/inc/waiting-list.php';
+
+
+QuotasActionsFilter::init();
+WaitingListActionsFilters::init();
 

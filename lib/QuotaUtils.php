@@ -5,7 +5,7 @@ namespace Lasntg\Admin\Quotas;
 /**
  * QuotaUtil
  */
-class QuotaUtil {
+class QuotaUtils {
 
 
 	public static $private_client_group_id = 69;
@@ -54,7 +54,6 @@ class QuotaUtil {
 			}
 		}
 		$private_client_group_id = self::$private_client_group_id;
-		$statuses                = [ 'wc-completed', 'wc-processing' ];
 
 		$results = $wpdb->get_results(
 			$wpdb->prepare(
@@ -65,14 +64,14 @@ class QuotaUtil {
         LEFT JOIN {$wpdb->posts} AS posts ON order_items.order_id = posts.ID
         LEFT JOIN {$wpdb->prefix}postmeta as post_meta ON posts.ID = post_meta.post_id
         WHERE posts.post_type = 'shop_order'
-        AND posts.post_status in ('" . implode( "','", $statuses ) . "')
+        AND posts.post_status in (%s, %s)
         AND order_items.order_item_type = 'line_item'
         AND order_item_meta.meta_key = '_product_id'
         AND order_item_meta.meta_value = %s
         AND post_meta.meta_value = %s
         AND post_meta.meta_key = 'groups-read'
     ",
-				[ $product_id, $private_client_group_id ]
+				[ 'wc-completed', 'wc-processing', $product_id, $private_client_group_id ]
 			)
 		);
 
@@ -84,20 +83,17 @@ class QuotaUtil {
 
 		if ( $order_ids ) {
 			$in_str_arr = array_fill( 0, count( $order_ids ), '%s' );
-			// create a string of %s - one for each array value. This creates array( '%s', '%s', '%s' )
+			// %s,%s,%s
 			$in_str = join( ',', $in_str_arr );
-			// now turn it into a comma separated string. This creates "%s,%s,%s"
-
-			$sql = $wpdb->prepare(
-				" SELECT * FROM {$wpdb->prefix}woocommerce_order_itemmeta
-			WHERE meta_key = '_qty' AND order_item_id IN (
-                                   $in_str
-                                )",
-				$order_ids
-			);
 
 			$qty = $wpdb->get_results(
-				$sql
+				$wpdb->prepare(
+					"SELECT * FROM {$wpdb->prefix}woocommerce_order_itemmeta" .
+					" WHERE meta_key = '_qty' AND order_item_id IN (
+                                   %s
+                                )",
+					join( ',', $order_ids )
+				)
 			);
 
 			foreach ( $qty as $item ) {

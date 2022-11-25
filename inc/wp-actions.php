@@ -33,12 +33,9 @@ add_action( 'woocommerce_product_data_panels', 'lasntgadmin_quotas_product_tab_d
 function lasntgadmin_quotas_product_tab_data(): void {
 	global $post, $wpdb;
 
-	$prefix = $wpdb->prefix;
-	$table  = $prefix . 'groups_group';
-
 	$results = $wpdb->get_results(
 		$wpdb->prepare(
-			"SELECT name,group_id FROM $table ORDER BY name"
+			"SELECT name,group_id {$wpdb->prefix}groups_group FROM  ORDER BY name"
 		)
 	);
 

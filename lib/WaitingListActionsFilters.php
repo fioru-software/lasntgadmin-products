@@ -3,7 +3,7 @@
  * All related Actions and filters for Waiting List
  */
 
-namespace Lasntg\Admin\Quotas;
+namespace Lasntg\Admin\Products;
 use wc_order;
 /**
  * Handle all Filters and actions for Waiting List

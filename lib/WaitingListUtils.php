@@ -3,7 +3,7 @@
  * Waiting list Utility functions
  */
 
-namespace Lasntg\Admin\Quotas;
+namespace Lasntg\Admin\Products;
 
 /**
  * WaitingList Utility

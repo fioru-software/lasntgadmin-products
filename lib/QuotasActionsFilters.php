@@ -3,9 +3,9 @@
  * All related Actions and filters for Quota
  */
 
-namespace Lasntg\Admin\Quotas;
+namespace Lasntg\Admin\Products;
 
-use Lasntg\Admin\Quotas\QuotaUtils;
+use Lasntg\Admin\Products\QuotaUtils;
 /**
  * Handles Actions and Filters related to Quota functions
  */

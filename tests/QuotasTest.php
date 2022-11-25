@@ -1,6 +1,5 @@
 <?php
 
-use Lasntg\Admin\Quotas;
 
 /**
  * Class SampleTest

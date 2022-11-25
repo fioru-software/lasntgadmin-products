@@ -1,13 +1,13 @@
 {
     "name": "fioru/lasntgadmin-products",
-    "version": "2.0.0",
+    "version": "3.0.0",
     "type": "wordpress-plugin",
     "extra": {
         "installer-name": "lasntgadmin-products"
     },
     "autoload": {
         "psr-4": {
-            "Lasntg\\Admin\\Quotas\\": "lib"
+            "Lasntg\\Admin\\Products\\": "lib"
         }
     },
     "autoload-dev": {

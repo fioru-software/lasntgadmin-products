@@ -1,6 +1,6 @@
 <?php
 
-namespace Lasntg\Admin\Quotas;
+namespace Lasntg\Admin\Products;
 
 /**
  * Example

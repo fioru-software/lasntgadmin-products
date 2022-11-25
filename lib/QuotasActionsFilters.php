@@ -9,7 +9,7 @@ use Lasntg\Admin\Quotas\QuotaUtils;
 /**
  * Handles Actions and Filters related to Quota functions
  */
-class QuotasActionsFilter {
+class QuotasActionsFilters {
 	/**
 	 * Initiates the filtesr and actions for Quota related functions
 	 *

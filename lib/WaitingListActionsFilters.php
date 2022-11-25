@@ -20,7 +20,7 @@ class WaitingListActionsFilters {
 		add_filter( 'woocommerce_product_meta_start', [ self::class, '_form' ], 10 );
 
 		add_action( 'init', [ self::class, 'register_whishlist_order_status' ], 1 );
-		add_action( 'wp_enqueue_scripts', [ self::class, '_enqueu_scripts' ], 500 );
+		add_action( 'wp_enqueue_scripts', [ self::class, '_enqueue_scripts' ], 500 );
 		add_action( 'wp_ajax_lasntgadmin_wl', [ self::class, 'create_wl_order' ] );
 		add_action( 'wp_ajax_nopriv_lasntgadmin_wl', [ self::class, 'create_wl_order' ] );
 		add_action( 'user_register', [ self::class, 'associate_order_with_new_customer' ], 10, 2 );
@@ -31,7 +31,7 @@ class WaitingListActionsFilters {
 	 *
 	 * @return void
 	 */
-	public static function _enqueu_scripts():void {
+	public static function _enqueue_scripts():void {
 		wp_enqueue_script( 'lasntgadmin-add-to-wishlist' );
 		$wl_nonce   = wp_create_nonce( 'lasntgadmin-wl-nonce' );
 		$assets_dir = untrailingslashit( plugin_dir_url( __FILE__ ) ) . '/../assets/';

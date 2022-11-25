@@ -82,10 +82,6 @@ class QuotaUtils {
 		}
 
 		if ( $order_ids ) {
-			$in_str_arr = array_fill( 0, count( $order_ids ), '%s' );
-			// %s,%s,%s
-			$in_str = join( ',', $in_str_arr );
-
 			$qty = $wpdb->get_results(
 				$wpdb->prepare(
 					"SELECT * FROM {$wpdb->prefix}woocommerce_order_itemmeta" .

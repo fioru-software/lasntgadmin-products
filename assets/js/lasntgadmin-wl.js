@@ -1,12 +1,11 @@
 jQuery(document).ready(function ($) {
     let confirmed = 0;
     $('.lasntgadmin-wl-btn').on('click', () => {
-        console.log('wl clicked');
         const _this = $('.lasntgadmin-wl-btn');
         const email_field = $('#lasntgadmin-guest-email');
         const info_div = $('.lasntgadmin-wl-info');
         const product_id = _this.attr('data-id');
-        console.log('lasntgadmin_ws_localize', lasntgadmin_ws_localize)
+        
         if(email_field.length && email_field.val() == ''){
             info_div.html(`<div class="woocommerce-error">Email is required.</div>`);
             return;
@@ -27,7 +26,7 @@ jQuery(document).ready(function ($) {
                 _this.prop('disabled', true);
             },
             success: function (resp) {
-                console.log("🚀 ~ file: lasntgadmin-wl.js ~ line 14 ~ $ ~ resp", resp);
+                
                 _this.prop('disabled', false);
                 if (resp.status == 1) {
                     info_div.html(`<div class="woocommerce-info">${resp.msg}</div>`);
@@ -55,7 +54,7 @@ jQuery(document).ready(function ($) {
 
             },
             error: function (error) {
-                console.log("🚀 ~ file: lasntgadmin-wl.js ~ line 18 ~ $ ~ error", error)
+                
                 info_div.html('<div class="woocommerce-error">An error occurred. Please try again.</div>')
                 _this.prop('disabled', false);
             }

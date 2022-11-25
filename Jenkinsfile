@@ -36,7 +36,7 @@ pipeline {
         SITE_TITLE = 'WordPress'
         WP_PLUGINS = 'woocommerce'
         WP_THEME = 'storefront'
-        WP_PLUGIN = "lasntgadmin-quotas"
+        WP_PLUGIN = "lasntgadmin-products"
         ADMIN_USERNAME = 'admin'
         ADMIN_PASSWORD = 'secret'
         ADMIN_EMAIL = 'wordpress@example.com'

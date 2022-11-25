@@ -1,9 +1,9 @@
 <?php
 /**
- * Plugin Name:       Lasntg Quotas
- * Plugin URI:        https://github.com/fioru-software/lasntgadmin-plugin_template
- * Description:       Lasntg Quotas
- * Version:           1.0.1
+ * Plugin Name:       Lasntg Products
+ * Plugin URI:        https://github.com/fioru-software/lasntgadmin-products
+ * Description:       Lasntg Products
+ * Version:           2.0.0
  * Requires PHP:      7.2
  * Text Domain:       lasntgadmin
  * Domain Path:       /languages

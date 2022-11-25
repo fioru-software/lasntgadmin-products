@@ -15,7 +15,7 @@ Add your plugin folder name to the `WP_PLUGIN=` environment variable.
 ```
 SITE_URL=localhost:8080
 SITE_TITLE=WordPress
-WP_PLUGIN=lasntgadmin-quotas
+WP_PLUGIN=lasntgadmin-products
 WP_PLUGINS=groups woocommerce advanced-custom-fields user-role-editor wp-mail-smtp
 WP_THEME=storefront
 ADMIN_USERNAME=admin

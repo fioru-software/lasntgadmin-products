@@ -23,14 +23,7 @@ class WaitingListUtils {
 		if ( ! get_current_user_id() ) {
 			return false;
 		}
-		$args = array(
-			'customer_id' => get_current_user_id(),
-			'limit'       => -1,
-			'status'      => 'wc-waiting_list',
-
-		);
-
-		$orders  = wc_get_orders( $args );
+		
 		$orders  = wc_get_orders(
 			[
 				'limit'       => -1,

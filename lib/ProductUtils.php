@@ -2,10 +2,24 @@
 
 namespace Lasntg\Admin\Products;
 
+use Lasntg\Admin\Group\GroupUtils;
+use Lasntg\Admin\Products\ProductApi;
+
+use WP_Error;
+
 /**
  * ProductUtils
  */
 class ProductUtils {
+
+    public static function add_actions() {
+        add_action( 'rest_api_init', [ ProductApi::class, 'get_instance' ] );
+        add_action('admin_init', [ self::class, 'get_visible_products'] );
+    }
+
+    public static function add_filters() {
+        add_filter('woocommerce_product_object_query', [ self::class, 'product_query'], 10, 2);
+    }
 
 	/**
 	 * Has any role
@@ -71,4 +85,19 @@ class ProductUtils {
 		|| current_user_can( 'edit_products' )
 		|| current_user_can( 'edit_product' );
 	}
+
+    /**
+     * Get products with the same group memberships as my user.
+     * @return WC_Product[]
+     */
+    public static function get_visible_products(): array {
+        return wc_get_products(
+            [ 
+                'meta_key'=> 'groups-read',
+                'meta_compare' => 'IN',
+                'meta_value' => GroupUtils::get_current_users_group_ids()
+            ]
+        );
+    }
+
 }

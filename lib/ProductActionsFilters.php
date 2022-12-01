@@ -33,12 +33,8 @@ class ProductActionsFilters {
 		if ( $screen &&
 			'product' === $screen->post_type
 		 ) {
-			$required_roles = [ 'administrator', 'training_officer', 'national_manager' ];
-
-			if ( ! ProductUtils::has_any_role( $required_roles ) ) {
-				$redirect = isset( $_SERVER['HTTP_REFERER'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_REFERER'] ) ) : home_url( '/' );
-				$redirect = esc_url( $redirect );
-				exit( esc_attr( wp_redirect( $redirect ) ) );
+			if ( ! ProductUtils::is_manager_or_training_officer() ) {
+				ProductUtils::redirect_back();
 			}
 		}
 	}

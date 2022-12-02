@@ -1,0 +1,1 @@
+delete_others_products delete_product delete_products delete_published_products edit_others_products edit_product edit_products edit_published_products publish_products read_product

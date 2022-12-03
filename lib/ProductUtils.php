@@ -7,7 +7,6 @@ namespace Lasntg\Admin\Products;
  */
 class ProductUtils {
 
-
 	/**
 	 * Has any role
 	 *
@@ -58,5 +57,14 @@ class ProductUtils {
 		$redirect = isset( $_SERVER['HTTP_REFERER'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_REFERER'] ) ) : home_url( '/' );
 		$redirect = esc_url( $redirect );
 		exit( esc_attr( wp_redirect( $redirect ) ) );
+	}
+
+	public static function is_allowed_products_edit()
+	{
+		return current_user_can('publish_products') 
+		|| current_user_can('read_product') 
+		|| current_user_can('delete_products') 
+		|| current_user_can('edit_products') 
+		|| current_user_can('edit_product');
 	}
 }

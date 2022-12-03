@@ -9,10 +9,6 @@ namespace Lasntg\Admin\Products;
  * Handle Actions anf filters for products
  */
 class ProductActionsFilters {
-
-
-
-
 	/**
 	 * Iniates actions and filters regarding Product
 	 *
@@ -33,7 +29,7 @@ class ProductActionsFilters {
 		if ( $screen &&
 			'product' === $screen->post_type
 		 ) {
-			if ( ! ProductUtils::is_manager_or_training_officer() ) {
+			if ( ! ProductUtils::is_allowed_products_edit() ) {
 				ProductUtils::redirect_back();
 			}
 		}

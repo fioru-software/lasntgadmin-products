@@ -91,3 +91,5 @@ class WaitingListUtils {
 		return true;
 	}
 }
+
+

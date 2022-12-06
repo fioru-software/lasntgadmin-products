@@ -59,7 +59,12 @@ class ProductUtils {
 		exit( esc_attr( wp_redirect( $redirect ) ) );
 	}
 
-	public static function is_allowed_products_edit() {
+	/**
+	 * Check current user has products capabilities.
+	 *
+	 * @return bool
+	 */
+	public static function is_allowed_products_edit():bool {
 		 return current_user_can( 'publish_products' )
 		|| current_user_can( 'read_product' )
 		|| current_user_can( 'delete_products' )

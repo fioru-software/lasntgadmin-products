@@ -47,7 +47,7 @@ class ProductActionsFilters {
 		if ( ! isset( $postarr['_stock'] ) || 'product' !== $postarr['post_type'] ) {
 			return $data;
 		}
-
+		$errors = [];
 		if ( '0' === $postarr['_stock'] ) {
 			$errors[] = __( 'Course needs to be in stock.', 'lasntgadmin' );
 		}

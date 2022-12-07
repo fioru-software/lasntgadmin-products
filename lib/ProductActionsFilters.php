@@ -5,6 +5,8 @@
 
 namespace Lasntg\Admin\Products;
 
+use Lasntg\Admin\Products\ProductApi;
+
 /**
  * Handle Actions anf filters for products
  */
@@ -16,6 +18,7 @@ class ProductActionsFilters {
 	 */
 	public static function init(): void {
 		add_action( 'init', [ self::class, 'remove_product_content_post' ] );
+		add_action( 'rest_api_init', [ ProductApi::class, 'get_instance' ] );
 		add_action( 'admin_notices', [ self::class, 'admin_notice_errors' ], 500 );
 		add_filter( 'wp_insert_post_data', [ self::class, 'filter_post_data' ], 10, 2 );
 		add_filter( 'post_updated_messages', [ self::class, 'post_updated_messages_filter' ], 500 );

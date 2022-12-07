@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin Name:       Lasntg Products
+ * Plugin Name:       LASNTG Products
  * Plugin URI:        https://github.com/fioru-software/lasntgadmin-products
  * Description:       Lasntg Products
  * Version:           4.0.0
@@ -13,12 +13,14 @@
 defined( 'ABSPATH' ) || exit;
 
 require_once getenv( 'COMPOSER_AUTOLOAD_FILEPATH' );
-use Lasntg\Admin\Products\QuotasActionsFilters;
-use Lasntg\Admin\Products\WaitingListActionsFilters;
-use Lasntg\Admin\Products\ProductActionsFilters;
+
+use Lasntg\Admin\Products\{
+	QuotasActionsFilters,
+	WaitingListActionsFilters,
+	ProductActionsFilters
+};
 
 // Inits.
 QuotasActionsFilters::init();
 WaitingListActionsFilters::init();
 ProductActionsFilters::init();
-

@@ -23,8 +23,19 @@
       "secure": "security-checker security:check composer.lock",
       "all": [ "@lint", "@check", "@test", "@secure" ]
     },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url":  "git@github.com:fioru-software/lasntgadmin-grant-funded-payment-gateway.git"
+        },
+        {
+            "type": "vcs",
+            "url":  "git@github.com:fioru-software/lasntgadmin-groups.git"
+        }
+    ],
     "require": {
-        "composer/installers": "~2.0"
+        "composer/installers": "~2.0",
+        "fioru/lasntgadmin-grant-funded-payment-gateway": "1.0.7"
     },
     "require-dev": {
         "fakerphp/faker": "^1.19",

@@ -20,6 +20,7 @@ services:
         - .:/usr/local/src
       ports:
         - "8080:80"
+        - "8443:443"
 
     db:
       image: mariadb:10.3

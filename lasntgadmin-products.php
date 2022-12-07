@@ -14,10 +14,10 @@ defined( 'ABSPATH' ) || exit;
 
 require_once getenv( 'COMPOSER_AUTOLOAD_FILEPATH' );
 
-use Lasntg\Admin\Products\{ 
-    QuotasActionsFilters, 
-    WaitingListActionsFilters, 
-    ProductActionsFilters
+use Lasntg\Admin\Products\{
+	QuotasActionsFilters,
+	WaitingListActionsFilters,
+	ProductActionsFilters
 };
 
 // Inits.

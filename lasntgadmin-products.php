@@ -17,20 +17,10 @@ require_once getenv( 'COMPOSER_AUTOLOAD_FILEPATH' );
 use Lasntg\Admin\Products\{ 
     QuotasActionsFilters, 
     WaitingListActionsFilters, 
-    ProductActionsFilters,
-    ProductUtils
+    ProductActionsFilters
 };
 
 // Inits.
 QuotasActionsFilters::init();
 WaitingListActionsFilters::init();
 ProductActionsFilters::init();
-ProductUtils::add_actions();
-
-
-add_action('admin_init', function() {
-    $req = new WP_REST_Request( 'GET', "/lasntgadmin/product/v1/products" );
-
-    $res = rest_do_request( $req );
-    error_log(print_r($res->get_data(), true));
-}, 500);

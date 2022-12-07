@@ -51,7 +51,7 @@ pipeline {
                 container('docker-compose') {
                     script {
                         sh "touch .env"
-                        sh "docker-compose build --build-arg USER_ID=$USER_ID --pull --no-cache wordpress"
+                        sh "docker-compose build --build-arg USER_ID=$USER_ID --build-arg GITHUB_TOKEN=$GITHUB_TOKEN --pull --no-cache wordpress"
                         sh "docker-compose up -d db"
                         sh "docker run --rm -d -e DB_HOST=$DB_HOST -e SITE_URL=$SITE_URL -e SITE_TITLE=$SITE_TITLE -e WP_PLUGINS='$WP_PLUGINS' -e WP_THEME=$WP_THEME -e WP_PLUGIN=$WP_PLUGIN -e ADMIN_USERNAME=$ADMIN_USERNAME -e ADMIN_PASSWORD=$ADMIN_PASSWORD -e ADMIN_EMAIL=$ADMIN_EMAIL --name $CONTAINER_NAME --network ${PROJECT_NAME}_default ${PROJECT_NAME}_wordpress sleep infinity" 
                         sh "docker cp . $CONTAINER_NAME:/usr/local/src/"

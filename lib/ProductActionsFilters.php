@@ -17,8 +17,6 @@ class ProductActionsFilters {
 	 * @return void
 	 */
 	public static function init(): void {
-		add_action( 'init', [ self::class, 'remove_product_content_post' ] );
-		add_action( 'rest_api_init', [ ProductApi::class, 'get_instance' ] );
 		add_action( 'admin_notices', [ self::class, 'admin_notice_errors' ], 500 );
 		add_filter( 'wp_insert_post_data', [ self::class, 'filter_post_data' ], 10, 2 );
 		add_filter( 'post_updated_messages', [ self::class, 'post_updated_messages_filter' ], 500 );
@@ -91,12 +89,5 @@ class ProductActionsFilters {
 		}
 		delete_transient( 'lasntg_post_error' );
 	}
-	/**
-	 * Remove editor because it's being replaced by a custom field.
-	 *
-	 * @return void
-	 */
-	public static function remove_product_content_post(): void {
-		remove_post_type_support( 'product', 'editor' );
-	}
+	
 }

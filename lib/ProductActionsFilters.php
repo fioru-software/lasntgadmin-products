@@ -22,9 +22,49 @@ class ProductActionsFilters {
 		add_filter( 'post_updated_messages', [ self::class, 'post_updated_messages_filter' ], 500 );
 
 		add_action( 'add_meta_boxes', [ self::class, 'check_roles' ], 100 );
+
+		add_action( 'woocommerce_product_data_tabs', [ self::class, 'remove_unwanted_tabs' ], 999 );
+		add_action( 'admin_menu', [ self::class, 'remove_woocommerce_products_taxonomy' ], 99 );
 	}
 
-	public static function check_roles() {
+	/**
+	 * Remove unwanted woocommerce admin links
+	 *
+	 * @return void
+	 */
+	public static function remove_woocommerce_products_taxonomy():void {
+		remove_submenu_page( 'edit.php?post_type=product', 'product_attributes' );
+		remove_submenu_page( 'edit.php?post_type=product', 'product-reviews' );
+
+		$ptype = 'product';
+		remove_submenu_page( "edit.php?post_type={$ptype}", "edit-tags.php?taxonomy=product_tag&amp;post_type={$ptype}" );
+		remove_submenu_page( "edit.php?post_type={$ptype}", "edit-tags.php?taxonomy=product_cat&amp;post_type={$ptype}" );
+	}
+
+
+	/**
+	 * Remove unwanted woocommerce tabs in product.
+	 *
+	 * @param  mixed $tabs tabs.
+	 * @return array tabs.
+	 */
+	public static function remove_unwanted_tabs( $tabs ):array {
+		$unwanted_tabs = [ 'marketplace-suggestions', 'shipping', 'linked_product', 'attribute', 'advanced' ];
+		foreach ( $unwanted_tabs as $tab ) {
+			if ( isset( $tabs[ $tab ] ) ) {
+				unset( $tabs[ $tab ] );
+			}
+		}
+
+		return $tabs;
+	}
+
+	/**
+	 * Checks if role can edit products. If not redirects back.
+	 *
+	 * @return void
+	 */
+	public static function check_roles():void {
 		$screen = get_current_screen();
 		// disable creating courses for other users except admin, national manager and training manager.
 		if ( $screen &&

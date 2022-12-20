@@ -89,5 +89,5 @@ class ProductActionsFilters {
 		}
 		delete_transient( 'lasntg_post_error' );
 	}
-	
+
 }

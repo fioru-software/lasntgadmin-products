@@ -31,7 +31,7 @@ class Capabilities {
 		return [
 			'view_admin_dashboard',
 			'read',
-			
+
 			'read_product',
 			'manage_product_terms',
 			'delete_published_products',

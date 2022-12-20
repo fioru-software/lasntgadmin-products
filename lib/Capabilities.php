@@ -1,6 +1,6 @@
 <?php
 
-namespace Lasntg\Admin\Order;
+namespace Lasntg\Admin\Products;
 
 /**
  * Plugin capabilities assigned to roles
@@ -21,6 +21,18 @@ class Capabilities {
 		return array(
 			'view_admin_dashboard',
 			'read',
+
+			'read_product',
+			'manage_product_terms',
+			'delete_published_products',
+			'edit_product',
+			'publish_products',
+			'delete_published_products',
+
+			// groups.
+			'groups_access',
+			'groups_admin_groups',
+			'groups_restrict_access',
 		);
 	}
 
@@ -38,6 +50,10 @@ class Capabilities {
 			'edit_product',
 			'publish_products',
 			'delete_published_products',
+			// groups.
+			'groups_access',
+			'groups_admin_groups',
+			'groups_restrict_access',
 		];
 	}
 
@@ -55,6 +71,10 @@ class Capabilities {
 			'edit_product',
 			'publish_products',
 			'delete_published_products',
+			// groups.
+			'groups_access',
+			'groups_admin_groups',
+			'groups_restrict_access',
 		];
 	}
 

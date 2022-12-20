@@ -13,13 +13,15 @@
 defined( 'ABSPATH' ) || exit;
 
 require_once getenv( 'COMPOSER_AUTOLOAD_FILEPATH' );
+use Lasntg\Admin\Products\PluginUtils;
 
 use Lasntg\Admin\Products\{
 	QuotasActionsFilters,
 	WaitingListActionsFilters,
-	ProductActionsFilters
+	ProductActionsFilters,
 };
-
+register_activation_hook( __FILE__, [ PluginUtils::class, 'activate' ] );
+register_deactivation_hook( __FILE__, [ PluginUtils::class, 'deactivate' ] );
 // Inits.
 QuotasActionsFilters::init();
 WaitingListActionsFilters::init();

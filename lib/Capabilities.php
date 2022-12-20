@@ -21,13 +21,14 @@ class Capabilities {
 		return array(
 			'view_admin_dashboard',
 			'read',
-
+			// products.
 			'read_product',
-			'manage_product_terms',
-			'delete_published_products',
 			'edit_product',
-			'publish_products',
+			'edit_products',
 			'delete_published_products',
+			'edit_published_products',
+			'publish_products',
+			'publish_products',
 
 			// groups.
 			'groups_access',
@@ -44,12 +45,15 @@ class Capabilities {
 			'view_admin_dashboard',
 			'read',
 
+			// products
 			'read_product',
-			'manage_product_terms',
-			'delete_published_products',
 			'edit_product',
-			'publish_products',
+			'edit_products',
 			'delete_published_products',
+			'edit_published_products',
+			'publish_products',
+			'publish_products',
+
 			// groups.
 			'groups_access',
 			'groups_admin_groups',
@@ -64,13 +68,16 @@ class Capabilities {
 		return [
 			'view_admin_dashboard',
 			'read',
-			// products.
+			
+			// products
 			'read_product',
-			'manage_product_terms',
-			'delete_published_products',
 			'edit_product',
-			'publish_products',
+			'edit_products',
 			'delete_published_products',
+			'edit_published_products',
+			'publish_products',
+			'publish_products',
+
 			// groups.
 			'groups_access',
 			'groups_admin_groups',

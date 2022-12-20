@@ -18,21 +18,44 @@ class Capabilities {
 	 * National manager capabilities
 	 */
 	public static function get_national_manager_capabilities(): array {
-		return array();
+		return array(
+			'view_admin_dashboard',
+			'read',
+		);
 	}
 
 	/**
 	 * Regional training officer capabilities
 	 */
 	public static function get_regional_training_centre_manager_capabilities(): array {
-		return [];
+		return [
+			'view_admin_dashboard',
+			'read',
+			
+			'read_product',
+			'manage_product_terms',
+			'delete_published_products',
+			'edit_product',
+			'publish_products',
+			'delete_published_products',
+		];
 	}
 
 	/**
 	 * Training officer capabilities
 	 */
 	public static function get_training_officer_capabilities(): array {
-		return [];
+		return [
+			'view_admin_dashboard',
+			'read',
+			// products.
+			'read_product',
+			'manage_product_terms',
+			'delete_published_products',
+			'edit_product',
+			'publish_products',
+			'delete_published_products',
+		];
 	}
 
 	/**

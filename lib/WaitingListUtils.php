@@ -19,7 +19,7 @@ class WaitingListUtils {
 	 * @param  bool $delete should the whishlist be deleted.
 	 * @return bool
 	 */
-	public static function check_already_in_whishlist( int $current_product_id, bool $delete = false ):bool {
+	public static function check_already_in_whishlist( int $current_product_id, bool $delete = false ): bool {
 		if ( ! get_current_user_id() ) {
 			return false;
 		}
@@ -57,7 +57,7 @@ class WaitingListUtils {
 	 * @param  string $email Email meta value.
 	 * @return array
 	 */
-	public static function check_order_meta( string $key, string $email ):array {
+	public static function check_order_meta( string $key, string $email ): array {
 		global $wpdb;
 		$results = $wpdb->get_results( $wpdb->prepare( "select * from $wpdb->postmeta where meta_key = %s and meta_value = %s", $key, $email ) );
 		return $results;
@@ -69,7 +69,7 @@ class WaitingListUtils {
 	 * @param  string $email Email.
 	 * @return array
 	 */
-	public static function get_orders_by_meta( $email ):array {
+	public static function get_orders_by_meta( $email ): array {
 		global $wpdb;
 		return $wpdb->get_results( $wpdb->prepare( "select * from $wpdb->postmeta where meta_key like %s and meta_value = %s ", '%' . self::LASNTGADMIN_EMAIL_META_KEY . '_%', $email ) );
 	}
@@ -81,7 +81,7 @@ class WaitingListUtils {
 	 * @param  integer $product_id product Id.
 	 * @return bool
 	 */
-	public static function remove_guest( string $email, int $product_id ):bool {
+	public static function remove_guest( string $email, int $product_id ): bool {
 		global $wpdb;
 		$order_id = $wpdb->get_var( $wpdb->prepare( "select post_id from $wpdb->postmeta where meta_key = %s and meta_value = %s ", self::LASNTGADMIN_EMAIL_META_KEY . '_' . $product_id, $email ) );
 		if ( ! $order_id ) {

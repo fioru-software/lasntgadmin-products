@@ -45,7 +45,7 @@ class Capabilities {
 			'view_admin_dashboard',
 			'read',
 
-			// products
+			// products.
 			'read_product',
 			'edit_product',
 			'edit_products',
@@ -68,8 +68,8 @@ class Capabilities {
 		return [
 			'view_admin_dashboard',
 			'read',
-			
-			// products
+
+			// products.
 			'read_product',
 			'edit_product',
 			'edit_products',

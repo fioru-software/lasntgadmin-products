@@ -32,7 +32,7 @@ class WaitingListActionsFilters {
 	 *
 	 * @return void
 	 */
-	public static function _enqueue_scripts():void {
+	public static function _enqueue_scripts(): void {
 		wp_enqueue_script( 'lasntgadmin-add-to-wishlist' );
 		$wl_nonce   = wp_create_nonce( 'lasntgadmin-wl-nonce' );
 		$assets_dir = untrailingslashit( plugin_dir_url( __FILE__ ) ) . '/../assets/';
@@ -52,7 +52,7 @@ class WaitingListActionsFilters {
 	 *
 	 * @return void
 	 */
-	public static function register_whishlist_order_status():void {
+	public static function register_whishlist_order_status(): void {
 		register_post_status(
 			'wc-waiting_list',
 			array(
@@ -73,7 +73,7 @@ class WaitingListActionsFilters {
 	 * @param  mixed $order_statuses Order Statuses.
 	 * @return array Order Statuses.
 	 */
-	public static function custom_order_status( $order_statuses ):array {
+	public static function custom_order_status( $order_statuses ): array {
 		$order_statuses['wc-waiting_list'] = _x( 'Waiting list', 'Order status', 'lasntgadmin' );
 		return $order_statuses;
 	}
@@ -83,7 +83,7 @@ class WaitingListActionsFilters {
 	 *
 	 * @return void
 	 */
-	public static function _form():void {
+	public static function _form(): void {
 		global $product;
 		$product_id = $product->get_id();
 		$orders     = QuotaUtils::get_product_quota( $product_id );
@@ -111,7 +111,7 @@ class WaitingListActionsFilters {
 	 *
 	 * @return void
 	 */
-	public static function create_wl_order():void {
+	public static function create_wl_order(): void {
 		check_ajax_referer( 'lasntgadmin-wl-nonce', 'security' );
 		if ( ! isset( $_POST['product_id'] ) ) {
 			wp_send_json(
@@ -196,7 +196,7 @@ class WaitingListActionsFilters {
 	 * @param  integer $user_id User ID.
 	 * @return void
 	 */
-	public static function associate_order_with_new_customer( int $user_id ):void {
+	public static function associate_order_with_new_customer( int $user_id ): void {
 		$user  = get_user_by( 'id', $user_id );
 		$metas = WaitingListUtils::get_orders_by_meta( $user->user_email );
 

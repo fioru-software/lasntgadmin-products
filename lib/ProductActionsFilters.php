@@ -29,6 +29,12 @@ class ProductActionsFilters {
 		add_action( 'admin_enqueue_scripts', [ self::class, 'admin_enqueue_scripts' ], 99 );
 
 		add_filter( 'post_row_actions', [ self::class, 'remove_quick_edit' ], 10, 1 );
+		add_filter( 'manage_product_posts_columns', [ self::class, 'rename_sku_column' ], 11 );
+	}
+
+	public static function rename_sku_column( $columns ) {
+		$columns['sku'] = __( 'Course Code', 'lasntgadmin' );
+		return $columns;
 	}
 
 	/**

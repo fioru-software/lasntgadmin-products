@@ -21,19 +21,24 @@ class Capabilities {
 		return array(
 			'view_admin_dashboard',
 			'read',
-			// products.
 			'read_product',
 			'edit_product',
-			'edit_products',
-			'delete_published_products',
-			'edit_published_products',
-			'publish_products',
+			'edit_product_terms',
+			'delete_product_terms',
+			'delete_product',
+			'edit_product',
+			'assign_product_terms',
 			'publish_products',
 
-			// groups.
-			'groups_access',
-			'groups_admin_groups',
-			'groups_restrict_access',
+			'delete_private_products',
+			'delete_products',
+			'delete_published_products',
+			'edit_others_products',
+			'edit_private_products',
+			'edit_products',
+			'publish_products',
+			'edit_published_products',
+			'read_private_products',
 		);
 	}
 
@@ -45,19 +50,24 @@ class Capabilities {
 			'view_admin_dashboard',
 			'read',
 
-			// products.
 			'read_product',
 			'edit_product',
-			'edit_products',
-			'delete_published_products',
-			'edit_published_products',
-			'publish_products',
+			'edit_product_terms',
+			'delete_product_terms',
+			'delete_product',
+			'edit_product',
+			'assign_product_terms',
 			'publish_products',
 
-			// groups.
-			'groups_access',
-			'groups_admin_groups',
-			'groups_restrict_access',
+			'delete_private_products',
+			'delete_products',
+			'delete_published_products',
+			'edit_others_products',
+			'edit_private_products',
+			'edit_products',
+			'publish_products',
+			'edit_published_products',
+			'read_private_products',
 		];
 	}
 
@@ -68,20 +78,6 @@ class Capabilities {
 		return [
 			'view_admin_dashboard',
 			'read',
-
-			// products.
-			'read_product',
-			'edit_product',
-			'edit_products',
-			'delete_published_products',
-			'edit_published_products',
-			'publish_products',
-			'publish_products',
-
-			// groups.
-			'groups_access',
-			'groups_admin_groups',
-			'groups_restrict_access',
 		];
 	}
 

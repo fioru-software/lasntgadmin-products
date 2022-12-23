@@ -5,7 +5,7 @@
 
 namespace Lasntg\Admin\Products;
 
-use Lasntg\Admin\Products\ProductApi;
+use Lasntg\Admin\Group\GroupUtils;
 
 /**
  * Handle Actions anf filters for products
@@ -26,14 +26,23 @@ class ProductActionsFilters {
 
 		add_action( 'woocommerce_product_data_tabs', [ self::class, 'remove_unwanted_tabs' ], 999 );
 		add_action( 'admin_menu', [ self::class, 'remove_woocommerce_products_taxonomy' ], 99 );
+		add_action( 'admin_enqueue_scripts', [ self::class, 'admin_enqueue_scripts' ], 99 );
 	}
 
+	public static function admin_enqueue_scripts():void {
+		$assets_dir = untrailingslashit( plugin_dir_url( __FILE__ ) ) . '/../assets/';
+		wp_enqueue_script( 'lasntgadmin-users-admin-js', ( $assets_dir . 'js/lasntgadmin-admin.js' ), array( 'jquery' ), '1.4', true );
+	}
 	/**
 	 * Remove unwanted woocommerce admin links
 	 *
 	 * @return void
 	 */
-	public static function remove_woocommerce_products_taxonomy(): void {
+	public static function remove_woocommerce_products_taxonomy():void {
+		// make sure administrator can see woocommerce menu items.
+		if ( current_user_can( 'edit_product_terms' ) ) {
+			return;
+		}
 		remove_submenu_page( 'edit.php?post_type=product', 'product_attributes' );
 		remove_submenu_page( 'edit.php?post_type=product', 'product-reviews' );
 
@@ -49,8 +58,17 @@ class ProductActionsFilters {
 	 * @param  mixed $tabs tabs.
 	 * @return array tabs.
 	 */
-	public static function remove_unwanted_tabs( $tabs ): array {
-		$unwanted_tabs = [ 'marketplace-suggestions', 'shipping', 'linked_product', 'attribute', 'advanced' ];
+	public static function remove_unwanted_tabs( $tabs ):array {
+		$unwanted_tabs = [
+			'marketplace-suggestions',
+			'shipping',
+			'linked_product',
+			'attribute',
+			'advanced',
+			'inventory',
+			'general',
+		];
+
 		foreach ( $unwanted_tabs as $tab ) {
 			if ( isset( $tabs[ $tab ] ) ) {
 				unset( $tabs[ $tab ] );
@@ -90,8 +108,14 @@ class ProductActionsFilters {
 			return $data;
 		}
 		$errors = [];
-		if ( '0' === $postarr['_stock'] ) {
-			$errors[] = __( 'Course needs to be in stock.', 'lasntgadmin' );
+		if ( '0' === $postarr['_stock'] || empty( $postarr['_stock'] ) ) {
+			$errors[] = __( 'Course needs to have capacity.', 'lasntgadmin' );
+		}
+		if ( empty( $postarr['_sku'] ) ) {
+			$errors[] = __( 'Course code is needed.', 'lasntgadmin' );
+		}
+		if ( '0' === $postarr['_regular_price'] || empty( $postarr['_regular_price'] ) ) {
+			$errors[] = __( 'Course needs to have price.', 'lasntgadmin' );
 		}
 		if ( ! isset( $postarr['groups-read'] ) || ! $postarr['groups-read'] ) {
 			$errors[] = __( 'Course groups required.', 'lasntgadmin' );

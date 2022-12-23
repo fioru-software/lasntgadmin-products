@@ -20,8 +20,10 @@ use Lasntg\Admin\Products\{
 	WaitingListActionsFilters,
 	ProductActionsFilters,
 };
+// Register activation and deactivation hooks.
 register_activation_hook( __FILE__, [ PluginUtils::class, 'activate' ] );
 register_deactivation_hook( __FILE__, [ PluginUtils::class, 'deactivate' ] );
+
 // Inits.
 QuotasActionsFilters::init();
 WaitingListActionsFilters::init();

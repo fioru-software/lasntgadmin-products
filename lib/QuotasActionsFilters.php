@@ -26,6 +26,7 @@ class QuotasActionsFilters {
 
 		// actions.
 		add_action( 'woocommerce_product_data_panels', [ self::class, 'product_tab_data' ], 10, 1 );
+		add_action( 'woocommerce_product_data_panels', [ self::class, 'course_capacity_tab_data' ], 10, 1 );
 		add_action( 'woocommerce_process_product_meta', [ self::class, 'add_quotas_save' ], 10, 1 );
 		add_action( 'woocommerce_before_cart_contents', [ self::class, 'show_quota_to_client' ], 10, 0 );
 		add_action( 'woocommerce_checkout_order_processed', [ self::class, 'add_checkout_orders_to_private' ], 10, 1 );
@@ -37,13 +38,72 @@ class QuotasActionsFilters {
 	 * @return array
 	 */
 	public static function product_tab( array $default_tabs ): array {
-		$default_tabs['quotas_tab'] = array(
+		$default_tabs['quotas_tab']      = array(
 			'label'    => __( 'Quotas', 'lasntgadmin' ),
 			'target'   => 'product_tab_data',
 			'priority' => 20,
 			'class'    => array(),
 		);
+		$default_tabs['course_capacity'] = array(
+			'label'    => __( 'Course Data', 'lasntgadmin' ),
+			'target'   => 'course_capacity_tab_data',
+			'priority' => 19,
+			'class'    => array(),
+		);
 		return $default_tabs;
+	}
+
+	public static function course_capacity_tab_data() {
+		 global $post;
+		$product = wc_get_product( $post->ID );
+
+		echo '<div id="course_capacity_tab_data" class="panel woocommerce_options_panel">';
+		echo '<input type="hidden" name="_manage_stock" value="yes"/>';
+		woocommerce_wp_text_input(
+			array(
+				'id'                => '_regular_price',
+				'label'             => __( 'Course Cost', 'lasntgadmin' ),
+				'placeholder'       => __( 'Course Cost.', 'lasntgadmin' ),
+				'desc_tip'          => 'true',
+				'value'             => $product ? $product->get_regular_price() : 0,
+				'type'              => 'number',
+				'custom_attributes' => array(
+					'step' => '1',
+					'min'  => '0',
+					'type' => 'number',
+				),
+			)
+		);
+
+		woocommerce_wp_text_input(
+			array(
+				'id'                => '_stock',
+				'label'             => __( 'Course Capacity', 'lasntgadmin' ),
+				'placeholder'       => __( 'Course Capacity', 'lasntgadmin' ),
+				'desc_tip'          => 'true',
+				'value'             => $product ? $product->get_stock_quantity() : 0,
+				'type'              => 'number',
+				'custom_attributes' => array(
+					'step' => '1',
+					'min'  => '0',
+					'type' => 'number',
+				),
+			)
+		);
+		woocommerce_wp_text_input(
+			array(
+				'id'                => '_sku',
+				'label'             => __( 'Course Code', 'lasntgadmin' ),
+				'placeholder'       => __( 'Course Code', 'lasntgadmin' ),
+				'desc_tip'          => 'true',
+				'value'             => $product ? $product->get_sku() : 0,
+				'type'              => 'text',
+				'custom_attributes' => array(
+					'type' => 'text',
+				),
+			)
+		);
+		echo '</div>';
 	}
 
 	/**

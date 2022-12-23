@@ -29,7 +29,7 @@ class ProductActionsFilters {
 		add_action( 'admin_enqueue_scripts', [ self::class, 'admin_enqueue_scripts' ], 99 );
 	}
 
-	public static function admin_enqueue_scripts():void {
+	public static function admin_enqueue_scripts(): void {
 		$assets_dir = untrailingslashit( plugin_dir_url( __FILE__ ) ) . '/../assets/';
 		wp_enqueue_script( 'lasntgadmin-users-admin-js', ( $assets_dir . 'js/lasntgadmin-admin.js' ), array( 'jquery' ), '1.4', true );
 	}
@@ -38,7 +38,7 @@ class ProductActionsFilters {
 	 *
 	 * @return void
 	 */
-	public static function remove_woocommerce_products_taxonomy():void {
+	public static function remove_woocommerce_products_taxonomy(): void {
 		// make sure administrator can see woocommerce menu items.
 		if ( current_user_can( 'edit_product_terms' ) ) {
 			return;
@@ -58,7 +58,7 @@ class ProductActionsFilters {
 	 * @param  mixed $tabs tabs.
 	 * @return array tabs.
 	 */
-	public static function remove_unwanted_tabs( $tabs ):array {
+	public static function remove_unwanted_tabs( $tabs ): array {
 		$unwanted_tabs = [
 			'marketplace-suggestions',
 			'shipping',

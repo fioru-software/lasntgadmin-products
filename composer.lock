@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3894a98a76b92adf652d93dc3cca0f48",
+    "content-hash": "b64d34c608d2d0bf6dcb594ab1e97586",
     "packages": [
         {
             "name": "composer/installers",
@@ -154,16 +154,16 @@
         },
         {
             "name": "fioru/lasntgadmin-grant-funded-payment-gateway",
-            "version": "1.0.7",
+            "version": "1.0.8",
             "source": {
                 "type": "git",
                 "url": "git@github.com:fioru-software/lasntgadmin-grant-funded-payment-gateway.git",
-                "reference": "e5d40cb485890f000932724008432b0d2cf76213"
+                "reference": "9796c2dfb442813265042a7e38fb11ea82c1e6cd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fioru-software/lasntgadmin-grant-funded-payment-gateway/zipball/e5d40cb485890f000932724008432b0d2cf76213",
-                "reference": "e5d40cb485890f000932724008432b0d2cf76213",
+                "url": "https://api.github.com/repos/fioru-software/lasntgadmin-grant-funded-payment-gateway/zipball/9796c2dfb442813265042a7e38fb11ea82c1e6cd",
+                "reference": "9796c2dfb442813265042a7e38fb11ea82c1e6cd",
                 "shasum": ""
             },
             "require": {
@@ -220,23 +220,23 @@
                 ]
             },
             "support": {
-                "source": "https://github.com/fioru-software/lasntgadmin-grant-funded-payment-gateway/tree/1.0.7",
+                "source": "https://github.com/fioru-software/lasntgadmin-grant-funded-payment-gateway/tree/1.0.8",
                 "issues": "https://github.com/fioru-software/lasntgadmin-grant-funded-payment-gateway/issues"
             },
-            "time": "2022-12-02T15:57:41+00:00"
+            "time": "2022-12-22T15:25:31+00:00"
         },
         {
             "name": "fioru/lasntgadmin-groups",
-            "version": "1.0.2",
+            "version": "1.0.3",
             "source": {
                 "type": "git",
                 "url": "git@github.com:fioru-software/lasntgadmin-groups.git",
-                "reference": "cdc43b8269d89b500d668d94dddd9556f621956a"
+                "reference": "f9b1d6c8573a477a15d693e95699e42a0e0ffb94"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fioru-software/lasntgadmin-groups/zipball/cdc43b8269d89b500d668d94dddd9556f621956a",
-                "reference": "cdc43b8269d89b500d668d94dddd9556f621956a",
+                "url": "https://api.github.com/repos/fioru-software/lasntgadmin-groups/zipball/f9b1d6c8573a477a15d693e95699e42a0e0ffb94",
+                "reference": "f9b1d6c8573a477a15d693e95699e42a0e0ffb94",
                 "shasum": ""
             },
             "require": {
@@ -292,10 +292,10 @@
                 ]
             },
             "support": {
-                "source": "https://github.com/fioru-software/lasntgadmin-groups/tree/1.0.2",
+                "source": "https://github.com/fioru-software/lasntgadmin-groups/tree/1.0.3",
                 "issues": "https://github.com/fioru-software/lasntgadmin-groups/issues"
             },
-            "time": "2022-12-21T11:14:06+00:00"
+            "time": "2022-12-22T14:33:45+00:00"
         }
     ],
     "packages-dev": [
@@ -1197,31 +1197,32 @@
         },
         {
             "name": "overtrue/phplint",
-            "version": "3.2.0",
+            "version": "3.3.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/overtrue/phplint.git",
-                "reference": "c3021ad8cebd802ad3f4924c45f508803e0b80e5"
+                "reference": "6049eb11bec9c893d00acb7bdb2b6d0fbf3f5d8a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/overtrue/phplint/zipball/c3021ad8cebd802ad3f4924c45f508803e0b80e5",
-                "reference": "c3021ad8cebd802ad3f4924c45f508803e0b80e5",
+                "url": "https://api.github.com/repos/overtrue/phplint/zipball/6049eb11bec9c893d00acb7bdb2b6d0fbf3f5d8a",
+                "reference": "6049eb11bec9c893d00acb7bdb2b6d0fbf3f5d8a",
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
                 "n98/junit-xml": "1.1.0",
-                "php": "^5.5.9 || ^7.0",
-                "symfony/console": "^3.2 || ^4.0 || ^5.0",
-                "symfony/finder": "^3.0 || ^4.0 || ^5.0",
-                "symfony/process": "^3.3 || ^4.0 || ^5.0",
-                "symfony/yaml": "^3.0 || ^4.0 || ^5.0"
+                "php": "^7.4",
+                "symfony/console": "^5.4",
+                "symfony/finder": "^5.4",
+                "symfony/options-resolver": "^5.4",
+                "symfony/process": "^5.4",
+                "symfony/yaml": "^5.4"
             },
             "require-dev": {
                 "brainmaestro/composer-git-hooks": "^2.7",
-                "friendsofphp/php-cs-fixer": "^2.16",
-                "jakub-onderka/php-console-highlighter": "^0.3.2 || ^0.4"
+                "friendsofphp/php-cs-fixer": "^3.4",
+                "php-parallel-lint/php-console-highlighter": "^1.0"
             },
             "bin": [
                 "bin/phplint"
@@ -1261,7 +1262,7 @@
             ],
             "support": {
                 "issues": "https://github.com/overtrue/phplint/issues",
-                "source": "https://github.com/overtrue/phplint/tree/3.2.0"
+                "source": "https://github.com/overtrue/phplint/tree/3.3.2"
             },
             "funding": [
                 {
@@ -1269,7 +1270,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2022-07-12T07:37:04+00:00"
+            "time": "2022-12-23T08:27:05+00:00"
         },
         {
             "name": "phar-io/manifest",
@@ -1636,12 +1637,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHPCSStandards/PHPCSUtils.git",
-                "reference": "ae30b422de0a8a6528a9271174bd370d920595c4"
+                "reference": "08826c2bd611ba8faf0a96e17aed1194cc9ee095"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHPCSStandards/PHPCSUtils/zipball/ae30b422de0a8a6528a9271174bd370d920595c4",
-                "reference": "ae30b422de0a8a6528a9271174bd370d920595c4",
+                "url": "https://api.github.com/repos/PHPCSStandards/PHPCSUtils/zipball/08826c2bd611ba8faf0a96e17aed1194cc9ee095",
+                "reference": "08826c2bd611ba8faf0a96e17aed1194cc9ee095",
                 "shasum": ""
             },
             "require": {
@@ -1703,7 +1704,7 @@
                 "issues": "https://github.com/PHPCSStandards/PHPCSUtils/issues",
                 "source": "https://github.com/PHPCSStandards/PHPCSUtils"
             },
-            "time": "2022-12-18T12:23:05+00:00"
+            "time": "2022-12-22T02:40:53+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",
@@ -1711,12 +1712,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/php-code-coverage.git",
-                "reference": "2853234bfb7fd80a81a64f4ef8f982f8452b7e61"
+                "reference": "709ee6094447d7adb00a587c74ddcc664f03b061"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/2853234bfb7fd80a81a64f4ef8f982f8452b7e61",
-                "reference": "2853234bfb7fd80a81a64f4ef8f982f8452b7e61",
+                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/709ee6094447d7adb00a587c74ddcc664f03b061",
+                "reference": "709ee6094447d7adb00a587c74ddcc664f03b061",
                 "shasum": ""
             },
             "require": {
@@ -1780,7 +1781,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2022-12-20T11:32:13+00:00"
+            "time": "2022-12-22T07:57:08+00:00"
         },
         {
             "name": "phpunit/php-file-iterator",
@@ -2029,12 +2030,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "5c8e892924570f77511d09a63457d31f0c85b774"
+                "reference": "52401735cb924dd353d3fe9cc05b4b3bec2afa8b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/5c8e892924570f77511d09a63457d31f0c85b774",
-                "reference": "5c8e892924570f77511d09a63457d31f0c85b774",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/52401735cb924dd353d3fe9cc05b4b3bec2afa8b",
+                "reference": "52401735cb924dd353d3fe9cc05b4b3bec2afa8b",
                 "shasum": ""
             },
             "require": {
@@ -2123,7 +2124,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-12-20T11:32:43+00:00"
+            "time": "2022-12-23T05:43:26+00:00"
         },
         {
             "name": "psr/container",
@@ -3356,12 +3357,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/squizlabs/PHP_CodeSniffer.git",
-                "reference": "c732fec6a77ffa72cdd2426d9919264a3241453c"
+                "reference": "add95a74551c3ba8fc99ef7651ad05f553b3fbbf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/squizlabs/PHP_CodeSniffer/zipball/c732fec6a77ffa72cdd2426d9919264a3241453c",
-                "reference": "c732fec6a77ffa72cdd2426d9919264a3241453c",
+                "url": "https://api.github.com/repos/squizlabs/PHP_CodeSniffer/zipball/add95a74551c3ba8fc99ef7651ad05f553b3fbbf",
+                "reference": "add95a74551c3ba8fc99ef7651ad05f553b3fbbf",
                 "shasum": ""
             },
             "require": {
@@ -3406,7 +3407,7 @@
                 "source": "https://github.com/squizlabs/PHP_CodeSniffer",
                 "wiki": "https://github.com/squizlabs/PHP_CodeSniffer/wiki"
             },
-            "time": "2022-12-18T22:46:53+00:00"
+            "time": "2022-12-22T21:46:41+00:00"
         },
         {
             "name": "symfony/console",
@@ -3580,12 +3581,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/finder.git",
-                "reference": "7872a66f57caffa2916a584db1aa7f12adc76f8c"
+                "reference": "40c08632019838dfb3350f18cf5563b8080055fc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/finder/zipball/7872a66f57caffa2916a584db1aa7f12adc76f8c",
-                "reference": "7872a66f57caffa2916a584db1aa7f12adc76f8c",
+                "url": "https://api.github.com/repos/symfony/finder/zipball/40c08632019838dfb3350f18cf5563b8080055fc",
+                "reference": "40c08632019838dfb3350f18cf5563b8080055fc",
                 "shasum": ""
             },
             "require": {
@@ -3635,7 +3636,76 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-07-29T07:37:50+00:00"
+            "time": "2022-12-22T10:31:03+00:00"
+        },
+        {
+            "name": "symfony/options-resolver",
+            "version": "5.4.x-dev",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/options-resolver.git",
+                "reference": "54f14e36aa73cb8f7261d7686691fd4d75ea2690"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/options-resolver/zipball/54f14e36aa73cb8f7261d7686691fd4d75ea2690",
+                "reference": "54f14e36aa73cb8f7261d7686691fd4d75ea2690",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.2.5",
+                "symfony/deprecation-contracts": "^2.1|^3",
+                "symfony/polyfill-php73": "~1.0",
+                "symfony/polyfill-php80": "^1.16"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Component\\OptionsResolver\\": ""
+                },
+                "exclude-from-classmap": [
+                    "/Tests/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Provides an improved replacement for the array_replace PHP function",
+            "homepage": "https://symfony.com",
+            "keywords": [
+                "config",
+                "configuration",
+                "options"
+            ],
+            "support": {
+                "source": "https://github.com/symfony/options-resolver/tree/5.4"
+            },
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2022-07-20T13:00:38+00:00"
         },
         {
             "name": "symfony/polyfill-ctype",
@@ -4475,12 +4545,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/WordPress/WordPress-Coding-Standards.git",
-                "reference": "f6fda8b5619c43785d0e328af885db8892ab2674"
+                "reference": "ecf78b0400d06c58c59db6489296edfadd183c74"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/WordPress/WordPress-Coding-Standards/zipball/f6fda8b5619c43785d0e328af885db8892ab2674",
-                "reference": "f6fda8b5619c43785d0e328af885db8892ab2674",
+                "url": "https://api.github.com/repos/WordPress/WordPress-Coding-Standards/zipball/ecf78b0400d06c58c59db6489296edfadd183c74",
+                "reference": "ecf78b0400d06c58c59db6489296edfadd183c74",
                 "shasum": ""
             },
             "require": {
@@ -4520,7 +4590,7 @@
                 "source": "https://github.com/WordPress/WordPress-Coding-Standards",
                 "wiki": "https://github.com/WordPress/WordPress-Coding-Standards/wiki"
             },
-            "time": "2022-12-21T09:48:07+00:00"
+            "time": "2022-12-22T10:59:27+00:00"
         },
         {
             "name": "yoast/phpunit-polyfills",

@@ -13,6 +13,10 @@ class PluginUtils {
 	public static function deactivate() {
 		Capabilities::remove();
 	}
+
+	public static function deactivate() {
+		Capabilities::remove();
+	}
 	public static function get_camel_case_name(): string {
 		return 'lasntgadmin_products';
 	}
@@ -21,7 +25,7 @@ class PluginUtils {
 		return 'lasntgadmin-products';
 	}
 
-	public static function get_absolute_plugin_path():string {
+	public static function get_absolute_plugin_path(): string {
 		return sprintf( '/var/www/html/wp-content/plugins/%s', self::get_kebab_case_name() );
 	}
 }

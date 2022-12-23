@@ -21,7 +21,6 @@ class Capabilities {
 		return array(
 			'view_admin_dashboard',
 			'read',
-
 			'read_product',
 			'edit_product',
 			'edit_product_terms',

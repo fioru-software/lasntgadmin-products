@@ -17,6 +17,7 @@ class ProductActionsFilters {
 	 * @return void
 	 */
 	public static function init(): void {
+		add_action( 'rest_api_init', [ ProductApi::class, 'get_instance' ] );
 		add_action( 'admin_notices', [ self::class, 'admin_notice_errors' ], 500 );
 		add_filter( 'wp_insert_post_data', [ self::class, 'filter_post_data' ], 10, 2 );
 		add_filter( 'post_updated_messages', [ self::class, 'post_updated_messages_filter' ], 500 );
@@ -82,12 +83,12 @@ class ProductActionsFilters {
 	 *
 	 * @return void
 	 */
-	public static function check_roles():void {
+	public static function check_roles(): void {
 		$screen = get_current_screen();
 		// disable creating courses for other users except admin, national manager and training manager.
 		if ( $screen &&
 			'product' === $screen->post_type
-		 ) {
+		) {
 			if ( ! ProductUtils::is_allowed_products_edit() ) {
 				ProductUtils::redirect_back();
 			}

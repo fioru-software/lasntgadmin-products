@@ -28,8 +28,8 @@ class ProductUtils {
 	 *
 	 * @return bool
 	 */
-	public static function is_allowed_products_edit():bool {
-		 return current_user_can( 'publish_products' )
+	public static function is_allowed_products_edit(): bool {
+		return current_user_can( 'publish_products' )
 		|| current_user_can( 'read_product' )
 		|| current_user_can( 'delete_products' )
 		|| current_user_can( 'edit_products' )

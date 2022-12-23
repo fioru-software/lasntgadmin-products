@@ -1,6 +1,6 @@
 <?php
 
-namespace Lasntg\Admin\Order;
+namespace Lasntg\Admin\Products;
 
 /**
  * Plugin capabilities assigned to roles
@@ -18,21 +18,68 @@ class Capabilities {
 	 * National manager capabilities
 	 */
 	public static function get_national_manager_capabilities(): array {
-		return array();
+		return array(
+			'view_admin_dashboard',
+			'read',
+
+			'read_product',
+			'edit_product',
+			'edit_product_terms',
+			'delete_product_terms',
+			'delete_product',
+			'edit_product',
+			'assign_product_terms',
+			'publish_products',
+
+			'delete_private_products',
+			'delete_products',
+			'delete_published_products',
+			'edit_others_products',
+			'edit_private_products',
+			'edit_products',
+			'publish_products',
+			'edit_published_products',
+			'read_private_products',
+		);
 	}
 
 	/**
 	 * Regional training officer capabilities
 	 */
 	public static function get_regional_training_centre_manager_capabilities(): array {
-		return [];
+		return [
+			'view_admin_dashboard',
+			'read',
+
+			'read_product',
+			'edit_product',
+			'edit_product_terms',
+			'delete_product_terms',
+			'delete_product',
+			'edit_product',
+			'assign_product_terms',
+			'publish_products',
+
+			'delete_private_products',
+			'delete_products',
+			'delete_published_products',
+			'edit_others_products',
+			'edit_private_products',
+			'edit_products',
+			'publish_products',
+			'edit_published_products',
+			'read_private_products',
+		];
 	}
 
 	/**
 	 * Training officer capabilities
 	 */
 	public static function get_training_officer_capabilities(): array {
-		return [];
+		return [
+			'view_admin_dashboard',
+			'read',
+		];
 	}
 
 	/**

@@ -26,7 +26,6 @@ class ProductActionsFilters {
 		add_action( 'woocommerce_product_data_tabs', [ self::class, 'remove_unwanted_tabs' ], 999 );
 		add_action( 'admin_menu', [ self::class, 'remove_woocommerce_products_taxonomy' ], 99 );
 		add_action( 'admin_enqueue_scripts', [ self::class, 'admin_enqueue_scripts' ], 99 );
-
 	}
 
 	public static function admin_enqueue_scripts():void {

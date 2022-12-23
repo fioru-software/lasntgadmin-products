@@ -14,9 +14,6 @@ class PluginUtils {
 		Capabilities::remove();
 	}
 
-	public static function deactivate() {
-		Capabilities::remove();
-	}
 	public static function get_camel_case_name(): string {
 		return 'lasntgadmin_products';
 	}

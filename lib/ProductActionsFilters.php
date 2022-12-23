@@ -27,12 +27,33 @@ class ProductActionsFilters {
 		add_action( 'woocommerce_product_data_tabs', [ self::class, 'remove_unwanted_tabs' ], 999 );
 		add_action( 'admin_menu', [ self::class, 'remove_woocommerce_products_taxonomy' ], 99 );
 		add_action( 'admin_enqueue_scripts', [ self::class, 'admin_enqueue_scripts' ], 99 );
+
+		add_filter( 'post_row_actions', [ self::class, 'remove_quick_edit' ], 10, 1 );
 	}
 
+	/**
+	 * Remove quick edit
+	 *
+	 * @param  array $actions post row actions array.
+	 * @return array
+	 */
+	public static function remove_quick_edit( $actions ): array {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			unset( $actions['inline hide-if-no-js'] );
+		}
+		return $actions;
+	}
+
+	/**
+	 * Admin enqueue scripts
+	 *
+	 * @return void
+	 */
 	public static function admin_enqueue_scripts(): void {
 		$assets_dir = untrailingslashit( plugin_dir_url( __FILE__ ) ) . '/../assets/';
 		wp_enqueue_script( 'lasntgadmin-users-admin-js', ( $assets_dir . 'js/lasntgadmin-admin.js' ), array( 'jquery' ), '1.4', true );
 	}
+
 	/**
 	 * Remove unwanted woocommerce admin links
 	 *

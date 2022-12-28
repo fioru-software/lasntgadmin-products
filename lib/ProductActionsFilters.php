@@ -11,6 +11,16 @@ use Lasntg\Admin\Group\GroupUtils;
  * Handle Actions anf filters for products
  */
 class ProductActionsFilters {
+	private static $statuses = [
+		'template'          => 'Template',
+		'draft'             => 'Draft',
+		'publish'           => 'Open for enrollment',
+		'enrollment_closed' => 'Enrollment Closed',
+		'date_passed'       => 'Date Passed',
+		'closed'            => 'Closed',
+		'cancelled'         => 'Cancelled',
+		'archived'          => 'Archived',
+	];
 	/**
 	 * Iniates actions and filters regarding Product
 	 *
@@ -30,6 +40,100 @@ class ProductActionsFilters {
 
 		add_filter( 'post_row_actions', [ self::class, 'remove_quick_edit' ], 10, 1 );
 		add_filter( 'manage_product_posts_columns', [ self::class, 'rename_sku_column' ], 11 );
+		add_action( 'init', [ self::class, 'register_custom_product_statuses' ], 0 );
+
+		add_action( 'admin_footer-post.php', [ self::class, 'my_custom_status_add_in_post_page' ], 0 );
+		add_action( 'admin_footer-post-new.php', [ self::class, 'my_custom_status_add_in_post_page' ], 0 );
+		add_action( 'admin_footer-edit.php', [ self::class, 'my_custom_status_add_in_quick_edit' ] );
+
+		add_action( 'edit_form_after_title', [ self::class, 'hidden_status' ] );
+		add_filter( 'woocommerce_product_meta_start', [ self::class, 'woocommerce_get_availability_text' ], 10, 2 );
+		add_filter( 'woocommerce_is_purchasable', [ self::class, 'product_is_in_stock' ], 15, 2 );
+
+		add_filter( 'woocommerce_product_query', [ self::class, 'woocommerce_product_query' ], 15, 1 );
+	}
+
+	public static function woocommerce_product_query( $q ) {
+		$q->set( 'post_status', 'publish' );
+	}
+
+
+	public static function product_is_in_stock( $is_in_stock, $product ) {
+		return 'publish' === $product->get_status();
+	}
+
+	public static function woocommerce_get_availability_text() {
+		$product_id = get_the_ID();
+		$product    = wc_get_product( $product_id );
+		if ( 'publish' !== $product->get_status() ) {
+			$status = self::$statuses[ $product->get_status() ];
+			echo '<p class="stock out-of-stock">Course not available: ' . esc_attr( $status ) . '</p>';
+		}
+	}
+
+	public static function stock_filter( $available_text, $product ) {
+		if ( 'publish' !== $product->get_status() ) {
+			$status = self::$statuses[ $product->get_status() ];
+			return '<p class="stock out-of-stock">Course not available: ' . esc_attr( $status ) . '</p>';
+		}
+
+		return $available_text;
+	}
+
+	public static function hidden_status() {
+		global $post;
+		if ( 'product' !== $post->post_type ) {
+			return;
+		}
+		print '<input type="hidden" name="lasntgadmin_status" id="lasntgadmin_status" size="30" tabindex="1" value="' . esc_attr( htmlspecialchars( $post->post_status ) ) . '" id="title" autocomplete="off" />';
+	}
+
+	public static function my_custom_status_add_in_post_page() {
+		global $post;
+
+		if ( 'product' !== $post->post_type ) {
+			return;
+		}
+		echo '<script>
+        jQuery(document).ready( function() {';
+		foreach ( self::$statuses as $key => $status ) {
+			echo "jQuery( 'select[name=\"post_status\"]' ).append( '<option value=\"$key\">$status</option>' );";
+		}
+		echo "jQuery( 'select[name=\"post_status\"]' ).val( '" . $post->post_status . "' );";
+		if ( array_key_exists( $post->post_status, self::$statuses ) ) {
+			echo "jQuery( '#post-status-display' ).html( '" . self::$statuses[ $post->post_status ] . "' );";
+		}
+
+		echo '});
+        </script>';
+	}
+
+	public static function my_custom_status_add_in_quick_edit() {
+		echo '<script>
+        jQuery(document).ready( function() {';
+		echo "alert('test')";
+		foreach ( self::$statuses as $key => $status ) {
+			echo "jQuery( 'select[name=\"post_status\"]' ).append( '<option value=\"$key\">$status</option>' );";
+		}
+		echo "jQuery( 'select[name=\"post_status\"]' ).val( '" . $post->post_status . "' );";
+		echo '}); 
+        </script>';
+	}
+
+	public static function register_custom_product_statuses() {
+		foreach ( self::$statuses as $tag => $status ) {
+			register_post_status(
+				$tag,
+				array(
+					'label'                     => __( $status, 'post' ),
+					'label_count'               => _n_noop( $status . ' <span class="count">(%s)</span>', $status . ' <span class="count">(%s)</span>', 'lasntgadmin' ),
+					'public'                    => true,
+					'exclude_from_search'       => false,
+					'show_in_admin_all_list'    => true,
+					'show_in_admin_status_list' => true,
+				)
+			);
+		}
 	}
 
 	public static function rename_sku_column( $columns ) {
@@ -44,9 +148,7 @@ class ProductActionsFilters {
 	 * @return array
 	 */
 	public static function remove_quick_edit( $actions ): array {
-		if ( ! current_user_can( 'manage_options' ) ) {
-			unset( $actions['inline hide-if-no-js'] );
-		}
+		unset( $actions['inline hide-if-no-js'] );
 		return $actions;
 	}
 
@@ -164,7 +266,7 @@ class ProductActionsFilters {
 		if ( ! isset( $postarr['groups-read'] ) || ! $postarr['groups-read'] ) {
 			$errors[] = __( 'Groups is required.', 'lasntgadmin' );
 		}
-
+		$data['post_status'] = $postarr['lasntgadmin_status'];
 		if ( $errors ) {
 			$data['post_status'] = 'draft';
 			set_transient( 'lasntg_post_error', wp_json_encode( $errors ) );

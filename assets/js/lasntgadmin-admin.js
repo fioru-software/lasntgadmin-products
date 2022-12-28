@@ -12,5 +12,12 @@ jQuery(document).ready(function ($) {
       if (next_class === 'children') {
          $(this).remove()
       }
-   })
+   });
+
+   const lastngtadmin_status = $('#lasntgadmin_status')
+   if(lastngtadmin_status.length){
+      $('.save-post-status').on('click', function(){
+         lastngtadmin_status.val($('select[name="post_status"]').val())
+      })
+   }
 });

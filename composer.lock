@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5004a1c934f30ecc4c1b1d3323aef519",
+    "content-hash": "b64d34c608d2d0bf6dcb594ab1e97586",
     "packages": [
         {
             "name": "composer/installers",
@@ -154,16 +154,16 @@
         },
         {
             "name": "fioru/lasntgadmin-grant-funded-payment-gateway",
-            "version": "1.0.7",
+            "version": "1.0.8",
             "source": {
                 "type": "git",
                 "url": "git@github.com:fioru-software/lasntgadmin-grant-funded-payment-gateway.git",
-                "reference": "e5d40cb485890f000932724008432b0d2cf76213"
+                "reference": "9796c2dfb442813265042a7e38fb11ea82c1e6cd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fioru-software/lasntgadmin-grant-funded-payment-gateway/zipball/e5d40cb485890f000932724008432b0d2cf76213",
-                "reference": "e5d40cb485890f000932724008432b0d2cf76213",
+                "url": "https://api.github.com/repos/fioru-software/lasntgadmin-grant-funded-payment-gateway/zipball/9796c2dfb442813265042a7e38fb11ea82c1e6cd",
+                "reference": "9796c2dfb442813265042a7e38fb11ea82c1e6cd",
                 "shasum": ""
             },
             "require": {
@@ -220,23 +220,24 @@
                 ]
             },
             "support": {
-                "source": "https://github.com/fioru-software/lasntgadmin-grant-funded-payment-gateway/tree/1.0.7",
+                "source": "https://github.com/fioru-software/lasntgadmin-grant-funded-payment-gateway/tree/1.0.8",
                 "issues": "https://github.com/fioru-software/lasntgadmin-grant-funded-payment-gateway/issues"
             },
-            "time": "2022-12-02T15:57:41+00:00"
+            "time": "2022-12-22T15:25:31+00:00"
         },
         {
             "name": "fioru/lasntgadmin-groups",
-            "version": "1.0.5",
+   "reference": "7e41b1618319971a1686cd3d95e2586c73ae4a1d",
+            "version": "1.0.3",
             "source": {
                 "type": "git",
                 "url": "git@github.com:fioru-software/lasntgadmin-groups.git",
-                "reference": "7e41b1618319971a1686cd3d95e2586c73ae4a1d"
+                "reference": "f9b1d6c8573a477a15d693e95699e42a0e0ffb94"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fioru-software/lasntgadmin-groups/zipball/7e41b1618319971a1686cd3d95e2586c73ae4a1d",
-                "reference": "7e41b1618319971a1686cd3d95e2586c73ae4a1d",
+                "url": "https://api.github.com/repos/fioru-software/lasntgadmin-groups/zipball/f9b1d6c8573a477a15d693e95699e42a0e0ffb94",
+                "reference": "f9b1d6c8573a477a15d693e95699e42a0e0ffb94",
                 "shasum": ""
             },
             "require": {
@@ -292,10 +293,10 @@
                 ]
             },
             "support": {
-                "source": "https://github.com/fioru-software/lasntgadmin-groups/tree/1.0.5",
+                "source": "https://github.com/fioru-software/lasntgadmin-groups/tree/1.0.3",
                 "issues": "https://github.com/fioru-software/lasntgadmin-groups/issues"
             },
-            "time": "2022-12-27T12:20:08+00:00"
+            "time": "2022-12-22T14:33:45+00:00"
         }
     ],
     "packages-dev": [
@@ -1637,12 +1638,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHPCSStandards/PHPCSUtils.git",
-                "reference": "eec1c7342653af2f1da3a5aa713491c331352c69"
+                "reference": "08826c2bd611ba8faf0a96e17aed1194cc9ee095"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHPCSStandards/PHPCSUtils/zipball/eec1c7342653af2f1da3a5aa713491c331352c69",
-                "reference": "eec1c7342653af2f1da3a5aa713491c331352c69",
+                "url": "https://api.github.com/repos/PHPCSStandards/PHPCSUtils/zipball/08826c2bd611ba8faf0a96e17aed1194cc9ee095",
+                "reference": "08826c2bd611ba8faf0a96e17aed1194cc9ee095",
                 "shasum": ""
             },
             "require": {
@@ -1704,7 +1705,7 @@
                 "issues": "https://github.com/PHPCSStandards/PHPCSUtils/issues",
                 "source": "https://github.com/PHPCSStandards/PHPCSUtils"
             },
-            "time": "2022-12-26T00:37:24+00:00"
+            "time": "2022-12-22T02:40:53+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",
@@ -1712,12 +1713,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/php-code-coverage.git",
-                "reference": "ba4df045334bf301374a5a7bbf108341cdc27615"
+                "reference": "709ee6094447d7adb00a587c74ddcc664f03b061"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/ba4df045334bf301374a5a7bbf108341cdc27615",
-                "reference": "ba4df045334bf301374a5a7bbf108341cdc27615",
+                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/709ee6094447d7adb00a587c74ddcc664f03b061",
+                "reference": "709ee6094447d7adb00a587c74ddcc664f03b061",
                 "shasum": ""
             },
             "require": {
@@ -1781,7 +1782,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2022-12-24T11:55:01+00:00"
+            "time": "2022-12-22T07:57:08+00:00"
         },
         {
             "name": "phpunit/php-file-iterator",
@@ -2030,12 +2031,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "22ca7c4249add75f21356e886401376c11e2be1e"
+                "reference": "52401735cb924dd353d3fe9cc05b4b3bec2afa8b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/22ca7c4249add75f21356e886401376c11e2be1e",
-                "reference": "22ca7c4249add75f21356e886401376c11e2be1e",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/52401735cb924dd353d3fe9cc05b4b3bec2afa8b",
+                "reference": "52401735cb924dd353d3fe9cc05b4b3bec2afa8b",
                 "shasum": ""
             },
             "require": {
@@ -2124,7 +2125,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-12-24T05:47:24+00:00"
+            "time": "2022-12-23T05:43:26+00:00"
         },
         {
             "name": "psr/container",

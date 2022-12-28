@@ -19,7 +19,7 @@ class ProductActionsFilters {
 	public static function init(): void {
 		add_action( 'rest_api_init', [ ProductApi::class, 'get_instance' ] );
 		add_action( 'admin_notices', [ self::class, 'admin_notice_errors' ], 500 );
-		add_filter( 'wp_insert_post_data', [ self::class, 'filter_post_data' ], 10, 2 );
+		add_filter( 'wp_insert_post_data', [ self::class, 'filter_post_data' ], 99, 2 );
 		add_filter( 'post_updated_messages', [ self::class, 'post_updated_messages_filter' ], 500 );
 
 		add_action( 'add_meta_boxes', [ self::class, 'check_roles' ], 100 );
@@ -109,17 +109,35 @@ class ProductActionsFilters {
 		}
 		$errors = [];
 		if ( '0' === $postarr['_stock'] || empty( $postarr['_stock'] ) ) {
-			$errors[] = __( 'Course needs to have capacity.', 'lasntgadmin' );
+			$errors[] = __( 'Capacity is required.', 'lasntgadmin' );
 		}
+
+		if ( empty( $postarr['tax_input'] ) ) {
+			$errors[] = __( 'Category is required.', 'lasntgadmin' );
+		} else {
+			$sum = array_sum( array_values( $postarr['tax_input']['product_cat'] ) );
+
+			if ( ! $sum ) {
+				$errors[] = __( 'Category is required.', 'lasntgadmin' );
+			}
+		}
+
 		if ( empty( $postarr['_sku'] ) ) {
-			$errors[] = __( 'Course code is needed.', 'lasntgadmin' );
+			$errors[] = __( 'Course code is required.', 'lasntgadmin' );
 		}
+
+		if ( empty( $postarr['post_title'] ) ) {
+			$errors[] = __( 'Name is required.', 'lasntgadmin' );
+		}
+
 		if ( '0' === $postarr['_regular_price'] || empty( $postarr['_regular_price'] ) ) {
-			$errors[] = __( 'Course needs to have price.', 'lasntgadmin' );
+			$errors[] = __( 'Course cost is required.', 'lasntgadmin' );
 		}
+
 		if ( ! isset( $postarr['groups-read'] ) || ! $postarr['groups-read'] ) {
-			$errors[] = __( 'Course groups required.', 'lasntgadmin' );
+			$errors[] = __( 'Groups is required.', 'lasntgadmin' );
 		}
+
 		if ( $errors ) {
 			$data['post_status'] = 'draft';
 			set_transient( 'lasntg_post_error', wp_json_encode( $errors ) );
@@ -130,6 +148,7 @@ class ProductActionsFilters {
 	public static function post_updated_messages_filter( $messages ) {
 		if ( get_transient( 'lasntg_post_error' ) ) {
 			$messages['product'][8] = '';
+			$messages['product'][6] = '';
 		}
 		return $messages;
 	}

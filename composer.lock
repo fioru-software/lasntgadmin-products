@@ -227,6 +227,7 @@
         },
         {
             "name": "fioru/lasntgadmin-groups",
+   "reference": "7e41b1618319971a1686cd3d95e2586c73ae4a1d",
             "version": "1.0.3",
             "source": {
                 "type": "git",

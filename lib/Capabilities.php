@@ -39,6 +39,7 @@ class Capabilities {
 			'publish_products',
 			'edit_published_products',
 			'read_private_products',
+			'manage_product_terms',
 		);
 	}
 
@@ -68,6 +69,7 @@ class Capabilities {
 			'publish_products',
 			'edit_published_products',
 			'read_private_products',
+			'manage_product_terms',
 		];
 	}
 

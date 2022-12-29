@@ -11,15 +11,16 @@ use Lasntg\Admin\Group\GroupUtils;
  * Handle Actions anf filters for products
  */
 class ProductActionsFilters {
-	private static $statuses = [
-		'template'          => 'Template',
-		'draft'             => 'Draft',
-		'publish'           => 'Open for enrollment',
-		'enrollment_closed' => 'Enrollment Closed',
-		'date_passed'       => 'Date Passed',
-		'closed'            => 'Closed',
-		'cancelled'         => 'Cancelled',
-		'archived'          => 'Archived',
+	private static $publish_status = 'open_for_enrollment';
+	private static $statuses       = [
+		'template'            => 'Template',
+		'draft'               => 'Draft',
+		'open_for_enrollment' => 'Open for enrollment',
+		'enrollment_closed'   => 'Enrollment Closed',
+		'date_passed'         => 'Date Passed',
+		'closed'              => 'Closed',
+		'cancelled'           => 'Cancelled',
+		'archived'            => 'Archived',
 	];
 	/**
 	 * Iniates actions and filters regarding Product
@@ -42,9 +43,9 @@ class ProductActionsFilters {
 		add_filter( 'manage_product_posts_columns', [ self::class, 'rename_sku_column' ], 11 );
 		add_action( 'init', [ self::class, 'register_custom_product_statuses' ], 0 );
 
-		add_action( 'admin_footer-post.php', [ self::class, 'my_custom_status_add_in_post_page' ], 0 );
-		add_action( 'admin_footer-post-new.php', [ self::class, 'my_custom_status_add_in_post_page' ], 0 );
-		add_action( 'admin_footer-edit.php', [ self::class, 'my_custom_status_add_in_quick_edit' ] );
+		add_action( 'admin_footer-post.php', [ self::class, 'add_custom_statuses_for_products' ], 0 );
+		add_action( 'admin_footer-post-new.php', [ self::class, 'add_custom_statuses_for_products' ], 0 );
+		add_action( 'admin_footer-edit.php', [ self::class, 'custom_status_add_in_quick_edit' ] );
 
 		add_action( 'edit_form_after_title', [ self::class, 'hidden_status' ] );
 		add_filter( 'woocommerce_product_meta_start', [ self::class, 'woocommerce_get_availability_text' ], 10, 2 );
@@ -53,25 +54,53 @@ class ProductActionsFilters {
 		add_filter( 'woocommerce_product_query', [ self::class, 'woocommerce_product_query' ], 15, 1 );
 	}
 
-	public static function woocommerce_product_query( $q ) {
-		$q->set( 'post_status', 'publish' );
+	/**
+	 * Only show products that have self::$publish_status in the shops page.
+	 *
+	 * @param  WP_Query $q Query.
+	 * @return void
+	 */
+	public static function woocommerce_product_query( $q ): void {
+		$q->set( 'post_status', self::$publish_status );
 	}
 
 
-	public static function product_is_in_stock( $is_in_stock, $product ) {
-		return 'publish' === $product->get_status();
+	/**
+	 * Determine if product is in stock depending on the course status.
+	 *
+	 * @param  bool       $is_in_stock In stock.
+	 * @param  WC_Product $product WC_product.
+	 * @return bool
+	 */
+	public static function product_is_in_stock( $is_in_stock, $product ): bool {
+		if ( self::$publish_status === $product->get_status() ) {
+			return $is_in_stock;
+		}
+		return false;
 	}
 
-	public static function woocommerce_get_availability_text() {
+	/**
+	 * Show if the product is available depending on the status.
+	 *
+	 * @return void
+	 */
+	public static function woocommerce_get_availability_text(): void {
 		$product_id = get_the_ID();
 		$product    = wc_get_product( $product_id );
-		if ( 'publish' !== $product->get_status() ) {
+		if ( self::$publish_status !== $product->get_status() ) {
 			$status = self::$statuses[ $product->get_status() ];
 			echo '<p class="stock out-of-stock">Course not available: ' . esc_attr( $status ) . '</p>';
 		}
 	}
 
-	public static function stock_filter( $available_text, $product ) {
+	/**
+	 * Show out of stock depending on course status.
+	 *
+	 * @param  string            $available_text the available text.
+	 * @param  object WC_Product $product wc_product.
+	 * @return string
+	 */
+	public static function stock_filter( $available_text, $product ): string {
 		if ( 'publish' !== $product->get_status() ) {
 			$status = self::$statuses[ $product->get_status() ];
 			return '<p class="stock out-of-stock">Course not available: ' . esc_attr( $status ) . '</p>';
@@ -80,7 +109,14 @@ class ProductActionsFilters {
 		return $available_text;
 	}
 
-	public static function hidden_status() {
+	/**
+	 * Hidden status input.
+	 * I added this input to be updated when OK button is clicked before publish.
+	 * Since the status field was being overridden by Woocommerce.
+	 *
+	 * @return void
+	 */
+	public static function hidden_status(): void {
 		global $post;
 		if ( 'product' !== $post->post_type ) {
 			return;
@@ -88,55 +124,68 @@ class ProductActionsFilters {
 		print '<input type="hidden" name="lasntgadmin_status" id="lasntgadmin_status" size="30" tabindex="1" value="' . esc_attr( htmlspecialchars( $post->post_status ) ) . '" id="title" autocomplete="off" />';
 	}
 
-	public static function my_custom_status_add_in_post_page() {
+	/**
+	 * Add our custom statuses.
+	 *
+	 * @return void
+	 */
+	public static function add_custom_statuses_for_products(): void {
 		global $post;
 
 		if ( 'product' !== $post->post_type ) {
 			return;
 		}
-		echo '<script>
-        jQuery(document).ready( function() {';
-		foreach ( self::$statuses as $key => $status ) {
-			echo "jQuery( 'select[name=\"post_status\"]' ).append( '<option value=\"$key\">$status</option>' );";
-		}
-		echo "jQuery( 'select[name=\"post_status\"]' ).val( '" . $post->post_status . "' );";
-		if ( array_key_exists( $post->post_status, self::$statuses ) ) {
-			echo "jQuery( '#post-status-display' ).html( '" . self::$statuses[ $post->post_status ] . "' );";
-		}
-
-		echo '});
-        </script>';
+		
 	}
 
-	public static function my_custom_status_add_in_quick_edit() {
+	/**
+	 * Add custom statuses in quick edit.
+	 *
+	 * @return void
+	 */
+	public static function custom_status_add_in_quick_edit(): void {
+		global $post;
 		echo '<script>
         jQuery(document).ready( function() {';
 		echo "alert('test')";
 		foreach ( self::$statuses as $key => $status ) {
-			echo "jQuery( 'select[name=\"post_status\"]' ).append( '<option value=\"$key\">$status</option>' );";
+			echo "jQuery( 'select[name=\"post_status\"]' ).append( '<option value=\"" . esc_attr( $key ) . '">' . esc_attr( $status ) . "</option>' );";
 		}
-		echo "jQuery( 'select[name=\"post_status\"]' ).val( '" . $post->post_status . "' );";
+		echo "jQuery( 'select[name=\"post_status\"]' ).val( '" . esc_attr( $post->post_status ) . "' );";
 		echo '}); 
         </script>';
 	}
 
-	public static function register_custom_product_statuses() {
+	/**
+	 * Register the needed custom codes.
+	 *
+	 * @return void
+	 */
+	public static function register_custom_product_statuses(): void {
 		foreach ( self::$statuses as $tag => $status ) {
 			register_post_status(
 				$tag,
 				array(
-					'label'                     => __( $status, 'post' ),
-					'label_count'               => _n_noop( $status . ' <span class="count">(%s)</span>', $status . ' <span class="count">(%s)</span>', 'lasntgadmin' ),
+					'label'                     => $status,
+					// translators: $status status.
+					'label_count'               => _n_noop( $status . ' <span class="count">(%s)</span>', $status . ' <span class="count">(%s)</span>', 'lasntgadmin' ), // phpcs:ignore WordPress.WP.I18n.NonSingularStringLiteralPlural,WordPress.WP.I18n.NonSingularStringLiteralSingle
 					'public'                    => true,
 					'exclude_from_search'       => false,
 					'show_in_admin_all_list'    => true,
 					'show_in_admin_status_list' => true,
+					'post_type'                 => [ 'product' ],
 				)
 			);
 		}
 	}
 
-	public static function rename_sku_column( $columns ) {
+	/**
+	 * Rename sku column to course code.
+	 *
+	 * @param  array $columns Columns.
+	 * @return array
+	 */
+	public static function rename_sku_column( $columns ): array {
 		$columns['sku'] = __( 'Course Code', 'lasntgadmin' );
 		return $columns;
 	}
@@ -158,8 +207,19 @@ class ProductActionsFilters {
 	 * @return void
 	 */
 	public static function admin_enqueue_scripts(): void {
+		global $post;
 		$assets_dir = untrailingslashit( plugin_dir_url( __FILE__ ) ) . '/../assets/';
 		wp_enqueue_script( 'lasntgadmin-users-admin-js', ( $assets_dir . 'js/lasntgadmin-admin.js' ), array( 'jquery' ), '1.4', true );
+
+		wp_localize_script(
+			'lasntgadmin-users-admin-js',
+			'lasntgadmin_products_admin_localize',
+			array(
+				'adminurl'   => admin_url() . 'admin-ajax.php',
+				'lasntg_status'   => $post ? $post->post_status : false,
+				'statuses' => self::$statuses
+			)
+		);
 	}
 
 	/**
@@ -274,7 +334,13 @@ class ProductActionsFilters {
 		return $data;
 	}
 
-	public static function post_updated_messages_filter( $messages ) {
+	/**
+	 * Overide the Woocommerce success message if there's an error.
+	 *
+	 * @param  array $messages Messages.
+	 * @return array
+	 */
+	public static function post_updated_messages_filter( $messages ): array {
 		if ( get_transient( 'lasntg_post_error' ) ) {
 			$messages['product'][8] = '';
 			$messages['product'][6] = '';

@@ -21,7 +21,7 @@ class QuotasActionsFilters {
 		add_filter( 'woocommerce_product_data_tabs', [ self::class, 'product_tab' ], 10, 1 );
 		add_filter( 'woocommerce_product_meta_start', [ self::class, 'show_out_of_stock_message' ], 1 );
 		add_filter( 'woocommerce_get_availability_text', [ self::class, 'stock_filter' ], 10, 2 );
-		add_filter( 'woocommerce_add_to_cart_validation', [ self::class, 'add_to_cart_validation' ], 10, 6 );
+		add_filter( 'woocommerce_add_to_cart_validation', [ self::class, 'add_to_cart_validation' ], 10, 3 );
 		add_filter( 'woocommerce_update_cart_validation', [ self::class, 'update_cart_validation' ], 10, 6 );
 
 		// actions.
@@ -203,7 +203,14 @@ class QuotasActionsFilters {
 		}
 	}
 
-	public static function stock_filter( $available_text, $product ) {
+	/**
+	 * Show if in stock and how many for private client.
+	 *
+	 * @param  mixed $available_text ignored.
+	 * @param  mixed $product WC_Product.
+	 * @return string
+	 */
+	public static function stock_filter( $available_text, $product ): string {
 		$post_id = $product->get_ID();
 		$orders  = QuotaUtils::get_product_quota( $post_id );
 		if ( $orders < 1 ) {
@@ -212,7 +219,14 @@ class QuotasActionsFilters {
 		return $orders . ' in stock';
 	}
 
-	public static function product_is_in_stock( $is_in_stock, $product ) {
+	/**
+	 * Check if product is in stock for private client.
+	 *
+	 * @param  bool   $is_in_stock Ignored.
+	 * @param  object $product WC_Product.
+	 * @return bool
+	 */
+	public static function product_is_in_stock( $is_in_stock, $product ): bool {
 		global $woocommerce;
 
 		$product_id = $product->get_ID();
@@ -227,7 +241,15 @@ class QuotasActionsFilters {
 		return $orders > 0;
 	}
 
-	public static function add_to_cart_validation( $add, $product_id, $product_quantity, $variation_id = '', $variations = array(), $cart_item_data = array() ) {
+	/**
+	 * Shold the product be added to cart
+	 *
+	 * @param  bool    $add Should it be added.
+	 * @param  integer $product_id Product ID.
+	 * @param  integer $product_quantity Product Quantity.
+	 * @return bool
+	 */
+	public static function add_to_cart_validation( $add, $product_id, $product_quantity ): bool {
 		$orders = QuotaUtils::get_product_quota( $product_id );
 		if ( 0 == $orders ) {
 			wc_add_notice( __( 'You do not have a quota for this course.', 'lasntgadmin' ), 'error' );
@@ -237,10 +259,19 @@ class QuotasActionsFilters {
 			wc_add_notice( 'The max quantity you can enter is ' . $orders, 'error' );
 			return false;
 		}
-		return true;
+		return $add;
 	}
 
-	public static function update_cart_validation( $passed, $cart_item_key, $values, $quantity ) {
+	/**
+	 * Update cart validation
+	 *
+	 * @param  bool  $passed if it has already passed/failed.
+	 * @param  mixed $cart_item_key ignored.
+	 * @param  array $values Array of products.
+	 * @param  int   $quantity Quantity of items.
+	 * @return bool
+	 */
+	public static function update_cart_validation( $passed, $cart_item_key, $values, $quantity ): bool {
 		$product_id = $values['product_id'];
 		$orders     = QuotaUtils::get_product_quota( $product_id, false );
 
@@ -252,12 +283,17 @@ class QuotasActionsFilters {
 			wc_add_notice( 'The max quantity you can enter is ' . $orders, 'error' );
 			return false;
 		}
-		return true;
+		return $passed;
 	}
 
 
-	public static function add_checkout_orders_to_private( $id ) {
-		error_log( 'Order Checkout for order ' . $id );
+	/**
+	 * Add checkout orders to private.
+	 *
+	 * @param  integer $id ID.
+	 * @return void
+	 */
+	public static function add_checkout_orders_to_private( $id ): void {
 		QuotaUtils::lasntgadmin_add_group( $id );
 	}
 }

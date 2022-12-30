@@ -111,7 +111,7 @@ class ProductActionsFilters {
 		$group_ids = GroupUtils::get_read_group_ids( $product_id );
 
 		if ( ! in_array( 33, $group_ids ) ) {
-			echo '<p class="stock out-of-stock">Course not available.</p>';
+			echo '<p class="stock out-of-stock">Course is not available.</p>';
 		}
 	}
 

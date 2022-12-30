@@ -67,7 +67,7 @@ class ProductActionsFilters {
 				'key'                             => 'groups-read',
 				'value'                           => 33,
 				// private client group id is 33.
-										'compare' => '=',
+				'compare' 						  => '=',
 				'type'                            => 'numeric',
 			),
 		);

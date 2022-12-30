@@ -86,7 +86,7 @@ class ProductActionsFilters {
 	public static function product_is_in_stock( $is_in_stock, $product ): bool {
 		$group_ids = GroupUtils::get_read_group_ids( $product->get_id() );
 
-		if ( ! in_array( 33, $group_ids, true ) ) {
+		if ( ! in_array( 33, $group_ids ) ) {
 			return false;
 		}
 		if ( self::$publish_status === $product->get_status() ) {
@@ -110,7 +110,7 @@ class ProductActionsFilters {
 
 		$group_ids = GroupUtils::get_read_group_ids( $product_id );
 
-		if ( ! in_array( 33, $group_ids, true ) ) {
+		if ( ! in_array( 33, $group_ids ) ) {
 			echo '<p class="stock out-of-stock">Course not available.</p>';
 		}
 	}

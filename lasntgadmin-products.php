@@ -3,7 +3,7 @@
  * Plugin Name:       LASNTG Products
  * Plugin URI:        https://github.com/fioru-software/lasntgadmin-products
  * Description:       Lasntg Products
- * Version:           4.0.8
+ * Version:           5.0.0
  * Requires PHP:      7.2
  * Text Domain:       lasntgadmin
  * Domain Path:       /languages

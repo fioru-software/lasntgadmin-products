@@ -64,11 +64,11 @@ class ProductActionsFilters {
 		// check the product has private group.
 		$args = array(
 			array(
-				'key'                             => 'groups-read',
-				'value'                           => 33,
+				'key'     => 'groups-read',
+				'value'   => 33,
 				// private client group id is 33.
-				'compare' 						  => '=',
-				'type'                            => 'numeric',
+				'compare' => '=',
+				'type'    => 'numeric',
 			),
 		);
 
@@ -84,7 +84,7 @@ class ProductActionsFilters {
 	 * @return bool
 	 */
 	public static function product_is_in_stock( $is_in_stock, $product ): bool {
-		$group_ids = \Groups_Post_Access::get_read_group_ids( $product->get_id() );
+		$group_ids = GroupUtils::get_read_group_ids( $product->get_id() );
 
 		if ( ! in_array( 33, $group_ids, true ) ) {
 			return false;
@@ -108,7 +108,7 @@ class ProductActionsFilters {
 			echo '<p class="stock out-of-stock">Course not available: ' . esc_attr( $status ) . '</p>';
 		}
 
-		$group_ids = \Groups_Post_Access::get_read_group_ids( $product_id );
+		$group_ids = GroupUtils::get_read_group_ids( $product_id );
 
 		if ( ! in_array( 33, $group_ids, true ) ) {
 			echo '<p class="stock out-of-stock">Course not available.</p>';

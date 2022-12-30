@@ -40,6 +40,10 @@ class Capabilities {
 			'edit_published_products',
 			'read_private_products',
 			'manage_product_terms',
+
+			// groups.
+			'groups_access',
+			'groups_restrict_access',
 		);
 	}
 
@@ -70,6 +74,10 @@ class Capabilities {
 			'edit_published_products',
 			'read_private_products',
 			'manage_product_terms',
+
+			// groups.
+			'groups_access',
+			'groups_restrict_access',
 		];
 	}
 

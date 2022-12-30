@@ -14,17 +14,25 @@ jQuery(document).ready(function ($) {
       }
    });
 
-   const lastngtadmin_status = $('#lasntgadmin_status')
+
+   //
+   if('product' !== lasntgadmin_products_admin_localize.post_type){
+      return;
+   }
+   const sel1 = $('[name="groups-read[]"]').selectize();
+   sel1[0].selectize.removeOption(1);
+   sel1[0].selectize.refreshOptions();
+   const lastngtadmin_status = $('#lasntgadmin_status');
    if(lastngtadmin_status.length){
       $('.save-post-status').on('click', function(){
          lastngtadmin_status.val($('select[name="post_status"]').val())
       })
-   }
-   console.log('lasntgadmin_products_admin_localize', lasntgadmin_products_admin_localize)
-   if(lasntgadmin_products_admin_localize.lasntg_status){
+
+      
+      if(lasntgadmin_products_admin_localize.lasntg_status && lasntgadmin_products_admin_localize.post_type){
       const current_status = lasntgadmin_products_admin_localize.lasntg_status;
       const post_status = $('select[name="post_status"]');
-      console.log("🚀 ~ file: lasntgadmin-admin.js:26 ~ post_status", post_status)
+      
       const statuses = lasntgadmin_products_admin_localize.statuses;
       Object.keys(statuses).forEach(status => {
          post_status.append(`<option value="${status}">${statuses[status]}</option>`)
@@ -33,4 +41,5 @@ jQuery(document).ready(function ($) {
       $( '#post-status-display' ).html(statuses[current_status])
    }
 
+   }
 });

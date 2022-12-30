@@ -22,32 +22,30 @@ class ProductActionsFilters {
 		'cancelled'           => 'Cancelled',
 		'archived'            => 'Archived',
 	];
+
 	/**
 	 * Iniates actions and filters regarding Product
 	 *
 	 * @return void
 	 */
 	public static function init(): void {
+		// actions.
 		add_action( 'rest_api_init', [ ProductApi::class, 'get_instance' ] );
 		add_action( 'admin_notices', [ self::class, 'admin_notice_errors' ], 500 );
-		add_filter( 'wp_insert_post_data', [ self::class, 'filter_post_data' ], 99, 2 );
-		add_filter( 'post_updated_messages', [ self::class, 'post_updated_messages_filter' ], 500 );
 
 		add_action( 'add_meta_boxes', [ self::class, 'check_roles' ], 100 );
-
 		add_action( 'woocommerce_product_data_tabs', [ self::class, 'remove_unwanted_tabs' ], 999 );
 		add_action( 'admin_menu', [ self::class, 'remove_woocommerce_products_taxonomy' ], 99 );
 		add_action( 'admin_enqueue_scripts', [ self::class, 'admin_enqueue_scripts' ], 99 );
-
-		add_filter( 'post_row_actions', [ self::class, 'remove_quick_edit' ], 10, 1 );
-		add_filter( 'manage_product_posts_columns', [ self::class, 'rename_sku_column' ], 11 );
+		add_action( 'edit_form_after_title', [ self::class, 'hidden_status' ] );
 		add_action( 'init', [ self::class, 'register_custom_product_statuses' ], 0 );
 
-		add_action( 'admin_footer-post.php', [ self::class, 'add_custom_statuses_for_products' ], 0 );
-		add_action( 'admin_footer-post-new.php', [ self::class, 'add_custom_statuses_for_products' ], 0 );
-		add_action( 'admin_footer-edit.php', [ self::class, 'custom_status_add_in_quick_edit' ] );
+		// filters.
+		add_filter( 'wp_insert_post_data', [ self::class, 'filter_post_data' ], 99, 2 );
+		add_filter( 'post_updated_messages', [ self::class, 'post_updated_messages_filter' ], 500 );
+		add_filter( 'post_row_actions', [ self::class, 'remove_quick_edit' ], 10, 1 );
+		add_filter( 'manage_product_posts_columns', [ self::class, 'rename_sku_column' ], 11 );
 
-		add_action( 'edit_form_after_title', [ self::class, 'hidden_status' ] );
 		add_filter( 'woocommerce_product_meta_start', [ self::class, 'woocommerce_get_availability_text' ], 10, 2 );
 		add_filter( 'woocommerce_is_purchasable', [ self::class, 'product_is_in_stock' ], 15, 2 );
 
@@ -62,6 +60,19 @@ class ProductActionsFilters {
 	 */
 	public static function woocommerce_product_query( $q ): void {
 		$q->set( 'post_status', self::$publish_status );
+
+		// check the product has private group.
+		$args = array(
+			array(
+				'key'                             => 'groups-read',
+				'value'                           => 33,
+				// private client group id is 33.
+										'compare' => '=',
+				'type'                            => 'numeric',
+			),
+		);
+
+		$q->set( 'meta_query', $args );
 	}
 
 
@@ -73,6 +84,11 @@ class ProductActionsFilters {
 	 * @return bool
 	 */
 	public static function product_is_in_stock( $is_in_stock, $product ): bool {
+		$group_ids = \Groups_Post_Access::get_read_group_ids( $product->get_id() );
+
+		if ( ! in_array( 33, $group_ids, true ) ) {
+			return false;
+		}
 		if ( self::$publish_status === $product->get_status() ) {
 			return $is_in_stock;
 		}
@@ -90,6 +106,12 @@ class ProductActionsFilters {
 		if ( self::$publish_status !== $product->get_status() ) {
 			$status = self::$statuses[ $product->get_status() ];
 			echo '<p class="stock out-of-stock">Course not available: ' . esc_attr( $status ) . '</p>';
+		}
+
+		$group_ids = \Groups_Post_Access::get_read_group_ids( $product_id );
+
+		if ( ! in_array( 33, $group_ids, true ) ) {
+			echo '<p class="stock out-of-stock">Course not available.</p>';
 		}
 	}
 
@@ -122,38 +144,6 @@ class ProductActionsFilters {
 			return;
 		}
 		print '<input type="hidden" name="lasntgadmin_status" id="lasntgadmin_status" size="30" tabindex="1" value="' . esc_attr( htmlspecialchars( $post->post_status ) ) . '" id="title" autocomplete="off" />';
-	}
-
-	/**
-	 * Add our custom statuses.
-	 *
-	 * @return void
-	 */
-	public static function add_custom_statuses_for_products(): void {
-		global $post;
-
-		if ( 'product' !== $post->post_type ) {
-			return;
-		}
-		
-	}
-
-	/**
-	 * Add custom statuses in quick edit.
-	 *
-	 * @return void
-	 */
-	public static function custom_status_add_in_quick_edit(): void {
-		global $post;
-		echo '<script>
-        jQuery(document).ready( function() {';
-		echo "alert('test')";
-		foreach ( self::$statuses as $key => $status ) {
-			echo "jQuery( 'select[name=\"post_status\"]' ).append( '<option value=\"" . esc_attr( $key ) . '">' . esc_attr( $status ) . "</option>' );";
-		}
-		echo "jQuery( 'select[name=\"post_status\"]' ).val( '" . esc_attr( $post->post_status ) . "' );";
-		echo '}); 
-        </script>';
 	}
 
 	/**
@@ -210,14 +200,16 @@ class ProductActionsFilters {
 		global $post;
 		$assets_dir = untrailingslashit( plugin_dir_url( __FILE__ ) ) . '/../assets/';
 		wp_enqueue_script( 'lasntgadmin-users-admin-js', ( $assets_dir . 'js/lasntgadmin-admin.js' ), array( 'jquery' ), '1.4', true );
+		$post_type = property_exists( get_current_screen(), 'post_type' ) ? get_current_screen()->post_type : false;
 
 		wp_localize_script(
 			'lasntgadmin-users-admin-js',
 			'lasntgadmin_products_admin_localize',
 			array(
-				'adminurl'   => admin_url() . 'admin-ajax.php',
-				'lasntg_status'   => $post ? $post->post_status : false,
-				'statuses' => self::$statuses
+				'adminurl'      => admin_url() . 'admin-ajax.php',
+				'lasntg_status' => $post ? $post->post_status : false,
+				'statuses'      => self::$statuses,
+				'post_type'     => $post_type,
 			)
 		);
 	}
@@ -239,7 +231,6 @@ class ProductActionsFilters {
 		remove_submenu_page( "edit.php?post_type={$ptype}", "edit-tags.php?taxonomy=product_tag&amp;post_type={$ptype}" );
 		remove_submenu_page( "edit.php?post_type={$ptype}", "edit-tags.php?taxonomy=product_cat&amp;post_type={$ptype}" );
 	}
-
 
 	/**
 	 * Remove unwanted woocommerce tabs in product.
@@ -283,7 +274,6 @@ class ProductActionsFilters {
 			}
 		}
 	}
-
 
 	/**
 	 * Check to see if groups are set for post_type product
@@ -347,7 +337,6 @@ class ProductActionsFilters {
 		}
 		return $messages;
 	}
-
 
 	/**
 	 * Admin notice errors

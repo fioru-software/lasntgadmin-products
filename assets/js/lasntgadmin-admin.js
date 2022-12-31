@@ -21,7 +21,7 @@ jQuery(document).ready(function ($) {
    }
    const sel1 = $('[name="groups-read[]"]').selectize();
    sel1[0].selectize.removeOption(1);
-   sel1[0].selectize.refreshOptions();
+   sel1[0].selectize.refreshOptions(false);
    const lastngtadmin_status = $('#lasntgadmin_status');
    if(lastngtadmin_status.length){
       $('.save-post-status').on('click', function(){

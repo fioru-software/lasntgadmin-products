@@ -321,10 +321,7 @@ class ProductActionsFilters {
 			$data['post_status'] = 'draft';
 			set_transient( 'lasntg_post_error', wp_json_encode( $errors ) );
 		}
-		//cancel course.
-		if('cancel' === $data['post_status']){
-		
-		}
+
 		return $data;
 	}
 

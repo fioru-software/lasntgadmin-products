@@ -44,7 +44,7 @@ class Capabilities {
 			// groups.
 			'groups_access',
 			'groups_restrict_access',
-			
+
 			'upload_files',
 		);
 	}

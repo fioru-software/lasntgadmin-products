@@ -14,7 +14,6 @@ class ProductActionsFilters {
 	private static $publish_status = 'open_for_enrollment';
 	private static $statuses       = [
 		'template'            => 'Template',
-		'draft'               => 'Draft',
 		'open_for_enrollment' => 'Open for enrollment',
 		'enrollment_closed'   => 'Enrollment Closed',
 		'date_passed'         => 'Date Passed',

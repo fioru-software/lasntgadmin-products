@@ -37,6 +37,23 @@ class ProductUtils {
 	}
 
 	/**
+	 * Get products with specific group membership.
+	 *
+	 * @param int $group_id The group id.
+	 * @return WC_Product[]
+	 */
+	public static function get_products_visible_to_group( int $group_id ): array {
+		return wc_get_products(
+			[
+				'meta_key'     => 'groups-read',
+				'meta_compare' => '=',
+				'meta_value'   => $group_id,
+				'meta_type'    => 'NUMERIC',
+			]
+		);
+	}
+
+	/**
 	 * Get products with the same group memberships as my user.
 	 *
 	 * @return WC_Product[]

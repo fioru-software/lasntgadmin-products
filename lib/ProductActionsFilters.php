@@ -14,7 +14,6 @@ class ProductActionsFilters {
 	private static $publish_status = 'open_for_enrollment';
 	private static $statuses       = [
 		'template'            => 'Template',
-		'draft'               => 'Draft',
 		'open_for_enrollment' => 'Open for enrollment',
 		'enrollment_closed'   => 'Enrollment Closed',
 		'date_passed'         => 'Date Passed',
@@ -86,7 +85,7 @@ class ProductActionsFilters {
 	public static function product_is_in_stock( $is_in_stock, $product ): bool {
 		$group_ids = GroupUtils::get_read_group_ids( $product->get_id() );
 
-		if ( ! in_array( 33, $group_ids, true ) ) {
+		if ( ! in_array( 33, $group_ids ) ) {
 			return false;
 		}
 		if ( self::$publish_status === $product->get_status() ) {
@@ -110,8 +109,8 @@ class ProductActionsFilters {
 
 		$group_ids = GroupUtils::get_read_group_ids( $product_id );
 
-		if ( ! in_array( 33, $group_ids, true ) ) {
-			echo '<p class="stock out-of-stock">Course not available.</p>';
+		if ( ! in_array( 33, $group_ids ) ) {
+			echo '<p class="stock out-of-stock">Course is not available.</p>';
 		}
 	}
 
@@ -199,7 +198,7 @@ class ProductActionsFilters {
 	public static function admin_enqueue_scripts(): void {
 		global $post;
 		$assets_dir = untrailingslashit( plugin_dir_url( __FILE__ ) ) . '/../assets/';
-		wp_enqueue_script( 'lasntgadmin-products-admin-js', ( $assets_dir . 'js/lasntgadmin-admin.js' ), array( 'jquery' ), '1.4', true );
+		wp_enqueue_script( 'lasntgadmin-products-admin-js', ( $assets_dir . 'js/lasntgadmin-admin.js' ), array( 'jquery' ), '1.6', true );
 		$post_type = property_exists( get_current_screen(), 'post_type' ) ? get_current_screen()->post_type : false;
 		if ( 'product' !== $post_type ) {
 			return;
@@ -324,6 +323,7 @@ class ProductActionsFilters {
 			$data['post_status'] = 'draft';
 			set_transient( 'lasntg_post_error', wp_json_encode( $errors ) );
 		}
+
 		return $data;
 	}
 

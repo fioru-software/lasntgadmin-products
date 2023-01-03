@@ -50,6 +50,9 @@ class ProductActionsFilters {
 		add_filter( 'woocommerce_is_purchasable', [ self::class, 'product_is_in_stock' ], 15, 2 );
 
 		add_filter( 'woocommerce_product_query', [ self::class, 'woocommerce_product_query' ], 15, 1 );
+
+		// custom actions.
+		// lasntgadmin_course_cancelled | order_id.
 	}
 
 	/**
@@ -321,9 +324,19 @@ class ProductActionsFilters {
 			$data['post_status'] = 'draft';
 			set_transient( 'lasntg_post_error', wp_json_encode( $errors ) );
 		}
+
+		if ( 'cancelled' === $data['post_status'] ) {
+			$order_ids = ProductUtils::get_orders_ids_by_product_id( $postarr['ID'] );
+			var_dump( $order_ids );
+			die();
+			foreach ( $order_ids as $order_id ) {
+				$order = wc_get_order( $order_id );
+				$order->update_status( 'wc-cancelled' );
+				do_action( 'lasntgadmin_course_cancelled', $order_id );
+			}
+		}
 		return $data;
 	}
-
 	/**
 	 * Overide the Woocommerce success message if there's an error.
 	 *

@@ -198,13 +198,13 @@ class ProductActionsFilters {
 	 */
 	public static function admin_enqueue_scripts(): void {
 		global $post;
-		$assets_dir = untrailingslashit( plugin_dir_url( __FILE__ ) ) . '/../assets/';
-		wp_enqueue_script( 'lasntgadmin-products-admin-js', ( $assets_dir . 'js/lasntgadmin-admin.js' ), array( 'jquery' ), '1.4', true );
 		$post_type = property_exists( get_current_screen(), 'post_type' ) ? get_current_screen()->post_type : false;
 		if ( 'product' !== $post_type ) {
 			return;
 		}
-
+		$assets_dir = untrailingslashit( plugin_dir_url( __FILE__ ) ) . '/../assets/';
+		wp_enqueue_script( 'lasntgadmin-products-admin-js', ( $assets_dir . 'js/lasntgadmin-admin.js' ), array( 'jquery' ), '1.4', true );
+		
 		wp_localize_script(
 			'lasntgadmin-products-admin-js',
 			'lasntgadmin_products_admin_localize',

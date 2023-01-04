@@ -15,7 +15,7 @@ class ProductActionsFilters {
 	private static $statuses       = [
 		'template'            => 'Template',
 		'draft'               => 'Draft',
-		'open_for_enrollment' => 'Open for enrollment',
+		'open_for_enrollment' => 'Open for Enrollment',
 		'enrollment_closed'   => 'Enrollment Closed',
 		'date_passed'         => 'Date Passed',
 		'closed'              => 'Closed',
@@ -50,9 +50,6 @@ class ProductActionsFilters {
 		add_filter( 'woocommerce_is_purchasable', [ self::class, 'product_is_in_stock' ], 15, 2 );
 
 		add_filter( 'woocommerce_product_query', [ self::class, 'woocommerce_product_query' ], 15, 1 );
-
-		// custom actions.
-		// lasntgadmin_course_cancelled | order_id.
 	}
 
 	/**
@@ -289,6 +286,12 @@ class ProductActionsFilters {
 		if ( ! isset( $postarr['_stock'] ) || 'product' !== $postarr['post_type'] ) {
 			return $data;
 		}
+
+		if ( ! ProductUtils::is_allowed_products_edit() ) {
+			$errors[] = __( 'You are not allowed to edit products.', 'lasntgadmin' );
+			return $errors;
+		}
+
 		$errors = [];
 		if ( '0' === $postarr['_stock'] || empty( $postarr['_stock'] ) ) {
 			$errors[] = __( 'Capacity is required.', 'lasntgadmin' );
@@ -322,17 +325,23 @@ class ProductActionsFilters {
 		$data['post_status'] = $postarr['lasntgadmin_status'];
 		if ( $errors ) {
 			$data['post_status'] = 'draft';
-			set_transient( 'lasntg_post_error', wp_json_encode( $errors ) );
 		}
+
+		set_transient(
+			'lasntg_post_error',
+			wp_json_encode(
+				[
+					'errors'      => $errors,
+					'post_status' => self::$statuses[ $data['post_status'] ],
+				]
+			)
+		);
 
 		if ( 'cancelled' === $data['post_status'] ) {
 			$order_ids = ProductUtils::get_orders_ids_by_product_id( $postarr['ID'] );
-			var_dump( $order_ids );
-			die();
 			foreach ( $order_ids as $order_id ) {
 				$order = wc_get_order( $order_id );
 				$order->update_status( 'wc-cancelled' );
-				do_action( 'lasntgadmin_course_cancelled', $order_id );
 			}
 		}
 		return $data;
@@ -344,7 +353,7 @@ class ProductActionsFilters {
 	 * @return array
 	 */
 	public static function post_updated_messages_filter( $messages ): array {
-		if ( get_transient( 'lasntg_post_error' ) ) {
+		if ( get_transient( 'lasntg_post_error' ) || get_transient( 'lasntg_clear_woocommerce' ) ) {
 			$messages['product'][8] = '';
 			$messages['product'][6] = '';
 		}
@@ -363,10 +372,14 @@ class ProductActionsFilters {
 		}
 		$class = 'notice notice-error';
 
-		printf( '<div class="%1$s"><p>%2$s</p></div>', esc_attr( $class ), esc_html( 'Product saved as draft.' ) );
-		$msgs = json_decode( $message );
-		foreach ( $msgs as $msg ) {
-			printf( '<div class="%1$s"><p>%2$s</p></div>', esc_attr( $class ), esc_html( $msg ) );
+		$msgs = json_decode( $message, true );
+		if ( $msgs['errors'] ) {
+			printf( '<div class="%1$s"><p>%2$s</p></div>', esc_attr( $class ), esc_html( 'Course saved as draft.' ) );
+			foreach ( $msgs['errors'] as $msg ) {
+				printf( '<div class="%1$s"><p>%2$s</p></div>', esc_attr( $class ), esc_html( $msg ) );
+			}
+		} else {
+			printf( '<div class="notice notice-success"><p>Course saved as %1$s</p></div>', esc_html( $msgs['post_status'] ) );
 		}
 		delete_transient( 'lasntg_post_error' );
 	}

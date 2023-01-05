@@ -379,7 +379,7 @@ class ProductActionsFilters {
 				printf( '<div class="%1$s"><p>%2$s</p></div>', esc_attr( $class ), esc_html( $msg ) );
 			}
 		} else {
-			printf( '<div class="notice notice-success"><p>Course saved as %1$s</p></div>', esc_html( $msgs['post_status'] ) );
+			printf( '<div class="notice notice-success"><p>Course saved with status %1$s</p></div>', esc_html( $msgs['post_status'] ) );
 		}
 		delete_transient( 'lasntg_post_error' );
 	}

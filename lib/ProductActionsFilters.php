@@ -14,8 +14,7 @@ class ProductActionsFilters {
 	private static $publish_status = 'open_for_enrollment';
 	private static $statuses       = [
 		'template'            => 'Template',
-		'draft'               => 'Draft',
-		'open_for_enrollment' => 'Open for Enrollment',
+		'open_for_enrollment' => 'Open for enrollment',
 		'enrollment_closed'   => 'Enrollment Closed',
 		'date_passed'         => 'Date Passed',
 		'closed'              => 'Closed',
@@ -198,12 +197,15 @@ class ProductActionsFilters {
 	 */
 	public static function admin_enqueue_scripts(): void {
 		global $post;
-		$assets_dir = untrailingslashit( plugin_dir_url( __FILE__ ) ) . '/../assets/';
-		wp_enqueue_script( 'lasntgadmin-users-admin-js', ( $assets_dir . 'js/lasntgadmin-admin.js' ), array( 'jquery' ), '1.5', true );
 		$post_type = property_exists( get_current_screen(), 'post_type' ) ? get_current_screen()->post_type : false;
+		if ( 'product' !== $post_type ) {
+			return;
+		}
+		$assets_dir = untrailingslashit( plugin_dir_url( __FILE__ ) ) . '/../assets/';
+		wp_enqueue_script( 'lasntgadmin-products-admin-js', ( $assets_dir . 'js/lasntgadmin-admin.js' ), array( 'jquery' ), '1.6', true );
 
 		wp_localize_script(
-			'lasntgadmin-users-admin-js',
+			'lasntgadmin-products-admin-js',
 			'lasntgadmin_products_admin_localize',
 			array(
 				'adminurl'      => admin_url() . 'admin-ajax.php',
@@ -345,6 +347,7 @@ class ProductActionsFilters {
 				$order->update_status( 'wc-cancelled' );
 			}
 		}
+
 		return $data;
 	}
 	/**

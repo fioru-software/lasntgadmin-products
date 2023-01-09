@@ -54,7 +54,7 @@ class QuotasActionsFilters {
 	}
 
 	public static function course_capacity_tab_data() {
-		 global $post;
+		global $post;
 		$product = wc_get_product( $post->ID );
 
 		echo '<div id="course_capacity_tab_data" class="panel woocommerce_options_panel">';

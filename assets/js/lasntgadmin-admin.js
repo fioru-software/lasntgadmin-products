@@ -24,6 +24,9 @@ jQuery(document).ready(function ($) {
    sel1[0].selectize.refreshOptions(false);
    const lastngtadmin_status = $('#lasntgadmin_status');
    if(lastngtadmin_status.length){
+      if(!lastngtadmin_status.val()){
+         lastngtadmin_status.val($('select[name="post_status"]').val())
+      }
       $('.save-post-status').on('click', function(){
          lastngtadmin_status.val($('select[name="post_status"]').val())
       })

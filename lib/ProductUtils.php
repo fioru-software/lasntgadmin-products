@@ -3,9 +3,6 @@
 namespace Lasntg\Admin\Products;
 
 use Lasntg\Admin\Group\GroupUtils;
-use Lasntg\Admin\Products\ProductApi;
-
-use WP_Error;
 
 /**
  * ProductUtils
@@ -71,4 +68,35 @@ class ProductUtils {
 		);
 	}
 
+	/**
+	 * Get All orders IDs for a given product ID.
+	 *
+	 * @param  integer $product_id (required).
+	 * @param  array   $order_status (optional) Default is ['wc-processing','wc-completed'].
+	 *
+	 * @return array
+	 */
+	public static function get_orders_ids_by_product_id( $product_id, $order_status = array( 'wc-processing', 'wc-completed' ) ) {
+		global $wpdb;
+		$args = implode( ',', array_fill( 0, count( $order_status ), '%s' ) );
+
+		$results = $wpdb->get_col(
+			$wpdb->prepare(
+				"
+			SELECT order_items.order_id
+			FROM {$wpdb->prefix}woocommerce_order_items as order_items
+			LEFT JOIN {$wpdb->prefix}woocommerce_order_itemmeta as order_item_meta ON order_items.order_item_id = order_item_meta.order_item_id
+			LEFT JOIN {$wpdb->posts} AS posts ON order_items.order_id = posts.ID
+			WHERE posts.post_type = 'shop_order'
+			AND posts.post_status IN ( $args )" // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+				. "AND order_items.order_item_type = 'line_item'
+			AND order_item_meta.meta_key = '_product_id'
+			AND order_item_meta.meta_value = %s
+			",
+				array_merge( $order_status, [ $product_id ] )
+			)
+		);
+
+		return $results;
+	}
 }

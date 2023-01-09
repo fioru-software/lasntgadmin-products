@@ -313,7 +313,7 @@ class ProductActionsFilters {
 			$errors[] = __( 'Course code is required.', 'lasntgadmin' );
 		}
 
-		if ( empty( $postarr['post_title	'] ) ) {
+		if ( empty( $postarr['post_title'] ) ) {
 			$errors[] = __( 'Name is required.', 'lasntgadmin' );
 		}
 

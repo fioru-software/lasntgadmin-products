@@ -311,7 +311,7 @@ class ProductActionsFilters {
 			$errors[] = __( 'Course code is required.', 'lasntgadmin' );
 		}
 
-		if ( empty( $postarr['post_title'] ) ) {
+		if ( empty( $postarr['post_title	'] ) ) {
 			$errors[] = __( 'Name is required.', 'lasntgadmin' );
 		}
 
@@ -322,6 +322,7 @@ class ProductActionsFilters {
 		if ( ! isset( $postarr['groups-read'] ) || ! $postarr['groups-read'] ) {
 			$errors[] = __( 'Groups is required.', 'lasntgadmin' );
 		}
+
 		$data['post_status'] = $postarr['lasntgadmin_status'];
 		if ( $errors ) {
 			$data['post_status'] = 'draft';

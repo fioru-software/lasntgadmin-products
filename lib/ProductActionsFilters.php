@@ -345,6 +345,9 @@ class ProductActionsFilters {
 	}
 
 	public static function cancel_orders( $post_ID, $post_after, $post_before ) {
+		if ( 'product' !== $post_after->post_type ) {
+			return;
+		}
 		if ( $post_after->post_status !== $post_before->post_status ) {
 			$order_ids = ProductUtils::get_orders_ids_by_product_id( $post_ID );
 			foreach ( $order_ids as $order_id ) {

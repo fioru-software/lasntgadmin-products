@@ -41,6 +41,7 @@ class ProductActionsFilters {
 
 		// filters.
 		add_filter( 'wp_insert_post_data', [ self::class, 'filter_post_data' ], 99, 2 );
+		add_filter( 'wp_insert_post', [ self::class, 'cancel_orders' ], 10, 3 );
 		add_filter( 'post_updated_messages', [ self::class, 'post_updated_messages_filter' ], 500 );
 		add_filter( 'post_row_actions', [ self::class, 'remove_quick_edit' ], 10, 1 );
 		add_filter( 'manage_product_posts_columns', [ self::class, 'rename_sku_column' ], 11 );
@@ -340,15 +341,17 @@ class ProductActionsFilters {
 			)
 		);
 
-		if ( 'cancelled' === $data['post_status'] ) {
-			$order_ids = ProductUtils::get_orders_ids_by_product_id( $postarr['ID'] );
+		return $data;
+	}
+
+	public static function cancel_orders( $post_ID, $post_after, $post_before ) {
+		if ( $post_after->post_status !== $post_before->post_status ) {
+			$order_ids = ProductUtils::get_orders_ids_by_product_id( $post_ID );
 			foreach ( $order_ids as $order_id ) {
 				$order = wc_get_order( $order_id );
 				$order->update_status( 'wc-cancelled' );
 			}
 		}
-
-		return $data;
 	}
 	/**
 	 * Overide the Woocommerce success message if there's an error.

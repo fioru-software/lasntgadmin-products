@@ -17,7 +17,6 @@ use Lasntg\Admin\Products\PluginUtils;
 
 use Lasntg\Admin\Products\{
 	QuotasActionsFilters,
-	WaitingListActionsFilters,
 	ProductActionsFilters,
 };
 // Register activation and deactivation hooks.
@@ -27,4 +26,3 @@ register_deactivation_hook( __FILE__, [ PluginUtils::class, 'deactivate' ] );
 // Inits.
 ProductActionsFilters::init();
 QuotasActionsFilters::init();
-WaitingListActionsFilters::init();

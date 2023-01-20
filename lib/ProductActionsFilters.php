@@ -11,16 +11,6 @@ use Lasntg\Admin\Group\GroupUtils;
  * Handle Actions anf filters for products
  */
 class ProductActionsFilters {
-	private static $publish_status = 'open_for_enrollment';
-	private static $statuses       = [
-		'template'            => 'Template',
-		'open_for_enrollment' => 'Open for enrollment',
-		'enrollment_closed'   => 'Enrollment Closed',
-		'date_passed'         => 'Date Passed',
-		'closed'              => 'Closed',
-		'cancelled'           => 'Cancelled',
-		'archived'            => 'Archived',
-	];
 
 	/**
 	 * Iniates actions and filters regarding Product
@@ -53,13 +43,13 @@ class ProductActionsFilters {
 	}
 
 	/**
-	 * Only show products that have self::$publish_status in the shops page.
+	 * Only show products that have $publish_status in the shops page.
 	 *
 	 * @param  WP_Query $q Query.
 	 * @return void
 	 */
 	public static function woocommerce_product_query( $q ): void {
-		$q->set( 'post_status', self::$publish_status );
+		$q->set( 'post_status', ProductUtils::$publish_status );
 
 		// check the product has private group.
 		$args = array(
@@ -89,7 +79,7 @@ class ProductActionsFilters {
 		if ( ! in_array( 33, $group_ids ) ) {
 			return false;
 		}
-		if ( self::$publish_status === $product->get_status() ) {
+		if ( ProductUtils::$publish_status === $product->get_status() ) {
 			return $is_in_stock;
 		}
 		return false;
@@ -103,8 +93,8 @@ class ProductActionsFilters {
 	public static function woocommerce_get_availability_text(): void {
 		$product_id = get_the_ID();
 		$product    = wc_get_product( $product_id );
-		if ( self::$publish_status !== $product->get_status() ) {
-			$status = self::$statuses[ $product->get_status() ];
+		if ( ProductUtils::$publish_status !== $product->get_status() ) {
+			$status = ProductUtils::get_status_name( $product->get_status() );
 			echo '<p class="stock out-of-stock">Course not available: ' . esc_attr( $status ) . '</p>';
 		}
 
@@ -124,7 +114,7 @@ class ProductActionsFilters {
 	 */
 	public static function stock_filter( $available_text, $product ): string {
 		if ( 'publish' !== $product->get_status() ) {
-			$status = self::$statuses[ $product->get_status() ];
+			$status = ProductUtils::get_status_name( $product->get_status() );
 			return '<p class="stock out-of-stock">Course not available: ' . esc_attr( $status ) . '</p>';
 		}
 
@@ -152,7 +142,7 @@ class ProductActionsFilters {
 	 * @return void
 	 */
 	public static function register_custom_product_statuses(): void {
-		foreach ( self::$statuses as $tag => $status ) {
+		foreach ( ProductUtils::$statuses as $tag => $status ) {
 			register_post_status(
 				$tag,
 				array(
@@ -211,7 +201,7 @@ class ProductActionsFilters {
 			array(
 				'adminurl'      => admin_url() . 'admin-ajax.php',
 				'lasntg_status' => $post ? $post->post_status : false,
-				'statuses'      => self::$statuses,
+				'statuses'      => ProductUtils::$statuses,
 				'post_type'     => $post_type,
 			)
 		);
@@ -336,7 +326,7 @@ class ProductActionsFilters {
 			wp_json_encode(
 				[
 					'errors'      => $errors,
-					'post_status' => self::$statuses[ $data['post_status'] ],
+					'post_status' => ProductUtils::get_status_name( $data['post_status'] ),
 				]
 			)
 		);

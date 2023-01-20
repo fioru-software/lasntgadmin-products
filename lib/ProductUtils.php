@@ -9,6 +9,21 @@ use Lasntg\Admin\Group\GroupUtils;
  */
 class ProductUtils {
 
+	public static $publish_status = 'open_for_enrollment';
+	public static $statuses       = [
+		'template'            => 'Template',
+		'open_for_enrollment' => 'Open for enrollment',
+		'enrollment_closed'   => 'Enrollment Closed',
+		'date_passed'         => 'Date Passed',
+		'closed'              => 'Closed',
+		'cancelled'           => 'Cancelled',
+		'archived'            => 'Archived',
+	];
+
+	public static function get_status_name( $status ) {
+		self::$statuses[ $status ];
+	}
+
 	/**
 	 * Redirect back
 	 *

@@ -20,8 +20,8 @@ class ProductUtils {
 		'archived'            => 'Archived',
 	];
 
-	public static function get_status_name( $status ) {
-		self::$statuses[ $status ];
+	public static function get_status_name( $status ): string {
+		return self::$statuses[ $status ];
 	}
 
 	/**

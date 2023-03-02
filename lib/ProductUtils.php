@@ -4,6 +4,8 @@ namespace Lasntg\Admin\Products;
 
 use Lasntg\Admin\Group\GroupUtils;
 
+use WC_Product;
+
 /**
  * ProductUtils
  */

@@ -337,9 +337,9 @@ class ProductActionsFilters {
 	}
 
 	public static function cancel_orders( int $post_ID, WP_Post $post_after, $post_before ) {
-        if( ! is_a( $post_before, 'WP_Post' ) || 'product' !== $post_after->post_type ) {
-            return ;
-        }
+		if ( ! is_a( $post_before, 'WP_Post' ) || 'product' !== $post_after->post_type ) {
+			return;
+		}
 		if ( $post_after->post_status !== $post_before->post_status ) {
 			$order_ids = ProductUtils::get_orders_ids_by_product_id( $post_ID );
 			foreach ( $order_ids as $order_id ) {

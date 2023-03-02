@@ -32,15 +32,15 @@ class AcfFields {
 		return $field;
 	}
 
-    public static function populate_grant_year_select_options( array $field ): array {
+	public static function populate_grant_year_select_options( array $field ): array {
 		$grant_years = GrantYearUtils::get_all();
 
-        $field['choices'][ null ] = 'Not funded';
+		$field['choices'][ null ] = 'Not funded';
 		foreach ( $grant_years as $grant_year ) {
 			$field['choices'][ $grant_year ] = $grant_year;
 		}
 		return $field;
-    }
+	}
 
 }
 

@@ -22,6 +22,12 @@ class ProductUtils {
 		'archived'            => 'Archived',
 	];
 
+	public static function is_funded( WC_Product $product ): bool {
+		$funding_source_slugs = $product->get_meta( 'funding_sources', true );
+		$grant_year           = $product->get_meta( 'grant_year', true );
+		return empty( $funding_source_slugs ) || empty( $grant_year ) ? false : true;
+	}
+
 	public static function get_status_name( $status ) {
 		return isset( self::$statuses[ $status ] ) ? self::$statuses[ $status ] : $status;
 	}

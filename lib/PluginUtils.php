@@ -25,6 +25,10 @@ class PluginUtils {
 	public static function get_absolute_plugin_path(): string {
 		return sprintf( '/var/www/html/wp-content/plugins/%s', self::get_kebab_case_name() );
 	}
+
+	public static function get_absolute_plugin_filepath(): string {
+		return sprintf( '%s/%s.php', self::get_absolute_plugin_path(), self::get_kebab_case_name() );
+	}
 }
 
 

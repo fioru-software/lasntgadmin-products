@@ -40,13 +40,21 @@ class ProductActionsFilters {
 		add_filter( 'wp_insert_post_data', [ self::class, 'filter_post_data' ], 99, 2 );
 		add_filter( 'wp_insert_post', [ self::class, 'cancel_orders' ], 10, 3 );
 		add_filter( 'post_updated_messages', [ self::class, 'post_updated_messages_filter' ], 500 );
-		add_filter( 'post_row_actions', [ self::class, 'remove_quick_edit' ], 10, 1 );
-		add_filter( 'manage_product_posts_columns', [ self::class, 'rename_sku_column' ], 11 );
 
 		add_filter( 'woocommerce_product_meta_start', [ self::class, 'woocommerce_get_availability_text' ], 10, 2 );
 		add_filter( 'woocommerce_is_purchasable', [ self::class, 'product_is_in_stock' ], 15, 2 );
 
 		add_filter( 'woocommerce_product_query', [ self::class, 'woocommerce_product_query' ], 15, 1 );
+
+		add_filter( 'woocommerce_register_post_type_product', [ self::class, 'register_post_type_product' ] );
+	}
+
+	/**
+	 * @see https://developer.wordpress.org/reference/functions/register_post_type/#capabilities
+	 */
+	public static function register_post_type_product( array $args ): array {
+		$args['capabilities']['create_posts'] = 'create_products';
+		return $args;
 	}
 
 	/**
@@ -166,27 +174,6 @@ class ProductActionsFilters {
 		}
 	}
 
-	/**
-	 * Rename sku column to course code.
-	 *
-	 * @param  array $columns Columns.
-	 * @return array
-	 */
-	public static function rename_sku_column( $columns ): array {
-		$columns['sku'] = __( 'Course Code', 'lasntgadmin' );
-		return $columns;
-	}
-
-	/**
-	 * Remove quick edit
-	 *
-	 * @param  array $actions post row actions array.
-	 * @return array
-	 */
-	public static function remove_quick_edit( $actions ): array {
-		unset( $actions['inline hide-if-no-js'] );
-		return $actions;
-	}
 
 	/**
 	 * Admin enqueue scripts

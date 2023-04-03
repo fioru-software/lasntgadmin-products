@@ -1,6 +1,6 @@
 {
     "name": "fioru/lasntgadmin-products",
-    "version": "5.4.0",
+    "version": "5.4.0-rc1",
     "type": "wordpress-plugin",
     "extra": {
         "installer-name": "lasntgadmin-products"
@@ -16,26 +16,45 @@
         }
     },
     "scripts": {
-      "test": "phpunit --verbose --configuration phpunit.xml.dist --prepend vendor/autoload.php --testdox --colors=always",
-      "lint": "phplint ./ --exclude=vendor",
-      "check": "phpcs -ns",
-      "fix": "phpcbf",
-      "secure": "security-checker security:check composer.lock",
-      "all": [ "@lint", "@check", "@test", "@secure" ]
+        "test": "phpunit --verbose --configuration phpunit.xml.dist --prepend vendor/autoload.php --testdox --colors=always",
+        "lint": "phplint ./ --exclude=vendor",
+        "check": "phpcs -ns",
+        "fix": "phpcbf",
+        "secure": "security-checker security:check composer.lock",
+        "all": ["@lint", "@check", "@test", "@secure"]
     },
-    "repositories": [
-        {
+    "repositories": [{
             "type": "vcs",
-            "url":  "git@github.com:fioru-software/lasntgadmin-grant-funded-payment-gateway.git"
+            "url": "git@github.com:fioru-software/lasntgadmin-grant-funded-payment-gateway.git"
         },
         {
             "type": "vcs",
-            "url":  "git@github.com:fioru-software/lasntgadmin-groups.git"
+            "url": "git@github.com:fioru-software/lasntgadmin-groups.git"
+        },
+        {
+            "type": "vcs",
+            "url": "git@github.com:fioru-software/lasntgadmin-attendees.git"
+        },
+        {
+            "type": "vcs",
+            "url": "git@github.com:fioru-software/lasntgadmin-products.git"
+        },
+        {
+            "type": "vcs",
+            "url": "git@github.com:fioru-software/lasntgadmin-users.git"
+        },
+        {
+            "type": "vcs",
+            "url": "git@github.com:fioru-software/lasntgadmin-orders.git"
         }
     ],
     "require": {
         "composer/installers": "~2.0",
-        "fioru/lasntgadmin-grant-funded-payment-gateway": "^1.0.7"
+        "fioru/lasntgadmin-grant-funded-payment-gateway": "^1.0.8",
+        "fioru/lasntgadmin-attendees": "^3.1.0",
+        "fioru/lasntgadmin-users": "^3.0.2",
+        "fioru/lasntgadmin-orders": "^1.5",
+        "fioru/lasntgadmin-groups": "^1.1"
     },
     "require-dev": {
         "fakerphp/faker": "^1.19",

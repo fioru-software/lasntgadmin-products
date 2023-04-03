@@ -93,8 +93,8 @@ class ProductUtils {
 
 	/**
 	 * Get All orders IDs for a given product ID.
-     *
-     * @todo rename to get_order_ids_by_product_id
+	 *
+	 * @todo rename to get_order_ids_by_product_id
 	 *
 	 * @param  integer $product_id (required).
 	 * @param  array   $order_status (optional) Default is ['wc-processing','wc-completed'].

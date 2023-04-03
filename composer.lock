@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e0c7a3179866d0319a32372a733edc8d",
+    "content-hash": "e0fb6fc90a0bbb963b5447f012d4a4d8",
     "packages": [
         {
             "name": "composer/installers",
@@ -374,16 +374,16 @@
         },
         {
             "name": "fioru/lasntgadmin-orders",
-            "version": "1.5.1-rc1",
+            "version": "1.5.2-rc1",
             "source": {
                 "type": "git",
                 "url": "git@github.com:fioru-software/lasntgadmin-orders.git",
-                "reference": "c596d1206200cede6b7ce0ee9b55c1eb84eaf293"
+                "reference": "48d9d790ffaa80f3662600c68fc12f2663325f08"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fioru-software/lasntgadmin-orders/zipball/c596d1206200cede6b7ce0ee9b55c1eb84eaf293",
-                "reference": "c596d1206200cede6b7ce0ee9b55c1eb84eaf293",
+                "url": "https://api.github.com/repos/fioru-software/lasntgadmin-orders/zipball/48d9d790ffaa80f3662600c68fc12f2663325f08",
+                "reference": "48d9d790ffaa80f3662600c68fc12f2663325f08",
                 "shasum": ""
             },
             "require": {
@@ -443,10 +443,10 @@
                 ]
             },
             "support": {
-                "source": "https://github.com/fioru-software/lasntgadmin-orders/tree/1.5.1-rc1",
+                "source": "https://github.com/fioru-software/lasntgadmin-orders/tree/1.5.2-rc1",
                 "issues": "https://github.com/fioru-software/lasntgadmin-orders/issues"
             },
-            "time": "2023-03-27T15:56:57+00:00"
+            "time": "2023-04-03T10:53:40+00:00"
         },
         {
             "name": "fioru/lasntgadmin-users",

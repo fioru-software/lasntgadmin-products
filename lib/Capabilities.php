@@ -12,7 +12,9 @@ class Capabilities {
 	 * Admin capabilities
 	 */
 	public static function get_administrator_capabilities(): array {
-		return array();
+		return [
+			'create_products',
+		];
 	}
 
 	/**
@@ -37,6 +39,8 @@ class Capabilities {
 			'edit_others_products',
 			'edit_private_products',
 			'edit_products',
+			'edit_posts',
+			'create_products',
 			'publish_products',
 			'edit_published_products',
 			'read_private_products',
@@ -73,6 +77,8 @@ class Capabilities {
 			'edit_others_products',
 			'edit_private_products',
 			'edit_products',
+			'edit_posts',
+			'create_products',
 			'publish_products',
 			'edit_published_products',
 			'read_private_products',
@@ -96,6 +102,8 @@ class Capabilities {
 			'read_product',
 			'read_private_products',
 			'edit_others_products',
+			'edit_posts',
+			'edit_products',
 		];
 	}
 

@@ -14,6 +14,11 @@ use WP_Post;
  */
 class ProductActionsFilters {
 
+
+
+
+
+
 	/**
 	 * Iniates actions and filters regarding Product
 	 *
@@ -150,7 +155,7 @@ class ProductActionsFilters {
 				array(
 					'label'                     => $status,
 					// translators: $status status.
-					'label_count'               => _n_noop( $status . ' <span class="count">(%s)</span>', $status . ' <span class="count">(%s)</span>', 'lasntgadmin' ), // phpcs:ignore WordPress.WP.I18n.NonSingularStringLiteralPlural,WordPress.WP.I18n.NonSingularStringLiteralSingle
+					'label_count'               => _n_noop( $status . ' <span class="count">(%s)</span>', $status . ' <span class="count">(%s)</span>', 'lasntgadmin' ), //phpcs:ignore WordPress.WP.I18n.NonSingularStringLiteralPlural, WordPress.WP.I18n.NonSingularStringLiteralSingle, WordPress.WP.I18n.NonSingularStringLiteralSingular
 					'public'                    => true,
 					'exclude_from_search'       => false,
 					'show_in_admin_all_list'    => true,
@@ -261,7 +266,8 @@ class ProductActionsFilters {
 	public static function check_roles(): void {
 		$screen = get_current_screen();
 		// disable creating courses for other users except admin, national manager and training manager.
-		if ( $screen &&
+		if (
+			$screen &&
 			'product' === $screen->post_type
 		) {
 			if ( ! ProductUtils::is_allowed_products_edit() ) {
@@ -385,5 +391,4 @@ class ProductActionsFilters {
 		}
 		delete_transient( 'lasntg_post_error' );
 	}
-
 }

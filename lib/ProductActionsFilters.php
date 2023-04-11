@@ -56,7 +56,7 @@ class ProductActionsFilters {
 		$assets_dir = untrailingslashit( plugin_dir_url( __FILE__ ) ) . '/../assets/';
 		wp_enqueue_script( 'media-library-taxonomy-filter', $assets_dir . '/js/collection-filter.js', array( 'media-editor', 'media-views' ) );
 		$user_groups = GroupUtils::get_groups_by_user_id( get_current_user_id() );
-		
+
 		// Load 'terms' into a JavaScript variable that collection-filter.js has access to.
 		wp_localize_script(
 			'media-library-taxonomy-filter',
@@ -97,11 +97,14 @@ class ProductActionsFilters {
 		}
 
 		$user_groups = GroupUtils::get_groups_by_user_id( get_current_user_id() );
-		
+
 		// if empty show all groups current user has.
 		// admin has access to all.
 		if ( empty( $selected_group_id ) ) {
-			if ( current_user_can( 'manage_options' ) ) {
+			// assumption that national_manager will be a member of all groups.
+			if ( current_user_can( 'manage_options' )
+				|| in_array( 'national_manager', wp_get_current_user()->roles ) !== false
+			) {
 				return $query;
 			}
 			$user_ids = [];
@@ -117,15 +120,15 @@ class ProductActionsFilters {
 				);
 				$user_ids = array_merge( $user_ids, $users );
 			}
-			$user_ids = array_unique($user_ids);
+			$user_ids            = array_unique( $user_ids );
 			$query['author__in'] = $users;
 			return $query;
-		}
+		}//end if
 		$user_groups = GroupUtils::get_group_ids_by_user_id( $user_id );
-		
+
 		if ( current_user_can( 'manage_options' ) || in_array( $selected_group_id, $user_groups ) !== false ) {
 			$group = new \Groups_Group( $selected_group_id );
-			
+
 			$users = array_map(
 				function ( $user ) {
 					return $user->ID;

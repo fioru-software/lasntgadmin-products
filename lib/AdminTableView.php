@@ -3,6 +3,7 @@
 namespace Lasntg\Admin\Products;
 
 use Lasntg\Admin\Group\GroupUtils;
+use Lasntg\Admin\Products\QuotaUtils;
 
 use WP_User;
 
@@ -19,9 +20,26 @@ class AdminTableView {
 	}
 
 	private static function add_filters() {
-		add_filter( 'manage_product_posts_columns', [ self::class, 'modify_product_columns' ], 11 );
+		add_filter( 'manage_product_posts_columns', [ self::class, 'modify_existing_columns' ], 15 );
+		add_filter( 'manage_product_posts_columns', [ self::class, 'add_group_quota_column' ], 15 );
+		add_filter( 'manage_product_posts_columns', [ self::class, 'add_order_create_column' ], 20 );
 		add_filter( 'post_row_actions', [ self::class, 'modify_product_row_actions' ] );
 		add_filter( 'login_redirect', [ self::class, 'redirect_to_product_list' ], 10, 3 );
+		add_filter( 'post_row_actions', [ self::class, 'modify_list_row_actions' ], 10, 2 );
+	}
+
+
+	public static function modify_list_row_actions( $actions, $post ) {
+		if ( 'product' === $post->post_type ) {
+			unset( $actions['view'] );
+			$actions['attendees'] = sprintf(
+				'<a href="%1$s">%2$s</a>',
+				esc_url( admin_url( sprintf( 'edit.php?post_type=attendee&product_id=%d', $post->ID ) ) ),
+				esc_html( __( 'Attendees', 'lasntgadmin' ) )
+			);
+		}
+
+		return $actions;
 	}
 
 	/**
@@ -36,13 +54,32 @@ class AdminTableView {
 		return $redirect_to;
 	}
 
+	public static function modify_existing_columns( array $columns ): array {
+		$columns['sku'] = __( 'Course Code', 'lasntgadmin' );
+		return $columns;
+	}
+
 	/**
 	 * Add the custom columns to the attendee custom post type.
 	 */
-	public static function modify_product_columns( array $columns ): array {
-		$columns['sku'] = __( 'Course Code', 'lasntgadmin' );
+	public static function add_order_create_column( array $columns ): array {
 		if ( current_user_can( 'publish_shop_orders' ) ) {
 			$columns['create_order'] = __( 'Order', 'lasntgadmin' );
+		}
+		return $columns;
+	}
+
+	/**
+	 * Add the custom columns to the attendee custom post type.
+	 */
+	public static function add_group_quota_column( array $columns ): array {
+		if ( current_user_can( 'publish_shop_orders' ) ) {
+			$user_groups = GroupUtils::get_current_users_groups();
+			if ( ! empty( $user_groups ) && count( $user_groups ) < 2 ) {
+				$columns['group_quota'] = __( 'Quota', 'lasntgadmin' );
+				unset( $columns['groups-read'] );
+				// Remove groups column when user is only a member of a single group.
+			}
 		}
 		return $columns;
 	}
@@ -53,9 +90,18 @@ class AdminTableView {
 	}
 
 	public static function render_product_column( string $column, int $post_id ): void {
+		if ( current_user_can( 'publish_shop_orders' ) && 'group_quota' === $column ) {
+			echo self::render_group_quota( $post_id ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		}
 		if ( current_user_can( 'publish_shop_orders' ) && 'create_order' === $column ) {
 			echo self::render_create_order_button( $post_id ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		}
+	}
+
+	private static function render_group_quota( int $product_id ): string {
+		$users_groups = GroupUtils::get_current_users_groups();
+		$quota        = QuotaUtils::remaining_quota( $product_id, $users_groups[0]->group_id );
+		return ! is_numeric( $quota ) ? '-' : $quota;
 	}
 
 	private static function render_create_order_button( int $product_id ): string {

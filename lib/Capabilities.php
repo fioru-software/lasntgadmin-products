@@ -104,6 +104,7 @@ class Capabilities {
 			'edit_others_products',
 			'edit_posts',
 			'edit_products',
+			'upload_files',
 		];
 	}
 

@@ -15,7 +15,8 @@
 					props: {
 						// Change this: key needs to be the WP_Query var for the taxonomy
 						lasntg_group: value.group_id,
-					}
+					},
+					priority: 20
 				};
 			});
 			filters.all = {

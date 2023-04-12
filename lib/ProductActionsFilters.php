@@ -54,6 +54,28 @@ class ProductActionsFilters {
 	 */
 	public static function register_post_type_product( array $args ): array {
 		$args['capabilities']['create_posts'] = 'create_products';
+
+		$labels              = array(
+			'name'               => __( 'Courses', 'lasntgadmin' ),
+			'singular_name'      => __( 'Course', 'lasntgadmin' ),
+			'menu_name'          => _x( 'Courses', 'Admin menu name', 'lasntgadmin' ),
+			'add_new'            => __( 'Add Course', 'lasntgadmin' ),
+			'add_new_item'       => __( 'Add New Course', 'lasntgadmin' ),
+			'edit'               => __( 'Edit', 'lasntgadmin' ),
+			'edit_item'          => __( 'Edit Course', 'lasntgadmin' ),
+			'new_item'           => __( 'New Course', 'lasntgadmin' ),
+			'view'               => __( 'View Course', 'lasntgadmin' ),
+			'view_item'          => __( 'View Course', 'lasntgadmin' ),
+			'search_items'       => __( 'Search Courses', 'lasntgadmin' ),
+			'not_found'          => __( 'No Courses found', 'lasntgadmin' ),
+			'not_found_in_trash' => __( 'No Courses found in trash', 'lasntgadmin' ),
+			'parent'             => __( 'Parent Course', 'lasntgadmin' ),
+		);
+		$args['labels']      = $labels;
+		$args['description'] = __( 'This is where you can add new courses.', 'lasntgadmin' );
+
+		$args['labels']['name']          = __( 'Courses', 'lasntgadmin' );
+		$args['labels']['singular_name'] = __( 'Course', 'lasntgadmin' );
 		return $args;
 	}
 
@@ -128,7 +150,7 @@ class ProductActionsFilters {
 	 * @return string
 	 */
 	public static function stock_filter( $available_text, $product ): string {
-		if ( 'publish' !== $product->get_status() ) {
+		if ( ProductUtils::$publish_status !== $product->get_status() ) {
 			$status = ProductUtils::get_status_name( $product->get_status() );
 			return '<p class="stock out-of-stock">Course not available: ' . esc_attr( $status ) . '</p>';
 		}
@@ -165,6 +187,7 @@ class ProductActionsFilters {
 					// translators: $status status.
 					'label_count'               => _n_noop( $status . ' <span class="count">(%s)</span>', $status . ' <span class="count">(%s)</span>', 'lasntgadmin' ), //phpcs:ignore WordPress.WP.I18n.NonSingularStringLiteralPlural, WordPress.WP.I18n.NonSingularStringLiteralSingle, WordPress.WP.I18n.NonSingularStringLiteralSingular
 					'public'                    => true,
+					'publicly_queryable'        => true,
 					'exclude_from_search'       => false,
 					'show_in_admin_all_list'    => true,
 					'show_in_admin_status_list' => true,

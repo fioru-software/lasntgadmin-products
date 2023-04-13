@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e0fb6fc90a0bbb963b5447f012d4a4d8",
+    "content-hash": "b5ab1548adc856b2327155ce9938a42e",
     "packages": [
         {
             "name": "composer/installers",
@@ -154,22 +154,23 @@
         },
         {
             "name": "fioru/lasntgadmin-attendees",
-            "version": "3.4.0",
+            "version": "3.5.0",
             "source": {
                 "type": "git",
                 "url": "git@github.com:fioru-software/lasntgadmin-attendees.git",
-                "reference": "6dbbaa0d45b68fdb0eca6170e0c18f951cfa8fda"
+                "reference": "39d2777dbca5fd98c4be0282ac1d0443d234ff4a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fioru-software/lasntgadmin-attendees/zipball/6dbbaa0d45b68fdb0eca6170e0c18f951cfa8fda",
-                "reference": "6dbbaa0d45b68fdb0eca6170e0c18f951cfa8fda",
+                "url": "https://api.github.com/repos/fioru-software/lasntgadmin-attendees/zipball/39d2777dbca5fd98c4be0282ac1d0443d234ff4a",
+                "reference": "39d2777dbca5fd98c4be0282ac1d0443d234ff4a",
                 "shasum": ""
             },
             "require": {
                 "composer/installers": "~2.0",
-                "fioru/lasntgadmin-groups": "^1.1.0",
-                "fioru/lasntgadmin-orders": "^1.2.0",
+                "fioru/lasntgadmin-groups": "^1.2.0",
+                "fioru/lasntgadmin-orders": "^1.5.2",
+                "fioru/lasntgadmin-products": "^5.5.0",
                 "symfony/uid": "^5.4"
             },
             "require-dev": {
@@ -222,10 +223,10 @@
                 ]
             },
             "support": {
-                "source": "https://github.com/fioru-software/lasntgadmin-attendees/tree/3.4.0",
+                "source": "https://github.com/fioru-software/lasntgadmin-attendees/tree/3.5.0",
                 "issues": "https://github.com/fioru-software/lasntgadmin-attendees/issues"
             },
-            "time": "2023-03-27T13:36:29+00:00"
+            "time": "2023-04-07T10:26:03+00:00"
         },
         {
             "name": "fioru/lasntgadmin-grant-funded-payment-gateway",
@@ -302,16 +303,16 @@
         },
         {
             "name": "fioru/lasntgadmin-groups",
-            "version": "1.1.1",
+            "version": "1.2.1",
             "source": {
                 "type": "git",
                 "url": "git@github.com:fioru-software/lasntgadmin-groups.git",
-                "reference": "26e8a425dbf1254be1435adc4df0263137505edc"
+                "reference": "15327657121c2c9644b870c8288aebc358b531da"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fioru-software/lasntgadmin-groups/zipball/26e8a425dbf1254be1435adc4df0263137505edc",
-                "reference": "26e8a425dbf1254be1435adc4df0263137505edc",
+                "url": "https://api.github.com/repos/fioru-software/lasntgadmin-groups/zipball/15327657121c2c9644b870c8288aebc358b531da",
+                "reference": "15327657121c2c9644b870c8288aebc358b531da",
                 "shasum": ""
             },
             "require": {
@@ -367,23 +368,23 @@
                 ]
             },
             "support": {
-                "source": "https://github.com/fioru-software/lasntgadmin-groups/tree/1.1.1",
+                "source": "https://github.com/fioru-software/lasntgadmin-groups/tree/1.2.1",
                 "issues": "https://github.com/fioru-software/lasntgadmin-groups/issues"
             },
-            "time": "2023-02-08T16:07:43+00:00"
+            "time": "2023-04-10T09:33:34+00:00"
         },
         {
             "name": "fioru/lasntgadmin-orders",
-            "version": "1.5.2-rc1",
+            "version": "1.5.5",
             "source": {
                 "type": "git",
                 "url": "git@github.com:fioru-software/lasntgadmin-orders.git",
-                "reference": "48d9d790ffaa80f3662600c68fc12f2663325f08"
+                "reference": "48c1a947f4782d1c2f4fb19d8f05c8b4de14498b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fioru-software/lasntgadmin-orders/zipball/48d9d790ffaa80f3662600c68fc12f2663325f08",
-                "reference": "48d9d790ffaa80f3662600c68fc12f2663325f08",
+                "url": "https://api.github.com/repos/fioru-software/lasntgadmin-orders/zipball/48c1a947f4782d1c2f4fb19d8f05c8b4de14498b",
+                "reference": "48c1a947f4782d1c2f4fb19d8f05c8b4de14498b",
                 "shasum": ""
             },
             "require": {
@@ -443,28 +444,28 @@
                 ]
             },
             "support": {
-                "source": "https://github.com/fioru-software/lasntgadmin-orders/tree/1.5.2-rc1",
+                "source": "https://github.com/fioru-software/lasntgadmin-orders/tree/1.5.5",
                 "issues": "https://github.com/fioru-software/lasntgadmin-orders/issues"
             },
-            "time": "2023-04-03T10:53:40+00:00"
+            "time": "2023-04-07T11:40:13+00:00"
         },
         {
             "name": "fioru/lasntgadmin-users",
-            "version": "3.0.4",
+            "version": "3.2.1",
             "source": {
                 "type": "git",
                 "url": "git@github.com:fioru-software/lasntgadmin-users.git",
-                "reference": "6634c80feb6f640d55ea50f6f32a4dfa9d32c454"
+                "reference": "4a0aa192633c596b5413ff6b127e10b8c3d2539a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fioru-software/lasntgadmin-users/zipball/6634c80feb6f640d55ea50f6f32a4dfa9d32c454",
-                "reference": "6634c80feb6f640d55ea50f6f32a4dfa9d32c454",
+                "url": "https://api.github.com/repos/fioru-software/lasntgadmin-users/zipball/4a0aa192633c596b5413ff6b127e10b8c3d2539a",
+                "reference": "4a0aa192633c596b5413ff6b127e10b8c3d2539a",
                 "shasum": ""
             },
             "require": {
                 "composer/installers": "~2.0",
-                "fioru/lasntgadmin-groups": "^1.0.5"
+                "fioru/lasntgadmin-groups": "^1.2.0"
             },
             "require-dev": {
                 "dealerdirect/phpcodesniffer-composer-installer": "^0.7",
@@ -516,10 +517,10 @@
                 ]
             },
             "support": {
-                "source": "https://github.com/fioru-software/lasntgadmin-users/tree/3.0.4",
+                "source": "https://github.com/fioru-software/lasntgadmin-users/tree/3.2.1",
                 "issues": "https://github.com/fioru-software/lasntgadmin-users/issues"
             },
-            "time": "2023-01-06T14:09:11+00:00"
+            "time": "2023-04-06T11:20:17+00:00"
         },
         {
             "name": "symfony/polyfill-uuid",
@@ -1182,12 +1183,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/psr7.git",
-                "reference": "3cf1b6d4f0c820a2cf8bcaec39fc698f3443b5cf"
+                "reference": "bfe7c39159e6b6ff7f5cc7e7af1a086f8fec6ef0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/psr7/zipball/3cf1b6d4f0c820a2cf8bcaec39fc698f3443b5cf",
-                "reference": "3cf1b6d4f0c820a2cf8bcaec39fc698f3443b5cf",
+                "url": "https://api.github.com/repos/guzzle/psr7/zipball/bfe7c39159e6b6ff7f5cc7e7af1a086f8fec6ef0",
+                "reference": "bfe7c39159e6b6ff7f5cc7e7af1a086f8fec6ef0",
                 "shasum": ""
             },
             "require": {
@@ -1278,7 +1279,7 @@
             ],
             "support": {
                 "issues": "https://github.com/guzzle/psr7/issues",
-                "source": "https://github.com/guzzle/psr7/tree/2.4.4"
+                "source": "https://github.com/guzzle/psr7/tree/master"
             },
             "funding": [
                 {
@@ -1294,7 +1295,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-03-09T13:19:02+00:00"
+            "time": "2023-04-08T21:54:23+00:00"
         },
         {
             "name": "hamcrest/hamcrest-php",
@@ -1350,16 +1351,16 @@
         },
         {
             "name": "mockery/mockery",
-            "version": "1.5.1",
+            "version": "1.5.x-dev",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mockery/mockery.git",
-                "reference": "e92dcc83d5a51851baf5f5591d32cb2b16e3684e"
+                "reference": "9ad050f4d5c838e60885d56f808dcafc56383805"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mockery/mockery/zipball/e92dcc83d5a51851baf5f5591d32cb2b16e3684e",
-                "reference": "e92dcc83d5a51851baf5f5591d32cb2b16e3684e",
+                "url": "https://api.github.com/repos/mockery/mockery/zipball/9ad050f4d5c838e60885d56f808dcafc56383805",
+                "reference": "9ad050f4d5c838e60885d56f808dcafc56383805",
                 "shasum": ""
             },
             "require": {
@@ -1416,9 +1417,9 @@
             ],
             "support": {
                 "issues": "https://github.com/mockery/mockery/issues",
-                "source": "https://github.com/mockery/mockery/tree/1.5.1"
+                "source": "https://github.com/mockery/mockery/tree/master"
             },
-            "time": "2022-09-07T15:32:08+00:00"
+            "time": "2023-03-07T14:41:21+00:00"
         },
         {
             "name": "myclabs/deep-copy",
@@ -2094,12 +2095,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/php-code-coverage.git",
-                "reference": "1eae16e6af7e03a13de8bf07d7d5209dff119465"
+                "reference": "db887088b40ae43d17b9913886df860a7035145d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/1eae16e6af7e03a13de8bf07d7d5209dff119465",
-                "reference": "1eae16e6af7e03a13de8bf07d7d5209dff119465",
+                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/db887088b40ae43d17b9913886df860a7035145d",
+                "reference": "db887088b40ae43d17b9913886df860a7035145d",
                 "shasum": ""
             },
             "require": {
@@ -2164,7 +2165,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2023-03-30T08:33:23+00:00"
+            "time": "2023-04-04T09:22:25+00:00"
         },
         {
             "name": "phpunit/php-file-iterator",
@@ -2413,12 +2414,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "d781fac3d8422eca72086c6e5b08fc04c76c6331"
+                "reference": "5a0a0de422fc800268b8819f42994c5aad024628"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/d781fac3d8422eca72086c6e5b08fc04c76c6331",
-                "reference": "d781fac3d8422eca72086c6e5b08fc04c76c6331",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/5a0a0de422fc800268b8819f42994c5aad024628",
+                "reference": "5a0a0de422fc800268b8819f42994c5aad024628",
                 "shasum": ""
             },
             "require": {
@@ -2508,7 +2509,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-03-30T08:23:00+00:00"
+            "time": "2023-04-11T13:00:21+00:00"
         },
         {
             "name": "psr/container",
@@ -2570,17 +2571,17 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-fig/http-client.git",
-                "reference": "22b2ef5687f43679481615605d7a15c557ce85b1"
+                "reference": "0955afe48220520692d2d09f7ab7e0f93ffd6a31"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-fig/http-client/zipball/22b2ef5687f43679481615605d7a15c557ce85b1",
-                "reference": "22b2ef5687f43679481615605d7a15c557ce85b1",
+                "url": "https://api.github.com/repos/php-fig/http-client/zipball/0955afe48220520692d2d09f7ab7e0f93ffd6a31",
+                "reference": "0955afe48220520692d2d09f7ab7e0f93ffd6a31",
                 "shasum": ""
             },
             "require": {
                 "php": "^7.0 || ^8.0",
-                "psr/http-message": "^1.0"
+                "psr/http-message": "^1.0 || ^2.0"
             },
             "default-branch": true,
             "type": "library",
@@ -2613,9 +2614,9 @@
                 "psr-18"
             ],
             "support": {
-                "source": "https://github.com/php-fig/http-client/tree/master"
+                "source": "https://github.com/php-fig/http-client/tree/1.0.2"
             },
-            "time": "2020-09-19T09:12:31+00:00"
+            "time": "2023-04-10T20:12:12+00:00"
         },
         {
             "name": "psr/http-factory",
@@ -2623,17 +2624,17 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-fig/http-factory.git",
-                "reference": "5a4f141ac2e5bc35e615134f127e1833158d2944"
+                "reference": "e616d01114759c4c489f93b099585439f795fe35"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-fig/http-factory/zipball/5a4f141ac2e5bc35e615134f127e1833158d2944",
-                "reference": "5a4f141ac2e5bc35e615134f127e1833158d2944",
+                "url": "https://api.github.com/repos/php-fig/http-factory/zipball/e616d01114759c4c489f93b099585439f795fe35",
+                "reference": "e616d01114759c4c489f93b099585439f795fe35",
                 "shasum": ""
             },
             "require": {
                 "php": ">=7.0.0",
-                "psr/http-message": "^1.0"
+                "psr/http-message": "^1.0 || ^2.0"
             },
             "default-branch": true,
             "type": "library",
@@ -2669,32 +2670,31 @@
                 "response"
             ],
             "support": {
-                "source": "https://github.com/php-fig/http-factory/tree/master"
+                "source": "https://github.com/php-fig/http-factory/tree/1.0.2"
             },
-            "time": "2022-07-14T07:21:53+00:00"
+            "time": "2023-04-10T20:10:41+00:00"
         },
         {
             "name": "psr/http-message",
-            "version": "dev-master",
+            "version": "1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-fig/http-message.git",
-                "reference": "efd67d1dc14a7ef4fc4e518e7dee91c271d524e4"
+                "reference": "cb6ce4845ce34a8ad9e68117c10ee90a29919eba"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-fig/http-message/zipball/efd67d1dc14a7ef4fc4e518e7dee91c271d524e4",
-                "reference": "efd67d1dc14a7ef4fc4e518e7dee91c271d524e4",
+                "url": "https://api.github.com/repos/php-fig/http-message/zipball/cb6ce4845ce34a8ad9e68117c10ee90a29919eba",
+                "reference": "cb6ce4845ce34a8ad9e68117c10ee90a29919eba",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3.0"
+                "php": "^7.2 || ^8.0"
             },
-            "default-branch": true,
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.0.x-dev"
+                    "dev-master": "1.1.x-dev"
                 }
             },
             "autoload": {
@@ -2723,9 +2723,9 @@
                 "response"
             ],
             "support": {
-                "source": "https://github.com/php-fig/http-message/tree/master"
+                "source": "https://github.com/php-fig/http-message/tree/1.1"
             },
-            "time": "2019-08-29T13:16:46+00:00"
+            "time": "2023-04-04T09:50:52+00:00"
         },
         {
             "name": "ralouphie/getallheaders",

@@ -13,12 +13,6 @@ use WP_Post;
  * Handle Actions anf filters for products
  */
 class ProductActionsFilters {
-
-
-
-
-
-
 	/**
 	 * Iniates actions and filters regarding Product
 	 *
@@ -47,8 +41,110 @@ class ProductActionsFilters {
 		add_filter( 'woocommerce_product_query', [ self::class, 'woocommerce_product_query' ], 15, 1 );
 
 		add_filter( 'woocommerce_register_post_type_product', [ self::class, 'register_post_type_product' ] );
+
+		// media library.
+		add_filter( 'ajax_query_attachments_args', [ self::class, 'show_groups_attachments' ] );
+
+		add_action( 'wp_enqueue_media', [ self::class, 'wp_enqueue_media' ] );
 	}
 
+	public static function wp_enqueue_media() {
+		$post_type = property_exists( get_current_screen(), 'post_type' ) ? get_current_screen()->post_type : false;
+		if ( 'product' !== $post_type ) {
+			return;
+		}
+		$assets_dir = untrailingslashit( plugin_dir_url( __FILE__ ) ) . '/../assets/';
+		wp_enqueue_script( 'media-library-taxonomy-filter', $assets_dir . '/js/collection-filter.js', array( 'media-editor', 'media-views' ) );
+		$user_groups = GroupUtils::get_groups_by_user_id( get_current_user_id() );
+
+		// Load 'terms' into a JavaScript variable that collection-filter.js has access to.
+		wp_localize_script(
+			'media-library-taxonomy-filter',
+			'MediaLibraryTaxonomyFilterData',
+			array(
+				'terms' => $user_groups,
+			)
+		);
+		// Overrides code styling to accommodate for a third dropdown filter.
+		add_action(
+			'admin_footer',
+			function () {
+				?>
+			<style>
+				.media-modal-content .media-frame select.attachment-filters {
+					max-width: -webkit-calc(33% - 12px);
+					max-width: calc(33% - 12px);
+				}
+			</style>
+				<?php
+			}
+		);
+	}
+
+	public static function show_groups_attachments( $query ) {
+		if ( ! isset( $_POST['query'] ) || ! isset( $_POST['post_id'] ) ) { //phpcs:ignore WordPress.Security.NonceVerification.Missing
+			return $query;
+		}
+		$user_id = get_current_user_id();
+		$post_id = sanitize_text_field( wp_unslash( $_POST['post_id'] ) ); //phpcs:ignore WordPress.Security.NonceVerification.Missing
+		$post    = get_post( $post_id );
+		if ( 'product' !== $post->post_type ) {
+			return $query;
+		}
+		$selected_group_id = '';
+		if ( isset( $_POST['query']['lasntg_group'] ) ) { //phpcs:ignore WordPress.Security.NonceVerification.Missing
+			$selected_group_id = sanitize_text_field( wp_unslash( $_POST['query']['lasntg_group'] ) ); //phpcs:ignore WordPress.Security.NonceVerification.Missing
+		}
+
+		$user_groups = GroupUtils::get_groups_by_user_id( get_current_user_id() );
+
+		// if empty show all groups current user has.
+		// admin has access to all.
+		if ( empty( $selected_group_id ) ) {
+			// assumption that national_manager will be a member of all groups.
+			if ( current_user_can( 'manage_options' )
+				|| in_array( 'national_manager', wp_get_current_user()->roles ) !== false
+			) {
+				return $query;
+			}
+			$user_ids = [];
+			foreach ( $user_groups as $user_group ) {
+				$group = new \Groups_Group( $user_group->group_id );
+				$users = $group->users;
+
+				$users    = array_map(
+					function ( $user ) {
+						return $user->ID;
+					},
+					$users
+				);
+				$user_ids = array_merge( $user_ids, $users );
+			}
+			$user_ids            = array_unique( $user_ids );
+			$query['author__in'] = $users;
+			return $query;
+		}//end if
+		$user_groups = GroupUtils::get_group_ids_by_user_id( $user_id );
+
+		if ( current_user_can( 'manage_options' ) || in_array( $selected_group_id, $user_groups ) !== false ) {
+			$group = new \Groups_Group( $selected_group_id );
+
+			$users = array_map(
+				function ( $user ) {
+					return $user->ID;
+				},
+				$group->users
+			);
+			if ( $users ) {
+				$query['author__in'] = $users;
+				return $query;
+			}
+		}
+		// if current user is not an admin and doesn't have the group return an absurd user id.
+		// if it's blank it returns all users media.
+		$query['author'] = '10000000';
+		return $query;
+	}
 	/**
 	 * @see https://developer.wordpress.org/reference/functions/register_post_type/#capabilities
 	 */

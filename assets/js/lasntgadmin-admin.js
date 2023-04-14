@@ -1,6 +1,6 @@
 jQuery(document).ready(function ($) {
    const wrapper = $('.product-data-wrapper');
-   
+
    if (wrapper.length) {
       $('#_virtual').prop('checked', true);
       wrapper.hide();
@@ -16,33 +16,36 @@ jQuery(document).ready(function ($) {
 
 
    //
-   if('product' !== lasntgadmin_products_admin_localize.post_type){
+   if ('product' !== lasntgadmin_products_admin_localize.post_type) {
       return;
    }
    const sel1 = $('[name="groups-read[]"]').selectize();
    sel1[0].selectize.removeOption(1);
    sel1[0].selectize.refreshOptions(false);
    const lastngtadmin_status = $('#lasntgadmin_status');
-   if(lastngtadmin_status.length){
-      if(!lastngtadmin_status.val()){
+   if (lastngtadmin_status.length) {
+      if (!lastngtadmin_status.val()) {
          lastngtadmin_status.val($('select[name="post_status"]').val())
       }
-      $('.save-post-status').on('click', function(){
+      $('.save-post-status').on('click', function () {
          lastngtadmin_status.val($('select[name="post_status"]').val())
       })
 
-      
-      if(lasntgadmin_products_admin_localize.lasntg_status && lasntgadmin_products_admin_localize.post_type){
-      const current_status = lasntgadmin_products_admin_localize.lasntg_status;
-      const post_status = $('select[name="post_status"]');
-      
-      const statuses = lasntgadmin_products_admin_localize.statuses;
-      Object.keys(statuses).forEach(status => {
-         post_status.append(`<option value="${status}">${statuses[status]}</option>`)
-      });
-      post_status.val(current_status);
-      $( '#post-status-display' ).html(statuses[current_status])
-   }
+
+      if (lasntgadmin_products_admin_localize.lasntg_status && lasntgadmin_products_admin_localize.post_type) {
+         const current_status = lasntgadmin_products_admin_localize.lasntg_status;
+         const post_status = $('select[name="post_status"]');
+
+         const statuses = lasntgadmin_products_admin_localize.statuses;
+         Object.keys(statuses).forEach(status => {
+            post_status.append(`<option value="${status}">${statuses[status]}</option>`)
+         });
+         post_status.val(current_status);
+         $('#post-status-display').html(statuses[current_status])
+      }
 
    }
+
+   
 });
+

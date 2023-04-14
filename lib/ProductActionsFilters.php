@@ -47,8 +47,47 @@ class ProductActionsFilters {
 		add_filter( 'woocommerce_product_query', [ self::class, 'woocommerce_product_query' ], 15, 1 );
 
 		add_filter( 'woocommerce_register_post_type_product', [ self::class, 'register_post_type_product' ] );
+		add_filter( 'manage_product_posts_columns', [ self::class, 'add_venue_column' ] );
+		add_filter( 'manage_edit-product_sortable_columns', [ self::class, 'sortable_venue' ] );
+		add_action( 'manage_product_posts_custom_column', [ self::class, 'add_venue_custom' ], 10, 2 );
+		add_action( 'pre_get_posts', [ self::class, 'my_sort_custom_column_query' ], 10, 1 );
 	}
 
+	public static function my_sort_custom_column_query( $query ) {
+		$orderby = $query->get( 'orderby' );
+
+		if ( 'venue' == $orderby ) {
+			$meta_query = array(
+				'relation' => 'OR',
+				array( //phpcs:ignore Universal.Arrays.MixedArrayKeyTypes.ImplicitNumericKey, Universal.Arrays.MixedKeyedUnkeyedArray.Found
+					'key'     => 'field_63881b84798a5',
+					'compare' => 'NOT EXISTS',
+				),
+				array( //phpcs:ignore Universal.Arrays.MixedArrayKeyTypes.ImplicitNumericKey, Universal.Arrays.MixedKeyedUnkeyedArray.Found
+					'key' => 'field_63881b84798a5',
+				),
+			);
+
+			$query->set( 'meta_query', $meta_query );
+			$query->set( 'orderby', 'meta_value' );
+		}
+	}
+
+	public static function sortable_venue( $columns ) {
+		$columns['venue'] = __( 'Venue', 'lasntgadmin' );
+		return $columns;
+	}
+	public static function add_venue_custom( $column_name, $post_id ) {
+		if ( 'venue' === $column_name ) {
+			echo get_field( 'field_63881b84798a5', $post_id ); //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		}
+	}
+	public static function add_venue_column( $defaults ) {
+		$assets_dir = untrailingslashit( plugin_dir_url( __FILE__ ) ) . '/../assets/';
+		wp_enqueue_style( 'admin-columns', $assets_dir . 'styles/admin-column.css' );
+		$defaults['venue'] = 'Venue';
+		return $defaults;
+	}
 	/**
 	 * @see https://developer.wordpress.org/reference/functions/register_post_type/#capabilities
 	 */

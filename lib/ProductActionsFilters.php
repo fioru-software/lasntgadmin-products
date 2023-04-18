@@ -41,13 +41,12 @@ class ProductActionsFilters {
 		add_filter( 'woocommerce_product_query', [ self::class, 'woocommerce_product_query' ], 15, 1 );
 
 		add_filter( 'woocommerce_register_post_type_product', [ self::class, 'register_post_type_product' ] );
-    
 
 		// media library.
 		add_filter( 'ajax_query_attachments_args', [ self::class, 'show_groups_attachments' ] );
 
 		add_action( 'wp_enqueue_media', [ self::class, 'wp_enqueue_media' ] );
-    
+
 		add_filter( 'manage_product_posts_columns', [ self::class, 'add_venue_column' ] );
 		add_filter( 'manage_product_posts_columns', [ self::class, 'rename_groups_column' ], 99 );
 		add_filter( 'manage_edit-product_sortable_columns', [ self::class, 'sortable_venue' ] );

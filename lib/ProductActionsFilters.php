@@ -19,7 +19,11 @@ class ProductActionsFilters {
 	 * @return void
 	 */
 	public static function init(): void {
-		// actions.
+		self::add_actions();
+		self::add_filters();
+	}
+
+	public static function add_actions(): void {
 		add_action( 'rest_api_init', [ ProductApi::class, 'get_instance' ] );
 		add_action( 'admin_notices', [ self::class, 'admin_notice_errors' ], 500 );
 
@@ -30,7 +34,13 @@ class ProductActionsFilters {
 		add_action( 'edit_form_after_title', [ self::class, 'hidden_status' ] );
 		add_action( 'init', [ self::class, 'register_custom_product_statuses' ], 0 );
 
-		// filters.
+		add_action( 'wp_enqueue_media', [ self::class, 'wp_enqueue_media' ] );
+
+		add_action( 'manage_product_posts_custom_column', [ self::class, 'add_venue_custom' ], 10, 2 );
+		add_action( 'pre_get_posts', [ self::class, 'sort_custom_columns_query' ], 99, 1 );
+	}
+
+	public static function add_filters(): void {
 		add_filter( 'wp_insert_post_data', [ self::class, 'filter_post_data' ], 99, 2 );
 		add_filter( 'wp_insert_post', [ self::class, 'cancel_orders' ], 10, 3 );
 		add_filter( 'post_updated_messages', [ self::class, 'post_updated_messages_filter' ], 500 );
@@ -45,13 +55,13 @@ class ProductActionsFilters {
 		// media library.
 		add_filter( 'ajax_query_attachments_args', [ self::class, 'show_groups_attachments' ] );
 
-		add_action( 'wp_enqueue_media', [ self::class, 'wp_enqueue_media' ] );
-
 		add_filter( 'manage_product_posts_columns', [ self::class, 'add_venue_column' ] );
 		add_filter( 'manage_product_posts_columns', [ self::class, 'rename_groups_column' ], 99 );
 		add_filter( 'manage_edit-product_sortable_columns', [ self::class, 'sortable_venue' ] );
-		add_action( 'manage_product_posts_custom_column', [ self::class, 'add_venue_custom' ], 10, 2 );
-		add_action( 'pre_get_posts', [ self::class, 'sort_custom_columns_query' ], 99, 1 );
+
+		// show products in private client group to anonymous shoppers.
+		add_filter( 'groups_post_access_posts_where_apply', [ self::class, 'filter_products_apply' ], 20, 3 );
+		add_filter( 'woocommerce_product_is_visible', [ self::class, 'product_is_visible' ], 11, 2 );
 	}
 
 	public static function sort_custom_columns_query( $query ) {
@@ -95,6 +105,7 @@ class ProductActionsFilters {
 
 		return $columns;
 	}
+
 	public static function add_venue_custom( $column_name, $post_id ) {
 		if ( 'venue' === $column_name ) {
 			echo get_field( 'field_63881b84798a5', $post_id ); //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
@@ -102,10 +113,12 @@ class ProductActionsFilters {
 			echo get_field( 'field_63881aee31478', $post_id ); //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		}
 	}
+
 	public static function rename_groups_column( $defaults ) {
 		$defaults['groups-read'] = 'Available to';
 		return $defaults;
 	}
+
 	public static function add_venue_column( $defaults ) {
 		$assets_dir = untrailingslashit( plugin_dir_url( __FILE__ ) ) . '/../assets/';
 		wp_enqueue_style( 'admin-columns', $assets_dir . 'styles/admin-column.css' );
@@ -113,6 +126,28 @@ class ProductActionsFilters {
 		$defaults['start_date'] = 'Start Date';
 
 		return $defaults;
+	}
+
+	/**
+	 * Override group plugin's product visibility override.
+	 *
+	 * @see https://github.com/itthinx/groups/blob/master/lib/extra/class-groups-extra.php#L52
+	 */
+	public static function product_is_visible( $visible, $product_id ) {
+		return true;
+	}
+
+	/**
+	 * Do not apply groups filter for products in the shop.
+	 *
+	 * @see https://github.com/fioru-software/lasntgadmin-products/blob/master/lib/ProductActionsFilters.php#L191
+	 * @see https://github.com/itthinx/groups/blob/master/lib/access/class-groups-post-access.php#L223
+	 */
+	public static function filter_products_apply( $bool, $where, $query ) {
+		if ( ! is_admin() && ( ( is_singular() && $query->get( 'post_type' ) === 'product' ) || is_shop() ) ) {
+			$bool = false;
+		}
+		return $bool;
 	}
 
 	public static function wp_enqueue_media() {

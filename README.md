@@ -1,4 +1,4 @@
-# LASNTG WordPress plugin template
+# LASNTG Products
 
 Please see [WordPress plugin developer handbook](https://developer.wordpress.org/plugins/) for detailed info. 
 

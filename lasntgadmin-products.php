@@ -3,7 +3,7 @@
  * Plugin Name:       LASNTG Products
  * Plugin URI:        https://github.com/fioru-software/lasntgadmin-products
  * Description:       Lasntg Products
- * Version:           5.5.6
+ * Version:           5.6.0
  * Requires PHP:      7.2
  * Text Domain:       lasntgadmin
  * Domain Path:       /languages
@@ -18,9 +18,9 @@ use Lasntg\Admin\Products\{
 	QuotasActionsFilters,
 	ProductActionsFilters,
 	AcfFields,
-    AdminTableView,
-    PluginUtils,
-    Importer
+	AdminTableView,
+	PluginUtils,
+	Importer
 };
 
 // Register activation and deactivation hooks.

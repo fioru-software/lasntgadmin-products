@@ -3,6 +3,7 @@
 namespace Lasntg\Admin\Products;
 
 use Lasntg\Admin\PaymentGateway\GrantFunded\{ GrantYearUtils, FundingSourceUtils };
+use Lasntg\Admin\Group\GroupUtils;
 
 class AcfFields {
 
@@ -18,6 +19,19 @@ class AcfFields {
 		// Apply to all fields.
 		add_action( 'acf/load_field/name=funding_sources', [ self::class, 'populate_funding_source_select_options' ], 10 );
 		add_action( 'acf/load_field/name=grant_year', [ self::class, 'populate_grant_year_select_options' ], 10 );
+		add_action( 'acf/load_field/name=training_centre', [ self::class, 'populate_training_centre_select_options' ], 10 );
+	}
+
+	/**
+	 * Fetch local authority options from the groups table.
+	 */
+	public static function populate_training_centre_select_options( array $field ): array {
+		$training_centres = GroupUtils::get_all_training_centres();
+
+		foreach ( $training_centres as $training_centre ) {
+			$field['choices'][ $training_centre->group_id ] = $training_centre->name;
+		}
+		return $field;
 	}
 
 	/**

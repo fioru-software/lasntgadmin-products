@@ -118,29 +118,66 @@ class QuotasActionsFilters {
 			"SELECT name,group_id FROM {$wpdb->prefix}groups_group ORDER BY name"
 		);
 
-		echo '<div id="product_tab_data" class="panel woocommerce_options_panel">';
+		echo '<div id="product_tab_data" class="panel woocommerce_options_panel" style="padding-left: 5px">';
 		// Get action. For new product it's add.
 		$action = get_current_screen()->action;
-
-		foreach ( $results as $group ) {
-			$groups[ $group->group_id ] = $group->name;
-			woocommerce_wp_text_input(
-				array(
-					'id'                => '_quotas_field_' . $group->group_id,
-					'label'             => $group->name,
-					'placeholder'       => __( 'Leave blank for unlimited quota.', 'lasntgadmin' ),
-					'desc_tip'          => 'true',
-					'description'       => __( 'Leave blank for unlimited quota.', 'lasntgadmin' ),
-					'value'             => 'add' !== $action ? get_post_meta( $post->ID, '_quotas_field_' . $group->group_id, true ) : 0,
-					'type'              => 'number',
-					'custom_attributes' => array(
-						'step' => '1',
-						'min'  => '0',
-						'type' => 'number',
-					),
-				)
+		$tree   = \Groups_Utility::get_group_tree();
+		unset( $tree['33'] );
+		unset( $tree['1'] );
+		foreach ( $tree as $parent_id => $group_id ) {
+			$group      = new \Groups_Group( $parent_id );
+			$group_name = esc_attr( $group->name );
+			echo "<h3>$group_name</h3>"; //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			$parent_id = (int) $parent_id;
+			echo "<div style='display: flex;justify-content: space-evenly;'>"
+			. "<button type='button' data-id='$parent_id' class='set-all-zero button button-small hide-if-no-js'>Set All to 0</button>" //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			. "<button type='button' data-id='$parent_id' class='set-all-unlimited button button-small hide-if-no-js'>Set All to unlimited</button>" //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			. '</div>';
+			$groups = \Groups_Group::get_groups(
+				[
+					'parent_id' => $parent_id,
+					'order_by'  => 'name',
+				]
 			);
-		}
+			foreach ( $groups as $group ) {
+				$groups[ $group->group_id ] = $group->name;
+				woocommerce_wp_text_input(
+					array(
+						'id'                => '_quotas_field_' . $group->group_id,
+						'label'             => $group->name,
+						'placeholder'       => __( 'Leave blank for unlimited quota.', 'lasntgadmin' ),
+						'desc_tip'          => 'true',
+						'description'       => __( 'Leave blank for unlimited quota.', 'lasntgadmin' ),
+						'value'             => 'add' !== $action ? get_post_meta( $post->ID, '_quotas_field_' . $group->group_id, true ) : 0,
+						'type'              => 'number',
+						'custom_attributes' => array(
+							'step'        => '1',
+							'min'         => '0',
+							'type'        => 'number',
+							'data-parent' => $parent_id,
+						),
+					)
+				);
+			}
+		}//end foreach
+		$group = new \Groups_Group( 33 );
+		echo '<h3>Private Client</h3>';
+		woocommerce_wp_text_input(
+			array(
+				'id'                => '_quotas_field_' . $group->group_id,
+				'label'             => $group->name,
+				'placeholder'       => __( 'Leave blank for unlimited quota.', 'lasntgadmin' ),
+				'desc_tip'          => 'true',
+				'description'       => __( 'Leave blank for unlimited quota.', 'lasntgadmin' ),
+				'value'             => 'add' !== $action ? get_post_meta( $post->ID, '_quotas_field_' . $group->group_id, true ) : 0,
+				'type'              => 'number',
+				'custom_attributes' => array(
+					'step' => '1',
+					'min'  => '0',
+					'type' => 'number',
+				),
+			)
+		);
 
 		echo '</div>';
 	}

@@ -1,4 +1,22 @@
 jQuery(document).ready(function ($) {
+   $('.set-all-zero').click(function(e){
+      e.preventDefault();
+      
+      const parent_id = $(this).data('id');
+      $('input[data-parent=' + parent_id +']').each(function() {
+         $(this).val(0)
+      })
+      return false;
+   })
+   $('.set-all-unlimited').click(function(e){
+      e.preventDefault();
+      
+      const parent_id = $(this).data('id');
+      $('input[data-parent=' + parent_id +']').each(function() {
+         $(this).val('')
+      })
+      return false;
+   })
    const wrapper = $('.product-data-wrapper');
 
    if (wrapper.length) {

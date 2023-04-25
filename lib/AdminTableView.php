@@ -100,8 +100,11 @@ class AdminTableView {
 
 	private static function render_group_quota( int $product_id ): string {
 		$users_groups = GroupUtils::get_current_users_groups();
-		$quota        = QuotaUtils::remaining_quota( $product_id, $users_groups[0]->group_id );
-		return ! is_numeric( $quota ) ? '-' : $quota;
+		if ( count( $users_groups ) > 1 ) {
+			return __( 'Multiple Quotas', 'lasntgadmin' );
+		}
+		$quota = QuotaUtils::remaining_quota( $product_id, $users_groups[0]->group_id );
+		return ! is_numeric( $quota ) ? __( 'Limited by spaces available', 'lasntgadmin' ) : $quota;
 	}
 
 	private static function render_create_order_button( int $product_id ): string {

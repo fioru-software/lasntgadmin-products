@@ -148,7 +148,7 @@ class QuotasActionsFilters {
 						'placeholder'       => __( 'Leave blank for unlimited quota.', 'lasntgadmin' ),
 						'desc_tip'          => 'true',
 						'description'       => __( 'Leave blank for unlimited quota.', 'lasntgadmin' ),
-						'value'             => 'add' !== $action ? get_post_meta( $post->ID, '_quotas_field_' . $group->group_id, true ) : 0,
+						'value'             => 'add' !== $action ? get_post_meta( $post->ID, '_quotas_field_' . $group->group_id, true ) : '',
 						'type'              => 'number',
 						'custom_attributes' => array(
 							'step'        => '1',
@@ -169,7 +169,7 @@ class QuotasActionsFilters {
 				'placeholder'       => __( 'Leave blank for unlimited quota.', 'lasntgadmin' ),
 				'desc_tip'          => 'true',
 				'description'       => __( 'Leave blank for unlimited quota.', 'lasntgadmin' ),
-				'value'             => 'add' !== $action ? get_post_meta( $post->ID, '_quotas_field_' . $group->group_id, true ) : 0,
+				'value'             => 'add' !== $action ? get_post_meta( $post->ID, '_quotas_field_' . $group->group_id, true ) : '',
 				'type'              => 'number',
 				'custom_attributes' => array(
 					'step' => '1',

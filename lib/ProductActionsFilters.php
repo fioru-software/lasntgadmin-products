@@ -122,6 +122,7 @@ class ProductActionsFilters {
 	public static function add_venue_column( $defaults ) {
 		$assets_dir = untrailingslashit( plugin_dir_url( __FILE__ ) ) . '/../assets/';
 		wp_enqueue_style( 'admin-columns', $assets_dir . 'styles/admin-column.css' );
+		
 		$defaults['venue']      = 'Venue';
 		$defaults['start_date'] = 'Start Date';
 
@@ -156,7 +157,7 @@ class ProductActionsFilters {
 			return;
 		}
 		$assets_dir = untrailingslashit( plugin_dir_url( __FILE__ ) ) . '/../assets/';
-		wp_enqueue_script( 'media-library-taxonomy-filter', $assets_dir . '/js/collection-filter.js', array( 'media-editor', 'media-views' ) );
+		wp_enqueue_script( 'media-library-taxonomy-filter', $assets_dir . '/js/collection-filter.js', array( 'media-editor', 'media-views' ), "5.7.1" );
 		$user_groups = GroupUtils::get_groups_by_user_id( get_current_user_id() );
 
 		// Load 'terms' into a JavaScript variable that collection-filter.js has access to.

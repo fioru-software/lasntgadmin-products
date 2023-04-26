@@ -75,7 +75,7 @@ class AdminTableView {
 	public static function add_group_quota_column( array $columns ): array {
 		if ( current_user_can( 'publish_shop_orders' ) ) {
 			$user_groups = GroupUtils::get_current_users_groups();
-			if ( ! empty( $user_groups ) && count( $user_groups ) < 2 ) {
+			if ( ! empty( $user_groups ) ) {
 				$columns['group_quota'] = __( 'Quota', 'lasntgadmin' );
 				unset( $columns['groups-read'] );
 				// Remove groups column when user is only a member of a single group.

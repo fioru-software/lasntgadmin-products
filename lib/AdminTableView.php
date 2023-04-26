@@ -99,13 +99,12 @@ class AdminTableView {
 	}
 
 	private static function render_group_quota( int $product_id ): string {
-		
-		$post_groups = GroupUtils::get_read_group_ids($product_id);
+		$post_groups = GroupUtils::get_read_group_ids( $product_id );
 		if ( count( $post_groups ) > 1 ) {
 			return __( 'Multiple Quotas', 'lasntgadmin' );
 		}
 		$quota = QuotaUtils::remaining_quota( $product_id, $post_groups[0] );
-		
+
 		return ! is_numeric( $quota ) ? __( 'Limited by spaces available', 'lasntgadmin' ) : $quota;
 	}
 

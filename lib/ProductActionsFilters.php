@@ -287,14 +287,20 @@ class ProductActionsFilters {
 	public static function woocommerce_product_query( $q ): void {
 		$q->set( 'post_status', ProductUtils::$publish_status );
 
-		// check the product has private group.
+		// check the product has private group or it's blank.
 		$args = array(
-			array(
+			'relation' => 'OR',
+
+			array(//phpcs:ignore Universal.Arrays.MixedArrayKeyTypes.ImplicitNumericKey, Universal.Arrays.MixedKeyedUnkeyedArray.Found
 				'key'     => 'groups-read',
 				'value'   => 33,
 				// private client group id is 33.
 				'compare' => '=',
 				'type'    => 'numeric',
+			),
+			array(//phpcs:ignore Universal.Arrays.MixedArrayKeyTypes.ImplicitNumericKey, Universal.Arrays.MixedKeyedUnkeyedArray.Found
+				'key'     => 'groups-read',
+				'compare' => 'NOT EXISTS',
 			),
 		);
 
@@ -312,7 +318,7 @@ class ProductActionsFilters {
 	public static function product_is_in_stock( $is_in_stock, $product ): bool {
 		$group_ids = GroupUtils::get_read_group_ids( $product->get_id() );
 
-		if ( ! in_array( 33, $group_ids ) ) {
+		if ( count( $group_ids ) > 1 && ! in_array( 33, $group_ids ) ) {
 			return false;
 		}
 		if ( ProductUtils::$publish_status === $product->get_status() ) {
@@ -336,7 +342,7 @@ class ProductActionsFilters {
 
 		$group_ids = GroupUtils::get_read_group_ids( $product_id );
 
-		if ( ! in_array( 33, $group_ids ) ) {
+		if ( count( $group_ids ) > 1 && ! in_array( 33, $group_ids ) ) {
 			echo '<p class="stock out-of-stock">Course is not available.</p>';
 		}
 	}
@@ -527,10 +533,6 @@ class ProductActionsFilters {
 
 		if ( '0' === $postarr['_regular_price'] || empty( $postarr['_regular_price'] ) ) {
 			$errors[] = __( 'Course cost is required.', 'lasntgadmin' );
-		}
-
-		if ( ! isset( $postarr['groups-read'] ) || ! $postarr['groups-read'] ) {
-			$errors[] = __( 'Groups is required.', 'lasntgadmin' );
 		}
 
 		$data['post_status'] = $postarr['lasntgadmin_status'];

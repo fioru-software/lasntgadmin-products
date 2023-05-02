@@ -103,6 +103,9 @@ class AdminTableView {
 		if ( count( $post_groups ) > 1 ) {
 			return __( 'Multiple Quotas', 'lasntgadmin' );
 		}
+		if ( ! count( $post_groups ) ) {
+			return __( 'Limited by spaces available', 'lasntgadmin' );
+		}
 		$quota = QuotaUtils::remaining_quota( $product_id, $post_groups[0] );
 
 		return ! is_numeric( $quota ) ? __( 'Limited by spaces available', 'lasntgadmin' ) : $quota;

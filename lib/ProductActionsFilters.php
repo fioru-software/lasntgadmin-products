@@ -50,8 +50,6 @@ class ProductActionsFilters {
 
 		add_filter( 'woocommerce_product_query', [ self::class, 'woocommerce_product_query' ], 15, 1 );
 
-		add_filter( 'woocommerce_register_post_type_product', [ self::class, 'register_post_type_product' ] );
-
 		// media library.
 		add_filter( 'ajax_query_attachments_args', [ self::class, 'show_groups_attachments' ] );
 

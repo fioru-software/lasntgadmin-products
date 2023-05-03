@@ -246,35 +246,6 @@ class ProductActionsFilters {
 		$query['author'] = '10000000';
 		return $query;
 	}
-	/**
-	 * @see https://developer.wordpress.org/reference/functions/register_post_type/#capabilities
-	 */
-	public static function register_post_type_product( array $args ): array {
-		$args['capabilities']['create_posts'] = 'create_products';
-
-		$labels              = array(
-			'name'               => __( 'Courses', 'lasntgadmin' ),
-			'singular_name'      => __( 'Course', 'lasntgadmin' ),
-			'menu_name'          => _x( 'Courses', 'Admin menu name', 'lasntgadmin' ),
-			'add_new'            => __( 'Add Course', 'lasntgadmin' ),
-			'add_new_item'       => __( 'Add New Course', 'lasntgadmin' ),
-			'edit'               => __( 'Edit', 'lasntgadmin' ),
-			'edit_item'          => __( 'Edit Course', 'lasntgadmin' ),
-			'new_item'           => __( 'New Course', 'lasntgadmin' ),
-			'view'               => __( 'View Course', 'lasntgadmin' ),
-			'view_item'          => __( 'View Course', 'lasntgadmin' ),
-			'search_items'       => __( 'Search Courses', 'lasntgadmin' ),
-			'not_found'          => __( 'No Courses found', 'lasntgadmin' ),
-			'not_found_in_trash' => __( 'No Courses found in trash', 'lasntgadmin' ),
-			'parent'             => __( 'Parent Course', 'lasntgadmin' ),
-		);
-		$args['labels']      = $labels;
-		$args['description'] = __( 'This is where you can add new courses.', 'lasntgadmin' );
-
-		$args['labels']['name']          = __( 'Courses', 'lasntgadmin' );
-		$args['labels']['singular_name'] = __( 'Course', 'lasntgadmin' );
-		return $args;
-	}
 
 	/**
 	 * Only show products that have $publish_status in the shops page.

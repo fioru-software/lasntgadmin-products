@@ -51,6 +51,8 @@ class Capabilities {
 			'groups_restrict_access',
 
 			'upload_files',
+
+			'woocommerce_duplicate_product_capability'
 		);
 	}
 
@@ -89,6 +91,7 @@ class Capabilities {
 			'groups_restrict_access',
 
 			'upload_files',
+			'woocommerce_duplicate_product_capability'
 		];
 	}
 

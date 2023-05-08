@@ -26,11 +26,17 @@ class AdminTableView {
 		add_filter( 'post_row_actions', [ self::class, 'modify_product_row_actions' ] );
 		add_filter( 'login_redirect', [ self::class, 'redirect_to_product_list' ], 10, 3 );
 		add_filter( 'post_row_actions', [ self::class, 'modify_list_row_actions' ], 10, 2 );
+		add_filter( 'woocommerce_duplicate_product_capability', [ self::class, 'woocommerce_duplicate_product_capability' ] );
 	}
 
-
+	public static function woocommerce_duplicate_product_capability()
+	{
+		return 'woocommerce_duplicate_product_capability';
+	}
 	public static function modify_list_row_actions( $actions, $post ) {
+		
 		if ( 'product' === $post->post_type ) {
+
 			unset( $actions['view'] );
 			$actions['attendees'] = sprintf(
 				'<a href="%1$s">%2$s</a>',

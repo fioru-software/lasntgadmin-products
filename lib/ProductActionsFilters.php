@@ -60,7 +60,19 @@ class ProductActionsFilters {
 		// show products in private client group to anonymous shoppers.
 		add_filter( 'groups_post_access_posts_where_apply', [ self::class, 'filter_products_apply' ], 20, 3 );
 		add_filter( 'woocommerce_product_is_visible', [ self::class, 'product_is_visible' ], 11, 2 );
+
+		add_filter( 'woocommerce_products_admin_list_table_filters', [ self::class, 'remove_products_filter' ] );
 	}
+
+	public static function remove_products_filter( $filters ) {
+		if ( isset( $filters['product_type'] ) ) {
+			$filters['product_type'] = [ self::class, 'product_filter_type_callback' ];
+		}
+		return $filters;
+	}
+	public static function product_filter_type_callback() {
+	}
+
 
 	public static function sort_custom_columns_query( $query ) {
 		$orderby = $query->get( 'orderby' );

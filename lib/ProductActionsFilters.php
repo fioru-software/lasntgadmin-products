@@ -71,6 +71,8 @@ class ProductActionsFilters {
 		return $filters;
 	}
 	public static function product_filter_type_callback() {
+		// extend our capability to control product permissions.
+		add_filter( 'woocommerce_register_post_type_product', [ self::class, 'register_post_type_product' ] );
 	}
 
 
@@ -257,6 +259,37 @@ class ProductActionsFilters {
 		// if it's blank it returns all users media.
 		$query['author'] = '10000000';
 		return $query;
+	}
+
+	public static function register_post_type_product( array $args ): array {
+		self::enable_create_products_capability( $args );
+		self::enable_edit_others_products_capability( $args );
+		return $args;
+	}
+
+	/**
+	 * Enable create_products capability.
+	 *
+	 * @see https://developer.wordpress.org/reference/functions/register_post_type/#capabilities
+	 */
+	private static function enable_create_products_capability( array &$args ) {
+		if ( ! array_key_exists( 'capabilities', $args ) ) {
+			$args['capabilities'] = [];
+		}
+		if ( ! array_key_exists( 'create_posts', $args['capabilities'] ) ) {
+			$args['capabilities']['create_posts'] = 'create_products';
+		}
+	}
+
+	/**
+	 * Enable edit_others_products capability.
+	 *
+	 * @see https://developer.wordpress.org/reference/functions/register_post_type/#capabilities
+	 */
+	private static function enable_edit_others_products_capability( array &$args ) {
+		if ( ! in_array( 'author', $args['supports'] ) ) {
+			$args['supports'] = array_merge( $args['supports'], [ 'author' ] );
+		}
 	}
 
 	/**

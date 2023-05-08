@@ -101,7 +101,6 @@ class Capabilities {
 			'read',
 			'read_product',
 			'read_private_products',
-			'edit_others_products',
 			'edit_posts',
 			'edit_products',
 			'upload_files',

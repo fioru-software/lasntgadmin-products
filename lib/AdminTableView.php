@@ -29,14 +29,11 @@ class AdminTableView {
 		add_filter( 'woocommerce_duplicate_product_capability', [ self::class, 'woocommerce_duplicate_product_capability' ] );
 	}
 
-	public static function woocommerce_duplicate_product_capability()
-	{
+	public static function woocommerce_duplicate_product_capability() {
 		return 'woocommerce_duplicate_product_capability';
 	}
 	public static function modify_list_row_actions( $actions, $post ) {
-		
 		if ( 'product' === $post->post_type ) {
-
 			unset( $actions['view'] );
 			$actions['attendees'] = sprintf(
 				'<a href="%1$s">%2$s</a>',

@@ -104,11 +104,11 @@ class AdminTableView {
 			echo self::render_group_quota( $post_id ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		}
 		if ( '_minimum_capacity' === $column ) {
-			echo get_post_meta( $post_id, '_minimum_capacity', true );
+			echo esc_attr( get_post_meta( $post_id, '_minimum_capacity', true ) );
 		}
 		if ( 'entry_requirements' === $column ) {
 			$media_id = get_post_meta( $post_id, 'entry_requirements', true );
-			echo get_attached_file( $media_id );
+			echo esc_attr( get_attached_file( $media_id ) );
 		}
 		if ( 'attendee_requirements' === $column ) {
 			$media_id = get_post_meta( $post_id, 'attendee_requirements', true );

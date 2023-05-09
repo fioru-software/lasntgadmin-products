@@ -53,7 +53,7 @@ class ProductActionsFilters {
 		// media library.
 		add_filter( 'ajax_query_attachments_args', [ self::class, 'show_groups_attachments' ] );
 
-		add_filter( 'manage_product_posts_columns', [ self::class, 'add_venue_column' ] );
+		add_filter( 'manage_product_posts_columns', [ self::class, 'add_more_columns' ] );
 		add_filter( 'manage_product_posts_columns', [ self::class, 'rename_groups_column' ], 99 );
 		add_filter( 'manage_edit-product_sortable_columns', [ self::class, 'sortable_venue' ] );
 
@@ -131,12 +131,15 @@ class ProductActionsFilters {
 		return $defaults;
 	}
 
-	public static function add_venue_column( $defaults ) {
+	public static function add_more_columns( $defaults ) {
 		$assets_dir = untrailingslashit( plugin_dir_url( __FILE__ ) ) . '/../assets/';
 		wp_enqueue_style( 'admin-columns', $assets_dir . 'styles/admin-column.css' );
 
-		$defaults['venue']      = 'Venue';
-		$defaults['start_date'] = 'Start Date';
+		$defaults['author']                = 'Author';
+		$defaults['venue']                 = 'Venue';
+		$defaults['start_date']            = 'Start Date';
+		$defaults['entry_requirements']    = 'Entry Req';
+		$defaults['attendee_requirements'] = 'Attendee Req';
 
 		return $defaults;
 	}
@@ -535,10 +538,6 @@ class ProductActionsFilters {
 			if ( ! $sum ) {
 				$errors[] = __( 'Category is required.', 'lasntgadmin' );
 			}
-		}
-
-		if ( empty( $postarr['_sku'] ) ) {
-			$errors[] = __( 'Course code is required.', 'lasntgadmin' );
 		}
 
 		if ( empty( $postarr['post_title'] ) ) {

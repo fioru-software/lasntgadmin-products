@@ -90,19 +90,23 @@ class QuotasActionsFilters {
 				),
 			)
 		);
+
 		woocommerce_wp_text_input(
 			array(
-				'id'                => '_sku',
-				'label'             => __( 'Course Code', 'lasntgadmin' ),
-				'placeholder'       => __( 'Course Code', 'lasntgadmin' ),
+				'id'                => '_minimum_capacity',
+				'label'             => __( 'Minimum Capacity', 'lasntgadmin' ),
+				'placeholder'       => __( 'Minimum Capacity', 'lasntgadmin' ),
 				'desc_tip'          => 'true',
-				'value'             => $product ? $product->get_sku() : 0,
-				'type'              => 'text',
+				'value'             => $product ? get_post_meta($product->get_ID(), '_minimum_capacity', true) : 0,
+				'type'              => 'number',
 				'custom_attributes' => array(
-					'type' => 'text',
+					'step' => '1',
+					'min'  => '0',
+					'type' => 'number',
 				),
 			)
 		);
+		
 		echo '</div>';
 	}
 
@@ -201,6 +205,11 @@ class QuotasActionsFilters {
 			$field = sanitize_text_field( wp_unslash( $_POST[ '_quotas_field_' . $group->group_id ] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
 
 			update_post_meta( $post_id, '_quotas_field_' . $group->group_id, esc_attr( $field ) );
+		}
+
+		if ( isset( $_POST[ '_minimum_capacity' ] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
+			$field = sanitize_text_field( wp_unslash( $_POST[ '_minimum_capacity'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
+			update_post_meta( $post_id, '_minimum_capacity', esc_attr( $field ) );
 		}
 	}
 

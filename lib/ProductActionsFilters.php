@@ -537,9 +537,6 @@ class ProductActionsFilters {
 			}
 		}
 
-		if ( empty( $postarr['_sku'] ) ) {
-			$errors[] = __( 'Course code is required.', 'lasntgadmin' );
-		}
 
 		if ( empty( $postarr['post_title'] ) ) {
 			$errors[] = __( 'Name is required.', 'lasntgadmin' );

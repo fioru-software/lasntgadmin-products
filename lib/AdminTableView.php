@@ -58,7 +58,13 @@ class AdminTableView {
 	}
 
 	public static function modify_existing_columns( array $columns ): array {
-		$columns['sku'] = __( 'Course Code', 'lasntgadmin' );
+		$columns['_minimum_capacity'] = __( 'Min Capacity', 'lasntgadmin' );
+		// hide unwanted columns.
+		unset( $columns['sku'] );
+		unset( $columns['product_tag'] );
+		unset( $columns['featured'] );
+		unset( $columns['thumb'] );
+		unset( $columns['date'] );
 		return $columns;
 	}
 
@@ -69,6 +75,7 @@ class AdminTableView {
 		if ( current_user_can( 'publish_shop_orders' ) ) {
 			$columns['create_order'] = __( 'Order', 'lasntgadmin' );
 		}
+		$columns['product_cat'] = __( 'Category', 'lasntgadmin' );
 		return $columns;
 	}
 
@@ -95,6 +102,39 @@ class AdminTableView {
 	public static function render_product_column( string $column, int $post_id ): void {
 		if ( current_user_can( 'publish_shop_orders' ) && 'group_quota' === $column ) {
 			echo self::render_group_quota( $post_id ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		}
+		if ( '_minimum_capacity' === $column ) {
+			echo get_post_meta( $post_id, '_minimum_capacity', true );
+		}
+		if ( 'entry_requirements' === $column ) {
+			$media_id = get_post_meta( $post_id, 'entry_requirements', true );
+			echo get_attached_file( $media_id );
+		}
+		if ( 'attendee_requirements' === $column ) {
+			$media_id = get_post_meta( $post_id, 'attendee_requirements', true );
+			if ( $media_id ) {
+				$media = wp_get_attachment_url( $media_id );
+				echo sprintf(
+					'<a href="%1$s" target="_blank">%2$s</a>',
+					esc_url( $media ),
+					esc_html( __( 'File', 'lasntgadmin' ) )
+				);
+			} else {
+				echo '-';
+			}
+		}
+		if ( 'entry_requirements' === $column ) {
+			$media_id = get_post_meta( $post_id, 'entry_requirements_file', true );
+			if ( $media_id ) {
+				$media = wp_get_attachment_url( $media_id );
+				echo sprintf(
+					'<a href="%1$s" target="_blank">%2$s</a>',
+					esc_url( $media ),
+					esc_html( __( 'File', 'lasntgadmin' ) )
+				);
+			} else {
+				echo '-';
+			}
 		}
 		if ( current_user_can( 'publish_shop_orders' ) && 'create_order' === $column ) {
 			echo self::render_create_order_button( $post_id ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped

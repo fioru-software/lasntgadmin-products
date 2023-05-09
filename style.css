@@ -1,6 +1,12 @@
-table.wp-list-table .column-create_order {
+table.wp-list-table .column-create_order, 
+table.wp-list-table .column-entry_requirements, 
+table.wp-list-table .column-attendee_requirements, 
+table.wp-list-table .column-_minimum_capacity {
     width: 11%;
 }
-table.wp-list-table .column-group_quota {
+table.wp-list-table .column-group_quota,
+table.wp-list-table .column-attendee_requirements,
+table.wp-list-table .column-entry_requirements,
+ table.wp-list-table .column-_minimum_capacity {
     width: 5%;
 }

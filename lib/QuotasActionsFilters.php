@@ -97,7 +97,7 @@ class QuotasActionsFilters {
 				'label'             => __( 'Minimum Capacity', 'lasntgadmin' ),
 				'placeholder'       => __( 'Minimum Capacity', 'lasntgadmin' ),
 				'desc_tip'          => 'true',
-				'value'             => $product ? get_post_meta($product->get_ID(), '_minimum_capacity', true) : 0,
+				'value'             => $product ? get_post_meta( $product->get_ID(), '_minimum_capacity', true ) : 0,
 				'type'              => 'number',
 				'custom_attributes' => array(
 					'step' => '1',
@@ -106,7 +106,7 @@ class QuotasActionsFilters {
 				),
 			)
 		);
-		
+
 		echo '</div>';
 	}
 
@@ -207,8 +207,8 @@ class QuotasActionsFilters {
 			update_post_meta( $post_id, '_quotas_field_' . $group->group_id, esc_attr( $field ) );
 		}
 
-		if ( isset( $_POST[ '_minimum_capacity' ] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
-			$field = sanitize_text_field( wp_unslash( $_POST[ '_minimum_capacity'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
+		if ( isset( $_POST['_minimum_capacity'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
+			$field = sanitize_text_field( wp_unslash( $_POST['_minimum_capacity'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
 			update_post_meta( $post_id, '_minimum_capacity', esc_attr( $field ) );
 		}
 	}

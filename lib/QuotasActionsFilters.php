@@ -281,7 +281,7 @@ class QuotasActionsFilters {
 	 */
 	public static function product_is_in_stock( $is_in_stock, $product ): bool {
 		global $woocommerce;
-		if(!$is_in_stock){
+		if ( ! $is_in_stock ) {
 			return $is_in_stock;
 		}
 		$product_id = $product->get_ID();

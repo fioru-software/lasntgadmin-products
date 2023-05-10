@@ -83,10 +83,19 @@ class ProductUtils {
 	public static function get_visible_products(): array {
 		return wc_get_products(
 			[
-				'status'       => 'open_for_enrollment',
-				'meta_key'     => 'groups-read',
-				'meta_compare' => 'IN',
-				'meta_value'   => GroupUtils::get_current_users_group_ids(),
+				'status'     => 'open_for_enrollment',
+				'meta_query' => [
+					[
+						'key'     => 'groups-read',
+						'compare' => 'IN',
+						'value'   => GroupUtils::get_current_users_group_ids(),
+					],
+					// When visibility has not been limited by group, then the product is visible to everyone.
+					[
+						'key'     => 'groups-read',
+						'compare' => 'NOT EXISTS',
+					],
+				],
 			]
 		);
 	}

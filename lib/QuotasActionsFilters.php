@@ -134,8 +134,8 @@ class QuotasActionsFilters {
 			echo "<h3>$group_name</h3>"; //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			$parent_id = (int) $parent_id;
 			echo "<div style='display: flex;justify-content: space-evenly;'>"
-			. "<button type='button' data-id='$parent_id' class='set-all-zero button button-small hide-if-no-js'>Set All to 0</button>" //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-			. "<button type='button' data-id='$parent_id' class='set-all-unlimited button button-small hide-if-no-js'>Set All to unlimited</button>" //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			. "<button type='button' data-id='$parent_id' class='set-all-zero button button-small hide-if-no-js'>" . __( 'Set All to 0', 'lasntgadmin' ) . '</button>' //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			. "<button type='button' data-id='$parent_id' class='set-all-unlimited button button-small hide-if-no-js'>" . __( 'Set All to unlimited', 'lasntgadmin' ) . '</button>' //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			. '</div>';
 			$groups = \Groups_Group::get_groups(
 				[
@@ -220,12 +220,18 @@ class QuotasActionsFilters {
 		$product_id = get_the_ID();
 		$orders     = QuotaUtils::get_product_quota( $product_id );
 		if ( 0 == $orders ) {
-			echo '<p class="stock out-of-stock">Not in stock</p>';
+			echo sprintf(
+				'<p class="stock out-of-stock">%s</p>',
+				__( 'Not in stock', 'lasntgadmin' ) //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			);
 		}
 		foreach ( $items as $values ) {
 			$orders = QuotaUtils::get_product_quota( $values['data']->get_id() );
 			if ( $values['data']->get_id() !== $product_id ) {
-				echo '<p class="woocommerce-error">You can only add one course to cart.</p>';
+				echo sprintf(
+					'<p class="woocommerce-error">%s</p>',
+					__( 'You can only add one course to cart.', 'lasntgadmin' ) //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+				);
 			}
 		}
 	}
@@ -245,7 +251,7 @@ class QuotasActionsFilters {
 		}
 
 		if ( $orders ) {
-			echo wp_kses_post( "<p class='woocommerce-info'>Available quota remaining: $orders</p>" );
+			echo ( sprintf( "<p class='woocommerce-info'>%s %d</p>", __( 'Available quota remaining:', 'lasntgadmin' ), esc_attr( $orders ) ) ); //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		}
 	}
 
@@ -262,7 +268,8 @@ class QuotasActionsFilters {
 		if ( $orders < 1 ) {
 			return __( 'Not in stock', 'lasntgadmin' );
 		}
-		return $orders . ' in stock';
+		// translators: in stock.
+		return sprintf( __( '%d in stock', 'lasntgadmin' ), $orders );
 	}
 
 	/**
@@ -274,7 +281,9 @@ class QuotasActionsFilters {
 	 */
 	public static function product_is_in_stock( $is_in_stock, $product ): bool {
 		global $woocommerce;
-
+		if(!$is_in_stock){
+			return $is_in_stock;
+		}
 		$product_id = $product->get_ID();
 		$orders     = QuotaUtils::get_product_quota( $product_id );
 		$items      = $woocommerce->cart->get_cart();
@@ -302,7 +311,11 @@ class QuotasActionsFilters {
 			return false;
 		}
 		if ( $product_quantity > $orders ) {
-			wc_add_notice( 'The max quantity you can enter is ' . $orders, 'error' );
+			wc_add_notice(
+				// translators: max quantity.
+				sprintf( __( 'The max quantity you can enter is %d', 'lasntgadmin' ), $orders ),
+				'error'
+			);
 			return false;
 		}
 		return $add;
@@ -326,7 +339,11 @@ class QuotasActionsFilters {
 			return false;
 		}
 		if ( $quantity > $orders ) {
-			wc_add_notice( 'The max quantity you can enter is ' . $orders, 'error' );
+			wc_add_notice(
+				// translators: max quantity.
+				sprintf( __( 'The max quantity you can enter is %d', 'lasntgadmin' ), $orders ),
+				'error'
+			);
 			return false;
 		}
 		return $passed;

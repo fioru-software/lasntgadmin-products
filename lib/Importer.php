@@ -88,6 +88,13 @@ class Importer {
 		foreach ( $cols as $key => $name ) {
 			if ( ! empty( $data[ $key ] ) ) {
 				switch ( $key ) {
+
+					// checkboxes
+					case 'road_grant_job_types':
+						$list = explode( ',', $data[ $key ] );
+						$object->update_meta_data( $key, $list );
+						break;
+
 					case 'post_status':
 						$object->set_status( $data[ $key ] );
 						break;

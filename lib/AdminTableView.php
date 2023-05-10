@@ -155,7 +155,13 @@ class AdminTableView {
 	}
 
 	private static function render_create_order_button( int $product_id ): string {
-		return sprintf( "<a href='/wp-admin/post-new.php?post_type=shop_order&product_id=$product_id' class='button button-primary'>%s</a>", __( 'Book Now', 'lasntgadmin' ) );
+		$product = wc_get_product( $product_id );
+		return sprintf(
+			"<a href='%s' %s class='button button-primary'>%s</a>",
+			ProductUtils::is_open_for_enrollment( $product ) ? "/wp-admin/post-new.php?post_type=shop_order&product_id=$product_id" : '#',
+			ProductUtils::is_open_for_enrollment( $product ) ? '' : 'disabled',
+			__( 'Book Now', 'lasntgadmin' )
+		);
 	}
 
 	public static function enqueue_assets( string $hook ): void {

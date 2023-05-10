@@ -22,6 +22,10 @@ class ProductUtils {
 		'archived'            => 'Archived',
 	];
 
+	public static function is_open_for_enrollment( WC_Product $product ): bool {
+		return $product->get_status() === 'open_for_enrollment';
+	}
+
 	public static function is_funded( WC_Product $product ): bool {
 		$funding_source_slugs = $product->get_meta( 'funding_sources', true );
 		$grant_year           = $product->get_meta( 'grant_year', true );

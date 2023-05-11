@@ -26,8 +26,6 @@ class Capabilities {
 			'read',
 			'read_product',
 			'edit_product',
-			'edit_product_terms',
-			'delete_product_terms',
 			'delete_product',
 			'edit_product',
 			'assign_product_terms',
@@ -44,7 +42,6 @@ class Capabilities {
 			'publish_products',
 			'edit_published_products',
 			'read_private_products',
-			'manage_product_terms',
 
 			// groups.
 			'groups_access',
@@ -66,8 +63,6 @@ class Capabilities {
 
 			'read_product',
 			'edit_product',
-			'edit_product_terms',
-			'delete_product_terms',
 			'delete_product',
 			'edit_product',
 			'assign_product_terms',
@@ -84,7 +79,6 @@ class Capabilities {
 			'publish_products',
 			'edit_published_products',
 			'read_private_products',
-			'manage_product_terms',
 
 			// groups.
 			'groups_access',

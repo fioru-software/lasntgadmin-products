@@ -89,7 +89,7 @@ class Importer {
 			if ( ! empty( $data[ $key ] ) ) {
 				switch ( $key ) {
 
-					// checkboxes
+					// checkboxes.
 					case 'road_grant_job_types':
 						$list = explode( ',', $data[ $key ] );
 						$object->update_meta_data( $key, $list );

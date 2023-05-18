@@ -5,7 +5,7 @@ namespace Lasntg\Admin\Products;
 use Lasntg\Admin\Group\GroupUtils;
 use Lasntg\Admin\Products\{ QuotaUtils, AdminTableUtils };
 
-use simplehtmldom\HtmlDocument;
+use DOMDocument;
 
 use WP_User, WP_Query;
 
@@ -46,11 +46,11 @@ class AdminTableView {
 			unset( $views[ ProductUtils::$publish_status ] );
 
 			if ( AdminTableUtils::is_base_request() ) {
-				$dom = new HtmlDocument();
-				$dom->load( $first );
-				$a = $dom->find( 'a', 0 );
-				$a->addClass( 'current' );
-				$first = $dom->save();
+				$dom = new DOMDocument();
+				$dom->loadHTML( $first );
+				$a = ( $dom->getElementsByTagName( 'a' ) )->item( 0 );
+				$a->setAttribute( 'class', 'current' );
+				$first = $dom->saveHTML( $a );
 			}
 
 			$views = array_merge(

@@ -3,9 +3,11 @@
 namespace Lasntg\Admin\Products;
 
 use Lasntg\Admin\Group\GroupUtils;
-use Lasntg\Admin\Products\QuotaUtils;
+use Lasntg\Admin\Products\{ QuotaUtils, AdminTableUtils };
 
-use WP_User;
+use DOMDocument;
+
+use WP_User, WP_Query;
 
 class AdminTableView {
 
@@ -27,11 +29,55 @@ class AdminTableView {
 		add_filter( 'login_redirect', [ self::class, 'redirect_to_product_list' ], 10, 3 );
 		add_filter( 'post_row_actions', [ self::class, 'modify_list_row_actions' ], 10, 2 );
 		add_filter( 'woocommerce_duplicate_product_capability', [ self::class, 'woocommerce_duplicate_product_capability' ] );
+
+		add_filter( 'parse_query', [ self::class, 'handle_filter_request' ] );
+		add_filter( 'views_edit-product', [ self::class, 'views_edit_product' ] );
+	}
+
+
+	/**
+	 * Remove "All" link and make "Open for Enrollment" the default.
+	 */
+	public static function views_edit_product( array $views ): array {
+		unset( $views['all'] );
+
+		if ( isset( $views[ ProductUtils::$publish_status ] ) ) {
+			$first = $views[ ProductUtils::$publish_status ];
+			unset( $views[ ProductUtils::$publish_status ] );
+
+			if ( AdminTableUtils::is_base_request() ) {
+				$dom = new DOMDocument();
+				$dom->loadHTML( $first );
+				$a = ( $dom->getElementsByTagName( 'a' ) )->item( 0 );
+				$a->setAttribute( 'class', 'current' );
+				$first = $dom->saveHTML( $a );
+			}
+
+			$views = array_merge(
+				[ ProductUtils::$publish_status => $first ],
+				$views
+			);
+		}
+		return $views;
+	}
+
+	/**
+	 * Default filter is post_status = open_for_enrollment
+	 */
+	public static function handle_filter_request( WP_Query $query ): WP_Query {
+		if ( is_admin() && function_exists( 'get_current_screen' ) ) {
+			$screen = get_current_screen();
+			if ( 'product' === $screen->post_type && 'edit-product' === $screen->id && 'product' === $query->query_vars['post_type'] && AdminTableUtils::is_base_request() ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+				$query->query_vars['post_status'] = [ ProductUtils::$publish_status ];
+			}
+		}//end if
+		return $query;
 	}
 
 	public static function woocommerce_duplicate_product_capability() {
 		return 'woocommerce_duplicate_product_capability';
 	}
+
 	public static function modify_list_row_actions( $actions, $post ) {
 		if ( 'product' === $post->post_type ) {
 			unset( $actions['view'] );
@@ -40,8 +86,12 @@ class AdminTableView {
 				esc_url( admin_url( sprintf( 'edit.php?post_type=attendee&product_id=%d', $post->ID ) ) ),
 				esc_html( __( 'Attendees', 'lasntgadmin' ) )
 			);
+			$actions['orders']    = sprintf(
+				'<a href="%1$s">%2$s</a>',
+				esc_url( admin_url( sprintf( 'edit.php?post_type=shop_order&product_id=%d', $post->ID ) ) ),
+				esc_html( __( 'Orders', 'lasntgadmin' ) )
+			);
 		}
-
 		return $actions;
 	}
 

@@ -14,6 +14,7 @@ class Capabilities {
 	public static function get_administrator_capabilities(): array {
 		return [
 			'create_products',
+			'woocommerce_duplicate_product_capability',
 		];
 	}
 

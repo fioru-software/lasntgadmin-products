@@ -8,6 +8,7 @@ namespace Lasntg\Admin\Products;
 use Lasntg\Admin\Group\GroupUtils;
 
 use WP_Post;
+use Groups_Group;
 
 /**
  * Handle Actions anf filters for products
@@ -157,6 +158,15 @@ class ProductActionsFilters {
 			echo get_field( 'field_63881b84798a5', $post_id ); //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		} elseif ( 'start_date' === $column_name ) {
 			echo get_field( 'field_63881aee31478', $post_id ); //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		} elseif ( 'organizer' === $column_name ) {
+			$groups = GroupUtils::formatted_tree_by_post_id($post_id); //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			$parent_ids = array_keys( $groups );
+			$parents = [];
+			foreach($parent_ids as $parent_id ) {
+				$group      = new Groups_Group( $parent_id );
+				$parents[] = $group->name;
+			}
+			echo implode(', ', $parents);
 		}
 	}
 
@@ -167,13 +177,12 @@ class ProductActionsFilters {
 
 	public static function add_more_columns( $defaults ) {
 		$assets_dir = untrailingslashit( plugin_dir_url( __FILE__ ) ) . '/../assets/';
-		wp_enqueue_style( 'admin-columns', $assets_dir . 'styles/admin-column.css' );
+		wp_enqueue_style( 'admin-columns-css', $assets_dir . 'styles/admin-column.css', '1.0.2' );
 
-		$defaults['author']                = 'Author';
 		$defaults['venue']                 = 'Venue';
 		$defaults['start_date']            = 'Start Date';
-		$defaults['entry_requirements']    = 'Entry Req';
-		$defaults['attendee_requirements'] = 'Attendee Req';
+		$defaults['attendee_requirements'] = 'Course Details';
+		$defaults['organizer']             = 'Organizer';
 
 		return $defaults;
 	}
@@ -468,7 +477,7 @@ class ProductActionsFilters {
 		$assets_dir = untrailingslashit( plugin_dir_url( __FILE__ ) ) . '/../assets/';
 		wp_enqueue_script( 'lasntgadmin-products-admin-js', ( $assets_dir . 'js/lasntgadmin-admin.js' ), array( 'jquery' ), '1.7', true );
 
-		wp_enqueue_style( 'admin-columns', $assets_dir . 'styles/product-admin.css' );
+		wp_enqueue_style( 'admin-columns', $assets_dir . 'styles/product-admin.css', [], '1.0.1' );
 		wp_localize_script(
 			'lasntgadmin-products-admin-js',
 			'lasntgadmin_products_admin_localize',

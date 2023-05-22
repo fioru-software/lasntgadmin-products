@@ -1,3 +1,13 @@
-.column-venue, .column-start_date, .column-groups-read{
-    width: 14%;
+.column-venue, 
+.column-start_date, 
+.column-organizer, 
+.column-groups-read,
+.sortable{
+    width: 10%;
+}
+select[name='stock_status']{
+    display: none;
+}
+.subsubsub > .byorder{
+    display: none;
 }

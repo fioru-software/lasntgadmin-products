@@ -159,14 +159,14 @@ class ProductActionsFilters {
 		} elseif ( 'start_date' === $column_name ) {
 			echo get_field( 'field_63881aee31478', $post_id ); //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		} elseif ( 'organizer' === $column_name ) {
-			$groups = GroupUtils::formatted_tree_by_post_id($post_id); //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			$groups     = GroupUtils::formatted_tree_by_post_id( $post_id ); //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			$parent_ids = array_keys( $groups );
-			$parents = [];
-			foreach($parent_ids as $parent_id ) {
-				$group      = new Groups_Group( $parent_id );
+			$parents    = [];
+			foreach ( $parent_ids as $parent_id ) {
+				$group     = new Groups_Group( $parent_id );
 				$parents[] = $group->name;
 			}
-			echo implode(', ', $parents);
+			echo implode( ', ', $parents );
 		}
 	}
 

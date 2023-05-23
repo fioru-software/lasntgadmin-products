@@ -18,6 +18,7 @@ services:
         - db
       volumes:
         - .:/usr/local/src
+        - ../lasntgadmin-orders:/var/www/html/wp-content/plugins/lasntgadmin-orders
       ports:
         - "8080:80"
         - "8443:443"

@@ -8,6 +8,7 @@ namespace Lasntg\Admin\Products;
 use Lasntg\Admin\Group\GroupUtils;
 
 use WP_Post;
+use Groups_Group;
 
 /**
  * Handle Actions anf filters for products
@@ -38,6 +39,14 @@ class ProductActionsFilters {
 
 		add_action( 'manage_product_posts_custom_column', [ self::class, 'add_venue_custom' ], 10, 2 );
 		add_action( 'pre_get_posts', [ self::class, 'sort_custom_columns_query' ], 99, 1 );
+		add_action( 'add_meta_boxes', [ self::class, 'remove_short_description' ], 999 );
+
+		add_action(
+			'init',
+			function() {
+				remove_post_type_support( 'product', 'editor' );
+			}
+		);
 	}
 
 	public static function add_filters(): void {
@@ -62,8 +71,34 @@ class ProductActionsFilters {
 		add_filter( 'woocommerce_product_is_visible', [ self::class, 'product_is_visible' ], 11, 2 );
 
 		add_filter( 'woocommerce_products_admin_list_table_filters', [ self::class, 'remove_products_filter' ] );
+		add_filter( 'woocommerce_product_tabs', [ self::class, 'remove_product_tab' ], 9999 );
 	}
 
+	public static function remove_short_description() {
+		remove_meta_box( 'postcustom', 'product', 'normal' );
+		remove_meta_box( 'postexcerpt', 'product', 'normal' );
+		remove_meta_box( 'commentsdiv', 'product', 'normal' );
+		remove_meta_box( 'tagsdiv-product_tag', 'product', 'normal' );
+
+		remove_meta_box( 'woocommerce-product-images', 'product', 'normal' );
+		remove_meta_box( 'woocommerce-product-images', 'product', 'side' );
+		remove_meta_box( 'woocommerce-order-note', 'product', 'normal' );
+
+		remove_meta_box( 'authordiv', 'product', 'normal' );
+		// Author Metabox.
+		remove_meta_box( 'authordiv', 'product', 'normal' );
+		// Author Metabox.
+		remove_meta_box( 'postimagediv', 'product', 'normal' );
+		// Featured Image Metabox.
+		remove_meta_box( 'postimagediv', 'product', 'side' );
+	}
+
+	public static function remove_product_tab( $tabs ) {
+		unset( $tabs['description'] );
+		unset( $tabs['additional_information'] );
+		unset( $tabs['reviews'] );
+		return $tabs;
+	}
 	public static function remove_products_filter( $filters ) {
 		if ( isset( $filters['product_type'] ) ) {
 			$filters['product_type'] = [ self::class, 'product_filter_type_callback' ];
@@ -123,6 +158,9 @@ class ProductActionsFilters {
 			echo get_field( 'field_63881b84798a5', $post_id ); //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		} elseif ( 'start_date' === $column_name ) {
 			echo get_field( 'field_63881aee31478', $post_id ); //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		} elseif ( 'organizer' === $column_name ) {
+			$centres = get_field( 'field_63881beb798a7', $post_id ); //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			echo implode( ', ', $centres ); //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		}
 	}
 
@@ -133,13 +171,12 @@ class ProductActionsFilters {
 
 	public static function add_more_columns( $defaults ) {
 		$assets_dir = untrailingslashit( plugin_dir_url( __FILE__ ) ) . '/../assets/';
-		wp_enqueue_style( 'admin-columns', $assets_dir . 'styles/admin-column.css' );
+		wp_enqueue_style( 'admin-columns-css', $assets_dir . 'styles/admin-column.css', '1.0.2' );
 
-		$defaults['author']                = 'Author';
 		$defaults['venue']                 = 'Venue';
 		$defaults['start_date']            = 'Start Date';
-		$defaults['entry_requirements']    = 'Entry Req';
-		$defaults['attendee_requirements'] = 'Attendee Req';
+		$defaults['attendee_requirements'] = 'Course Details';
+		$defaults['organizer']             = 'Organizer';
 
 		return $defaults;
 	}
@@ -434,6 +471,7 @@ class ProductActionsFilters {
 		$assets_dir = untrailingslashit( plugin_dir_url( __FILE__ ) ) . '/../assets/';
 		wp_enqueue_script( 'lasntgadmin-products-admin-js', ( $assets_dir . 'js/lasntgadmin-admin.js' ), array( 'jquery' ), '1.7', true );
 
+		wp_enqueue_style( 'admin-columns', $assets_dir . 'styles/product-admin.css', [], '1.0.1' );
 		wp_localize_script(
 			'lasntgadmin-products-admin-js',
 			'lasntgadmin_products_admin_localize',

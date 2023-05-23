@@ -127,28 +127,9 @@ class QuotasActionsFilters {
 		$tree   = Groups_Utility::get_group_tree();
 		unset( $tree[1] );
 		unset( $tree[33] );
-		$user_groups = GroupUtils::get_current_users_group_ids();
 
-		$allowed_groups = [];
-		foreach ( $tree as $parent_id => $group_id ) {
-			$groups                       = \Groups_Group::get_groups(
-				[
-					'parent_id' => $parent_id,
-					'order_by'  => 'name',
-				]
-			);
-			$allowed_groups[ $parent_id ] = [];
-			if ( in_array( $parent_id, $user_groups ) === true ) {
-				$allowed_groups[ $parent_id ] = $groups;
-				continue;
-			}
+		$allowed_groups = GroupUtils::formatted_current_user_tree();
 
-			foreach ( $groups as $group ) {
-				if ( in_array( $group->group_id, $user_groups ) == true ) {
-					$allowed_groups[ $parent_id ][] = $group;
-				}
-			}
-		}//end foreach
 		foreach ( $allowed_groups as $parent_id => $groups ) {
 			if ( ! $groups ) {
 				continue;
@@ -185,6 +166,7 @@ class QuotasActionsFilters {
 				);
 			}
 		}//end foreach
+		$user_groups = GroupUtils::get_current_users_group_ids();
 		if ( in_array( 33, $user_groups ) ) {
 			$group = new \Groups_Group( 33 );
 			echo '<h3>Private Client</h3>';

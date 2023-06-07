@@ -9,6 +9,7 @@ use Lasntg\Admin\Group\GroupUtils;
 
 use WP_Post;
 use Groups_Group;
+use WP_Query;
 
 /**
  * Handle Actions anf filters for products
@@ -40,6 +41,7 @@ class ProductActionsFilters {
 		add_action( 'manage_product_posts_custom_column', [ self::class, 'add_venue_custom' ], 10, 2 );
 		add_action( 'pre_get_posts', [ self::class, 'sort_custom_columns_query' ], 99, 1 );
 		add_action( 'add_meta_boxes', [ self::class, 'remove_short_description' ], 999 );
+		add_action( 'posts_where', [ self::class, 'remove_template_products' ], 10, 2 );
 
 		add_action(
 			'init',
@@ -73,7 +75,13 @@ class ProductActionsFilters {
 		add_filter( 'woocommerce_products_admin_list_table_filters', [ self::class, 'remove_products_filter' ] );
 		add_filter( 'woocommerce_product_tabs', [ self::class, 'remove_product_tab' ], 9999 );
 	}
+	public static function remove_template_products( string $where, WP_Query $query ) {
+		if ( $query->is_admin && $query->get( 'post_type' ) === 'product' && ! current_user_can( 'publish_products' ) ) {
+			$where .= sprintf( " AND post_status != '%s' ", 'template' );
+		}
 
+		return $where;
+	}
 	public static function remove_short_description() {
 		remove_meta_box( 'postcustom', 'product', 'normal' );
 		remove_meta_box( 'postexcerpt', 'product', 'normal' );
@@ -160,7 +168,7 @@ class ProductActionsFilters {
 			echo get_field( 'field_63881aee31478', $post_id ); //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		} elseif ( 'organizer' === $column_name ) {
 			$centres = get_field( 'field_63881beb798a7', $post_id ); //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-			if( $centres ) {
+			if ( $centres ) {
 				echo implode( ', ', $centres ); //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			}
 		}

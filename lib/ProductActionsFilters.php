@@ -75,10 +75,9 @@ class ProductActionsFilters {
 		add_filter( 'woocommerce_products_admin_list_table_filters', [ self::class, 'remove_products_filter' ] );
 		add_filter( 'woocommerce_product_tabs', [ self::class, 'remove_product_tab' ], 9999 );
 	}
-	public static function remove_template_products( string $where, WP_Query $query )
-	{
-		if ( $query->is_admin && $query->get( 'post_type' ) === 'product' && !current_user_can( 'publish_products' )) {
-			$where .= sprintf(" AND post_status != '%s' ", 'template');
+	public static function remove_template_products( string $where, WP_Query $query ) {
+		if ( $query->is_admin && $query->get( 'post_type' ) === 'product' && ! current_user_can( 'publish_products' ) ) {
+			$where .= sprintf( " AND post_status != '%s' ", 'template' );
 		}
 
 		return $where;
@@ -169,7 +168,7 @@ class ProductActionsFilters {
 			echo get_field( 'field_63881aee31478', $post_id ); //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		} elseif ( 'organizer' === $column_name ) {
 			$centres = get_field( 'field_63881beb798a7', $post_id ); //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-			if( $centres ) {
+			if ( $centres ) {
 				echo implode( ', ', $centres ); //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			}
 		}

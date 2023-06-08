@@ -49,6 +49,8 @@ class ProductActionsFilters {
 				remove_post_type_support( 'product', 'editor' );
 			}
 		);
+
+		add_action( 'init', [ self::class, 'disable_course_add_button' ] );
 	}
 
 	public static function add_filters(): void {
@@ -74,6 +76,14 @@ class ProductActionsFilters {
 
 		add_filter( 'woocommerce_products_admin_list_table_filters', [ self::class, 'remove_products_filter' ] );
 		add_filter( 'woocommerce_product_tabs', [ self::class, 'remove_product_tab' ], 9999 );
+	}
+
+	public function disable_course_add_button() {
+		global $wp_post_types;
+		if ( ! current_user_can( 'create_products' ) ) {
+			$wp_post_types['product']->map_meta_cap      = true;
+			$wp_post_types['product']->cap->create_posts = false;
+		}
 	}
 	public static function remove_template_products( string $where, WP_Query $query ) {
 		if ( $query->is_admin && $query->get( 'post_type' ) === 'product' && ! current_user_can( 'publish_products' ) ) {

@@ -15,6 +15,29 @@ class Capabilities {
 		return [
 			'create_products',
 			'woocommerce_duplicate_product_capability',
+			'view_admin_dashboard',
+			'read',
+			'read_product',
+			'edit_product',
+			'delete_product',
+			'edit_product',
+			'assign_product_terms',
+			'publish_products',
+
+			'delete_private_products',
+			'delete_products',
+			'delete_published_products',
+			'edit_others_products',
+			'edit_private_products',
+			'edit_products',
+			'edit_published_products',
+			'read_private_products',
+
+			// groups.
+			'groups_access',
+			'groups_restrict_access',
+
+			'upload_files',
 		];
 	}
 
@@ -38,7 +61,6 @@ class Capabilities {
 			'edit_others_products',
 			'edit_private_products',
 			'edit_products',
-			'edit_posts',
 			'create_products',
 			'edit_published_products',
 			'read_private_products',
@@ -74,7 +96,6 @@ class Capabilities {
 			'edit_others_products',
 			'edit_private_products',
 			'edit_products',
-			'edit_posts',
 			'create_products',
 			'edit_published_products',
 			'read_private_products',

@@ -36,7 +36,7 @@ class AdminTableView {
 
 
 	/**
-	 * Remove "All" link and make "Open for Enrollment" the default.
+	 * Remove "All" link and make "Open for Enrolment" the default.
 	 */
 	public static function views_edit_product( array $views ): array {
 		unset( $views['all'] );

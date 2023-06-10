@@ -78,7 +78,7 @@ class ProductActionsFilters {
 		add_filter( 'woocommerce_product_tabs', [ self::class, 'remove_product_tab' ], 9999 );
 	}
 
-	public function disable_course_add_button() {
+	public static function disable_course_add_button() {
 		global $wp_post_types;
 		if ( ! current_user_can( 'create_products' ) ) {
 			$wp_post_types['product']->map_meta_cap      = true;
@@ -195,7 +195,7 @@ class ProductActionsFilters {
 
 		$defaults['venue']                 = 'Venue';
 		$defaults['start_date']            = 'Start Date';
-		$defaults['attendee_requirements'] = 'Course Details';
+		$defaults['entry_requirements'] = 'Course Details';
 		$defaults['organizer']             = 'Organizer';
 
 		return $defaults;

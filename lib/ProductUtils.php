@@ -14,7 +14,7 @@ class ProductUtils {
 	public static $publish_status = 'open_for_enrollment';
 	public static $statuses       = [
 		'template'            => 'Template',
-		'open_for_enrollment' => 'Open for enrolment',
+		'open_for_enrollment' => 'Open for Enrolment',
 		'enrollment_closed'   => 'Enrolment Closed',
 		'date_passed'         => 'Date Passed',
 		'closed'              => 'Closed',

@@ -171,6 +171,9 @@ class ProductActionsFilters {
 		return $columns;
 	}
 
+	/**
+	 * @todo Escape the output.
+	 */
 	public static function add_venue_custom( $column_name, $post_id ) {
 		if ( 'venue' === $column_name ) {
 			echo get_field( 'field_63881b84798a5', $post_id ); //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
@@ -178,7 +181,7 @@ class ProductActionsFilters {
 			echo get_field( 'field_63881aee31478', $post_id ); //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		} elseif ( 'organizer' === $column_name ) {
 			$centres = get_field( 'field_63881beb798a7', $post_id ); //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-			if ( $centres ) {
+			if ( is_array( $centres ) && count( $centres ) ) {
 				echo implode( ', ', $centres ); //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			}
 		}
@@ -193,10 +196,10 @@ class ProductActionsFilters {
 		$assets_dir = untrailingslashit( plugin_dir_url( __FILE__ ) ) . '/../assets/';
 		wp_enqueue_style( 'admin-columns-css', $assets_dir . 'styles/admin-column.css', '1.0.2' );
 
-		$defaults['venue']                 = 'Venue';
-		$defaults['start_date']            = 'Start Date';
+		$defaults['venue']              = 'Venue';
+		$defaults['start_date']         = 'Start Date';
 		$defaults['entry_requirements'] = 'Course Details';
-		$defaults['organizer']             = 'Organizer';
+		$defaults['organizer']          = 'Organizer';
 
 		return $defaults;
 	}

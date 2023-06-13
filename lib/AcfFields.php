@@ -26,7 +26,7 @@ class AcfFields {
 	 * Fetch local authority options from the groups table.
 	 */
 	public static function populate_training_centre_select_options( array $field ): array {
-		$training_centres = GroupUtils::get_all_training_centres();
+		$training_centres = GroupUtils::get_all_training_centre_groups();
 
 		foreach ( $training_centres as $training_centre ) {
 			$field['choices'][ $training_centre->group_id ] = $training_centre->name;

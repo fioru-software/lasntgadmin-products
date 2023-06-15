@@ -81,7 +81,6 @@ class ProductActionsFilters {
 	}
 
 	public static function add_product_boxes_sort_order() {
-		
 		update_user_meta(
 			get_current_user_id(),
 			'meta-box-order_product',
@@ -91,12 +90,11 @@ class ProductActionsFilters {
 				'advanced' => '',
 			)
 		);
-
 	}
 
-	public static function wpse33063_move_meta_box(){
+	public static function wpse33063_move_meta_box() {
 		remove_meta_box( 'submitdiv', 'product', 'side' );
-		add_meta_box('submitdiv', __('Course Status', 'lasntgadmin'), 'post_submit_meta_box', 'product', 'normal', 'high');
+		add_meta_box( 'submitdiv', __( 'Course Status', 'lasntgadmin' ), 'post_submit_meta_box', 'product', 'normal', 'high' );
 	}
 	public static function disable_course_add_button() {
 		global $wp_post_types;
@@ -213,10 +211,10 @@ class ProductActionsFilters {
 		$assets_dir = untrailingslashit( plugin_dir_url( __FILE__ ) ) . '/../assets/';
 		wp_enqueue_style( 'admin-columns-css', $assets_dir . 'styles/admin-column.css', '1.0.2' );
 
-		$defaults['venue']                 = 'Venue';
-		$defaults['start_date']            = 'Start Date';
+		$defaults['venue']              = 'Venue';
+		$defaults['start_date']         = 'Start Date';
 		$defaults['entry_requirements'] = 'Course Details';
-		$defaults['organizer']             = 'Organizer';
+		$defaults['organizer']          = 'Organizer';
 
 		return $defaults;
 	}

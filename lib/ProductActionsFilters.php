@@ -189,6 +189,9 @@ class ProductActionsFilters {
 		return $columns;
 	}
 
+	/**
+	 * @todo Escape the output.
+	 */
 	public static function add_venue_custom( $column_name, $post_id ) {
 		if ( 'venue' === $column_name ) {
 			echo get_field( 'field_63881b84798a5', $post_id ); //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
@@ -196,7 +199,7 @@ class ProductActionsFilters {
 			echo get_field( 'field_63881aee31478', $post_id ); //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		} elseif ( 'organizer' === $column_name ) {
 			$centres = get_field( 'field_63881beb798a7', $post_id ); //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-			if ( $centres ) {
+			if ( is_array( $centres ) && count( $centres ) ) {
 				echo implode( ', ', $centres ); //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			}
 		}

@@ -76,8 +76,28 @@ class ProductActionsFilters {
 
 		add_filter( 'woocommerce_products_admin_list_table_filters', [ self::class, 'remove_products_filter' ] );
 		add_filter( 'woocommerce_product_tabs', [ self::class, 'remove_product_tab' ], 9999 );
+		add_filter( 'do_meta_boxes', [ self::class, 'wpse33063_move_meta_box' ] );
+		add_action( 'add_meta_boxes', array( self::class, 'add_product_boxes_sort_order' ), 99 );
 	}
 
+	public static function add_product_boxes_sort_order() {
+		
+		update_user_meta(
+			get_current_user_id(),
+			'meta-box-order_product',
+			array(
+				'side'     => 'postimagediv,woocommerce-product-images,product_catdiv,tagsdiv-product_tag,submitdiv',
+				'normal'   => 'woocommerce-product-data,postcustom,slugdiv,postexcerpt',
+				'advanced' => '',
+			)
+		);
+
+	}
+
+	public static function wpse33063_move_meta_box(){
+		remove_meta_box( 'submitdiv', 'product', 'side' );
+		add_meta_box('submitdiv', __('Course Status', 'lasntgadmin'), 'post_submit_meta_box', 'product', 'normal', 'high');
+	}
 	public static function disable_course_add_button() {
 		global $wp_post_types;
 		if ( ! current_user_can( 'create_products' ) ) {

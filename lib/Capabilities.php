@@ -84,20 +84,9 @@ class Capabilities {
 			'read',
 
 			'read_product',
-			'edit_product',
-			'delete_product',
-			'edit_product',
-			'assign_product_terms',
-			'publish_products',
+			'edit_posts',
 
-			'delete_private_products',
-			'delete_products',
-			'delete_published_products',
-			'edit_others_products',
-			'edit_private_products',
 			'edit_products',
-			'create_products',
-			'edit_published_products',
 			'read_private_products',
 
 			// groups.
@@ -120,6 +109,7 @@ class Capabilities {
 			'read_private_products',
 			'upload_files',
 			'edit_products',
+			'edit_posts',
 		];
 	}
 

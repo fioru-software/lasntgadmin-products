@@ -268,6 +268,9 @@ class ProductActionsFilters {
 					max-width: -webkit-calc(33% - 12px);
 					max-width: calc(33% - 12px);
 				}
+				#edit-slug-box{
+					display: none !important;
+				}
 			</style>
 				<?php
 			}

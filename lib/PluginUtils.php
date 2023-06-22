@@ -30,5 +30,3 @@ class PluginUtils {
 		return sprintf( '%s/%s.php', self::get_absolute_plugin_path(), self::get_kebab_case_name() );
 	}
 }
-
-

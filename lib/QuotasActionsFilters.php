@@ -207,9 +207,10 @@ class QuotasActionsFilters {
 			if ( ! isset( $_POST[ '_quotas_field_' . $group->group_id ] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
 				continue;
 			}
-			$field = sanitize_text_field( wp_unslash( $_POST[ '_quotas_field_' . $group->group_id ] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
-
+			$field     = sanitize_text_field( wp_unslash( $_POST[ '_quotas_field_' . $group->group_id ] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
+			$old_value = get_post_meta( $post_id, '_quotas_field_' . $group->group_id, true );
 			update_post_meta( $post_id, '_quotas_field_' . $group->group_id, esc_attr( $field ) );
+			do_action( 'lasntgadmin-products_quotas_field_changed', [ $post_id, $group->group_id, $old_value, $field ] );
 		}
 
 		if ( isset( $_POST['_minimum_capacity'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing

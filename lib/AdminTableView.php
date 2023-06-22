@@ -231,5 +231,4 @@ class AdminTableView {
 		);
 		wp_enqueue_style( $name );
 	}
-
 }

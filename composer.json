@@ -1,6 +1,6 @@
 {
     "name": "fioru/lasntgadmin-products",
-    "version": "5.9.9",
+    "version": "5.9.11",
     "type": "wordpress-plugin",
     "extra": {
         "installer-name": "lasntgadmin-products"
@@ -34,10 +34,6 @@
         {
             "type": "vcs",
             "url": "git@github.com:fioru-software/lasntgadmin-attendees.git"
-        },
-        {
-            "type": "vcs",
-            "url": "git@github.com:fioru-software/lasntgadmin-products.git"
         },
         {
             "type": "vcs",

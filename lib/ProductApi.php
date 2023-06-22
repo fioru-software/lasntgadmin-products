@@ -88,5 +88,4 @@ class ProductApi {
 		$products = ProductUtils::get_visible_products();
 		return array_map( fn( $product) => $product->get_data(), $products );
 	}
-
 }

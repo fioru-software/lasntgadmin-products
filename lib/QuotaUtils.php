@@ -41,8 +41,9 @@ class QuotaUtils {
 	 * @param  bool  $check_cart Whether to check in cart and deduct the items.
 	 * @return int
 	 */
-	public static function get_product_quota( $product_id, $check_cart = true ): int {
+	public static function get_product_quota( $product_id, $check_cart = true, $selected_group_id = false ): int {
 		global $wpdb, $woocommerce;
+		$selected_group_id = self::$private_client_group_id;
 		$already_in_cart = 0;
 		if ( $check_cart ) {
 			$cart_items = $woocommerce->cart->get_cart();
@@ -53,7 +54,6 @@ class QuotaUtils {
 				break;
 			}
 		}
-		$private_client_group_id = self::$private_client_group_id;
 
 		$results = $wpdb->get_results(
 			$wpdb->prepare(
@@ -71,7 +71,7 @@ class QuotaUtils {
         AND post_meta.meta_value = %s
         AND post_meta.meta_key = 'groups-read'
     ",
-				[ 'wc-completed', 'wc-processing', $product_id, $private_client_group_id ]
+				[ 'wc-completed', 'wc-processing', $product_id, $selected_group_id ]
 			)
 		);
 
@@ -97,7 +97,7 @@ class QuotaUtils {
 			}
 		}//end if
 
-		$private = self::remaining_quota( $product_id, self::$private_client_group_id );
+		$private = self::remaining_quota( $product_id, $selected_group_id );
 		$product = wc_get_product( $product_id );
 		$stock   = $product->get_stock_quantity();
 		if ( '' === $private ) {

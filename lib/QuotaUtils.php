@@ -43,7 +43,9 @@ class QuotaUtils {
 	 */
 	public static function get_product_quota( $product_id, $check_cart = true, $selected_group_id = false ): int {
 		global $wpdb, $woocommerce;
-		$selected_group_id = self::$private_client_group_id;
+		if ( ! $selected_group_id ) {
+			$selected_group_id = self::$private_client_group_id;
+		}
 		$already_in_cart = 0;
 		if ( $check_cart ) {
 			$cart_items = $woocommerce->cart->get_cart();

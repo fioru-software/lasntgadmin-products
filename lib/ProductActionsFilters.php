@@ -78,9 +78,7 @@ class ProductActionsFilters {
 		add_filter( 'woocommerce_product_tabs', [ self::class, 'remove_product_tab' ], 9999 );
 		add_filter( 'do_meta_boxes', [ self::class, 'wpse33063_move_meta_box' ] );
 		add_action( 'add_meta_boxes', array( self::class, 'add_product_boxes_sort_order' ), 99 );
-
-		
-	}	
+	}
 
 	public static function add_product_boxes_sort_order() {
 		update_user_meta(

@@ -37,9 +37,8 @@ class QuotasActionsFilters {
 		add_action( 'woocommerce_checkout_order_processed', [ self::class, 'add_checkout_orders_to_private' ], 10, 1 );
 	}
 
-	public static function meta_get_groups($groups)
-	{
-		$user_groups =  GroupUtils::get_current_users_group_ids();
+	public static function meta_get_groups( $groups ) {
+		$user_groups = GroupUtils::get_current_users_group_ids();
 		return $user_groups;
 	}
 	/**

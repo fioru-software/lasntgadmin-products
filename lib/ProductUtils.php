@@ -25,6 +25,10 @@ class ProductUtils {
 	public static function is_open_for_enrollment( WC_Product $product ): bool {
 		return $product->get_status() === 'open_for_enrollment';
 	}
+	public static function is_open_for_enrollment_by_product_id( int $product_id ): bool {
+		$product = wc_get_product( $product_id );
+		return $product->get_status() === 'open_for_enrollment';
+	}
 
 	public static function is_funded( WC_Product $product ): bool {
 		$funding_source_slugs = $product->get_meta( 'funding_sources', true );

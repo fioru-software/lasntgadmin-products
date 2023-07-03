@@ -26,6 +26,8 @@ class QuotasActionsFilters {
 		add_filter( 'woocommerce_get_availability_text', [ self::class, 'stock_filter' ], 10, 2 );
 		add_filter( 'woocommerce_add_to_cart_validation', [ self::class, 'add_to_cart_validation' ], 10, 3 );
 		add_filter( 'woocommerce_update_cart_validation', [ self::class, 'update_cart_validation' ], 10, 6 );
+		add_filter( 'groups_access_meta_boxes_groups_get_groups_options', [ self::class, 'meta_get_groups' ], 10 );
+		add_filter( 'groups_access_meta_boxes_user_can_restrict_group_ids', [ self::class, 'meta_get_groups' ], 10 );
 
 		// actions.
 		add_action( 'woocommerce_product_data_panels', [ self::class, 'product_tab_data' ], 10, 1 );
@@ -33,6 +35,12 @@ class QuotasActionsFilters {
 		add_action( 'woocommerce_process_product_meta', [ self::class, 'add_quotas_save' ], 10, 1 );
 		add_action( 'woocommerce_before_cart_contents', [ self::class, 'show_quota_to_client' ], 10, 0 );
 		add_action( 'woocommerce_checkout_order_processed', [ self::class, 'add_checkout_orders_to_private' ], 10, 1 );
+	}
+
+	public static function meta_get_groups($groups)
+	{
+		$user_groups =  GroupUtils::get_current_users_group_ids();
+		return $user_groups;
 	}
 	/**
 	 * Show tab
@@ -210,7 +218,9 @@ class QuotasActionsFilters {
 			$field     = sanitize_text_field( wp_unslash( $_POST[ '_quotas_field_' . $group->group_id ] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
 			$old_value = get_post_meta( $post_id, '_quotas_field_' . $group->group_id, true );
 			update_post_meta( $post_id, '_quotas_field_' . $group->group_id, esc_attr( $field ) );
-			do_action( 'lasntgadmin-products_quotas_field_changed', [ $post_id, $group->group_id, $old_value, $field ] );
+			if ( $old_value != $field ) {
+				do_action( 'lasntgadmin-products_quotas_field_changed', $post_id, $group->group_id, $old_value, $field );
+			}
 		}
 
 		if ( isset( $_POST['_minimum_capacity'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing

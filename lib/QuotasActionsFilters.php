@@ -27,7 +27,7 @@ class QuotasActionsFilters {
 		add_filter( 'woocommerce_add_to_cart_validation', [ self::class, 'add_to_cart_validation' ], 10, 3 );
 		add_filter( 'woocommerce_update_cart_validation', [ self::class, 'update_cart_validation' ], 10, 6 );
 		add_filter( 'groups_access_meta_boxes_groups_get_groups_options', [ self::class, 'meta_get_groups' ], 10, 0 );
-		
+
 		add_filter( 'groups_admin_posts_restrict_manage_posts_get_groups_options', [ self::class, 'meta_get_groups' ], 10, 0 );
 
 		// actions.
@@ -38,9 +38,13 @@ class QuotasActionsFilters {
 		add_action( 'woocommerce_checkout_order_processed', [ self::class, 'add_checkout_orders_to_private' ], 10, 1 );
 	}
 
-	public static function meta_get_groups(  ) {
+	public static function meta_get_groups() {
 		$user_groups = GroupUtils::get_current_users_group_ids();
-		return array( 'order_by' => 'name', 'order' => 'ASC', 'include' => $user_groups );
+		return array(
+			'order_by' => 'name',
+			'order'    => 'ASC',
+			'include'  => $user_groups,
+		);
 	}
 	/**
 	 * Show tab

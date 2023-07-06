@@ -23,11 +23,11 @@ class ProductUtils {
 	];
 
 	public static function is_open_for_enrollment( WC_Product $product ): bool {
-		return $product->get_status() === 'open_for_enrollment';
+		return $product->get_status() === self::$publish_status;
 	}
 	public static function is_open_for_enrollment_by_product_id( int $product_id ): bool {
 		$product = wc_get_product( $product_id );
-		return $product->get_status() === 'open_for_enrollment';
+		return $product->get_status() === self::$publish_status;
 	}
 
 	public static function is_funded( WC_Product $product ): bool {
@@ -71,15 +71,29 @@ class ProductUtils {
 	 * @return WC_Product[]
 	 */
 	public static function get_products_visible_to_group( int $group_id ): array {
-		return wc_get_products(
+		$post_ids = get_posts(
 			[
-				'status'       => 'open_for_enrollment',
-				'meta_key'     => 'groups-read',
-				'meta_compare' => '=',
-				'meta_value'   => $group_id,
-				'meta_type'    => 'NUMERIC',
+				'fields'         => 'ids',
+				'post_status'    => self::$publish_status,
+				'post_type'      => 'product',
+				'posts_per_page' => -1,
+				'meta_query'     => [
+					'relation' => 'OR',
+					[ // phpcs:ignore Universal.Arrays.MixedKeyedUnkeyedArray.Found, Universal.Arrays.MixedArrayKeyTypes.ImplicitNumericKey
+						'key'     => 'groups-read',
+						'compare' => '=',
+						'type'    => 'NUMERIC',
+						'value'   => $group_id,
+					],
+					[ // phpcs:ignore Universal.Arrays.MixedKeyedUnkeyedArray.Found
+						'key'     => 'groups-read',
+						'compare' => 'NOT EXISTS',
+					],
+				],
 			]
 		);
+		$products = array_map( fn( $post_id) => wc_get_product( $post_id ), $post_ids );
+		return $products;
 	}
 
 	/**
@@ -89,23 +103,53 @@ class ProductUtils {
 	 * @return WC_Product[]
 	 */
 	public static function get_visible_products(): array {
-		return wc_get_products(
+		$post_ids = get_posts(
 			[
-				'status'     => 'open_for_enrollment',
-				'meta_query' => [
-					[
+				'fields'         => 'ids',
+				'post_status'    => self::$publish_status,
+				'post_type'      => 'product',
+				'posts_per_page' => -1,
+				'meta_query'     => [
+					'relation' => 'OR',
+					[ // phpcs:ignore Universal.Arrays.MixedKeyedUnkeyedArray.Found, Universal.Arrays.MixedArrayKeyTypes.ImplicitNumericKey
 						'key'     => 'groups-read',
 						'compare' => 'IN',
+						'type'    => 'NUMERIC',
 						'value'   => GroupUtils::get_current_users_group_ids(),
 					],
-					// When visibility has not been limited by group, then the product is visible to everyone.
-					[
+					[ // phpcs:ignore Universal.Arrays.MixedKeyedUnkeyedArray.Found
 						'key'     => 'groups-read',
 						'compare' => 'NOT EXISTS',
 					],
 				],
 			]
 		);
+		$products = array_map( fn( $post_id) => wc_get_product( $post_id ), $post_ids );
+		return $products;
+	}
+
+	/**
+	 * Get products with status
+	 *
+	 * @return WC_Product[]
+	 */
+	public static function get_products_with_status( string $status ): array {
+		require_once '/var/www/html/wp-admin/includes/post.php';
+		$statuses = get_available_post_statuses( 'product' );
+		error_log( print_r( $statuses, true ) );
+		if ( in_array( $status, get_available_post_statuses( 'product' ) ) ) {
+			$post_ids = get_posts(
+				[
+					'fields'         => 'ids',
+					'post_status'    => trim( $status ),
+					'post_type'      => 'product',
+					'posts_per_page' => -1,
+				]
+			);
+			$products = array_map( fn( $post_id) => wc_get_product( $post_id ), $post_ids );
+			return $products;
+		}
+		return [];
 	}
 
 	/**

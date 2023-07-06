@@ -27,6 +27,7 @@ class ProductActionsFilters {
 
 	public static function add_actions(): void {
 		add_action( 'rest_api_init', [ ProductApi::class, 'get_instance' ] );
+
 		add_action( 'admin_notices', [ self::class, 'admin_notice_errors' ], 500 );
 
 		add_action( 'add_meta_boxes', [ self::class, 'check_roles' ], 100 );
@@ -51,6 +52,7 @@ class ProductActionsFilters {
 		);
 
 		add_action( 'init', [ self::class, 'disable_course_add_button' ] );
+		add_action( 'add_meta_boxes', array( self::class, 'add_product_boxes_sort_order' ), 99 );
 	}
 
 	public static function add_filters(): void {
@@ -77,7 +79,6 @@ class ProductActionsFilters {
 		add_filter( 'woocommerce_products_admin_list_table_filters', [ self::class, 'remove_products_filter' ] );
 		add_filter( 'woocommerce_product_tabs', [ self::class, 'remove_product_tab' ], 9999 );
 		add_filter( 'do_meta_boxes', [ self::class, 'wpse33063_move_meta_box' ] );
-		add_action( 'add_meta_boxes', array( self::class, 'add_product_boxes_sort_order' ), 99 );
 	}
 
 	public static function add_product_boxes_sort_order() {
@@ -382,19 +383,18 @@ class ProductActionsFilters {
 	 * @param  WP_Query $q Query.
 	 * @return void
 	 */
-	public static function woocommerce_product_query( $q ): void {
+	public static function woocommerce_product_query( WP_Query $q ): void {
 		$q->set( 'post_status', ProductUtils::$publish_status );
 
 		// check the product has private group or it's blank.
 		$args = array(
 			'relation' => 'OR',
-
 			array(//phpcs:ignore Universal.Arrays.MixedArrayKeyTypes.ImplicitNumericKey, Universal.Arrays.MixedKeyedUnkeyedArray.Found
 				'key'     => 'groups-read',
 				'value'   => 33,
 				// private client group id is 33.
 				'compare' => '=',
-				'type'    => 'numeric',
+				'type'    => 'NUMERIC',
 			),
 			array(//phpcs:ignore Universal.Arrays.MixedArrayKeyTypes.ImplicitNumericKey, Universal.Arrays.MixedKeyedUnkeyedArray.Found
 				'key'     => 'groups-read',

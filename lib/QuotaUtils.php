@@ -47,7 +47,7 @@ class QuotaUtils {
 			$selected_group_id = self::$private_client_group_id;
 		}
 		$already_in_cart = 0;
-		if ( $check_cart ) {
+		if ( $check_cart && ! is_null( $woocommerce->cart ) ) {
 			$cart_items = $woocommerce->cart->get_cart();
 			foreach ( $cart_items as $item => $values ) {
 				if ( $values['data']->get_id() === $product_id ) {

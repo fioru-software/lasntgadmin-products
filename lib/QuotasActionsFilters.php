@@ -235,43 +235,47 @@ class QuotasActionsFilters {
 
 	public static function show_out_of_stock_message() {
 		global $woocommerce;
-		$items = $woocommerce->cart->get_cart();
+		if ( ! is_null( $woocommerce->cart ) ) {
+			$items = $woocommerce->cart->get_cart();
 
-		$product_id = get_the_ID();
-		$orders     = QuotaUtils::get_product_quota( $product_id );
-		if ( 0 == $orders ) {
-			echo sprintf(
-				'<p class="stock out-of-stock">%s</p>',
-				__( 'Not in stock', 'lasntgadmin' ) //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-			);
-		}
-		foreach ( $items as $values ) {
-			$orders = QuotaUtils::get_product_quota( $values['data']->get_id() );
-			if ( $values['data']->get_id() !== $product_id ) {
+			$product_id = get_the_ID();
+			$orders     = QuotaUtils::get_product_quota( $product_id );
+			if ( 0 == $orders ) {
 				echo sprintf(
-					'<p class="woocommerce-error">%s</p>',
-					__( 'You can only add one course to cart.', 'lasntgadmin' ) //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+					'<p class="stock out-of-stock">%s</p>',
+					__( 'Not in stock', 'lasntgadmin' ) //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 				);
 			}
-		}
+			foreach ( $items as $values ) {
+				$orders = QuotaUtils::get_product_quota( $values['data']->get_id() );
+				if ( $values['data']->get_id() !== $product_id ) {
+					echo sprintf(
+						'<p class="woocommerce-error">%s</p>',
+						__( 'You can only add one course to cart.', 'lasntgadmin' ) //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+					);
+				}
+			}
+		}//end if
 	}
 
 	public static function show_quota_to_client() {
 		global $woocommerce;
-		$items = $woocommerce->cart->get_cart();
+		if ( ! is_null( $woocommerce->cart ) ) {
+			$items = $woocommerce->cart->get_cart();
 
-		// this assumes the cart can only have one item.
-		if ( ! count( $items ) ) {
-			return;
-		}
-		$orders = null;
-		foreach ( $items as $item => $values ) {
-			$orders = QuotaUtils::get_product_quota( $values['data']->get_id() );
-			break;
-		}
+			// this assumes the cart can only have one item.
+			if ( ! count( $items ) ) {
+				return;
+			}
+			$orders = null;
+			foreach ( $items as $item => $values ) {
+				$orders = QuotaUtils::get_product_quota( $values['data']->get_id() );
+				break;
+			}
 
-		if ( $orders ) {
-			echo ( sprintf( "<p class='woocommerce-info'>%s %d</p>", __( 'Available quota remaining:', 'lasntgadmin' ), esc_attr( $orders ) ) ); //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			if ( $orders ) {
+				echo ( sprintf( "<p class='woocommerce-info'>%s %d</p>", __( 'Available quota remaining:', 'lasntgadmin' ), esc_attr( $orders ) ) ); //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			}
 		}
 	}
 
@@ -306,11 +310,13 @@ class QuotasActionsFilters {
 		}
 		$product_id = $product->get_ID();
 		$orders     = QuotaUtils::get_product_quota( $product_id );
-		$items      = $woocommerce->cart->get_cart();
-		foreach ( $items as $values ) {
-			$orders = QuotaUtils::get_product_quota( $values['data']->get_id() );
-			if ( $values['data']->get_id() !== $product_id ) {
-				return false;
+		if ( ! is_null( $woocommerce->cart ) ) {
+			$items = $woocommerce->cart->get_cart();
+			foreach ( $items as $values ) {
+				$orders = QuotaUtils::get_product_quota( $values['data']->get_id() );
+				if ( $values['data']->get_id() !== $product_id ) {
+					return false;
+				}
 			}
 		}
 		return $orders > 0;

@@ -202,6 +202,13 @@ class ProductActionsFilters {
 				echo implode( ', ', $centres ); //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			}
 		}
+		else if('is_in_stock' === $column_name) {
+			$product    = wc_get_product( $post_id );
+			$sales = $product->get_total_sales();
+			$total = $product->get_stock_quantity() + $sales;
+			echo "Capacity ($total)\n<br/> " ;
+			echo "Booked ($sales)\n<br/> " ;
+		}
 	}
 
 	public static function rename_groups_column( $defaults ) {

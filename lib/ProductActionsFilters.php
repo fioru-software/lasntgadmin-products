@@ -50,6 +50,7 @@ class ProductActionsFilters {
 		);
 
 		add_action( 'init', [ self::class, 'disable_course_add_button' ] );
+		add_action( 'add_meta_boxes', array( self::class, 'add_product_boxes_sort_order' ), 99 );
 	}
 
 	public static function add_filters(): void {
@@ -76,7 +77,25 @@ class ProductActionsFilters {
 		add_filter( 'woocommerce_products_admin_list_table_filters', [ self::class, 'remove_products_filter' ] );
 		add_filter( 'woocommerce_product_tabs', [ self::class, 'remove_product_tab' ], 9999 );
 		add_filter( 'do_meta_boxes', [ self::class, 'wpse33063_move_meta_box' ] );
-		add_action( 'add_meta_boxes', array( self::class, 'add_product_boxes_sort_order' ), 99 );
+
+		add_action(
+			'registered_post_type',
+			function( $pt ) {
+				if ( ! isset( $_GET['post'] ) || ! in_array( 'product', get_post_types( array( '_builtin' => false ) ) ) ) {
+					return;
+				}
+				$GLOBALS['wp_post_types'][ $pt ]->labels->edit_item = 'Editing ' . get_the_title( $_GET['post'] );
+			}
+		);
+
+		add_filter(
+			'woocommerce_navigation_get_breadcrumbs',
+			function( $breadcrumbs ) {
+				$breadcrumbs[2] = 'Editing ' . get_the_title( $_GET['post'] );
+				return $breadcrumbs;
+			},
+			10
+		);
 	}
 
 	public static function add_product_boxes_sort_order() {
@@ -201,13 +220,12 @@ class ProductActionsFilters {
 			if ( is_array( $centres ) && count( $centres ) ) {
 				echo implode( ', ', $centres ); //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			}
-		}
-		else if('is_in_stock' === $column_name) {
-			$product    = wc_get_product( $post_id );
-			$sales = $product->get_total_sales();
-			$total = $product->get_stock_quantity() + $sales;
-			echo "Capacity ($total)\n<br/> " ;
-			echo "Booked ($sales)\n<br/> " ;
+		} elseif ( 'is_in_stock' === $column_name ) {
+			$product = wc_get_product( $post_id );
+			$sales   = $product->get_total_sales();
+			$total   = $product->get_stock_quantity() + $sales;
+			echo "Capacity ($total)\n<br/> ";
+			echo "Booked ($sales)\n<br/> ";
 		}
 	}
 

@@ -221,11 +221,10 @@ class QuotasActionsFilters {
 			}
 			$field     = sanitize_text_field( wp_unslash( $_POST[ '_quotas_field_' . $group->group_id ] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
 			$old_value = get_post_meta( $post_id, '_quotas_field_' . $group->group_id, true );
-			$quota = QuotaUtils::get_product_quota($post_id, false, [$group->group_id]);
+			$quota     = QuotaUtils::get_product_quota( $post_id, false, [ $group->group_id ] );
 			update_post_meta( $post_id, '_quotas_field_' . $group->group_id, esc_attr( $field ) );
 
-			
-			if ( $old_value != $field && $quota === 0) {
+			if ( $old_value != $field && $quota === 0 ) {
 				do_action( 'lasntgadmin-products_quotas_field_changed', $post_id, $group->group_id, $old_value, $field );
 			}
 		}

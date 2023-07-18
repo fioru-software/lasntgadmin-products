@@ -42,7 +42,7 @@ class ProductActionsFilters {
 		add_action( 'pre_get_posts', [ self::class, 'sort_custom_columns_query' ], 99, 1 );
 		add_action( 'add_meta_boxes', [ self::class, 'remove_short_description' ], 999 );
 		add_action( 'posts_where', [ self::class, 'remove_template_products' ], 10, 2 );
-
+		
 		add_action(
 			'init',
 			function() {
@@ -78,8 +78,64 @@ class ProductActionsFilters {
 		add_filter( 'woocommerce_product_tabs', [ self::class, 'remove_product_tab' ], 9999 );
 		add_filter( 'do_meta_boxes', [ self::class, 'wpse33063_move_meta_box' ] );
 		add_action( 'add_meta_boxes', array( self::class, 'add_product_boxes_sort_order' ), 99 );
+		// add_filter( 'product_upload_directory', [self::class, 'check_upload'], 99, 2);
+		// add_filter( 'wp_handle_upload', [self::class, 'wp_handle_upload'], 99);
+
+		add_filter('bulk_actions-upload', function($bulk_actions) {
+			$bulk_actions['move-to-archive'] = __('Move to Archive', 'txtdomain');
+			return $bulk_actions;
+		});
+
+		add_filter( 'pre-upload-ui', array( self::class, 'upload_prefilter' ), 99);
 	}
 
+	public static function upload_prefilter()
+	{
+		echo '
+			
+		';
+	}
+	public static function wp_handle_upload($file)
+	{
+		add_filter( 'upload_dir', [self::class, 'upload_dir'], 99);
+		return $file;
+	}
+	public static function upload_dir($dir)
+	{
+		    // xxx Lots of $_REQUEST usage in here, not a great idea.
+
+		// Are we where we want to be?
+		if (!isset($_REQUEST['action']) || 'upload-attachment' !== $_REQUEST['action']) {
+			return $dir;
+		}
+		
+		// make sure we have a post ID
+		if (!isset($_REQUEST['post_id'])) {
+			return $dir;
+		}
+
+		// modify the path and url.
+		$type = get_post_type($_REQUEST['post_id']);
+		if('product' !== $type){
+			return;
+		}
+		$uploads = apply_filters("{$type}_upload_directory", $type, $_REQUEST['post_id']);
+		$dir['path'] = path_join($dir['basedir'], $uploads);
+		$dir['url'] = path_join($dir['baseurl'], $uploads);
+
+		return $dir;
+	}
+	public static function check_upload($param, $post_id)
+	{
+		$terms = get_the_terms( $post_id, 'product_cat' );
+		$product    = new \WC_Product($post_id);
+		$cats = wc_get_product_category_list($post_id);
+		$cats = strip_tags($cats);
+		error_log("teeeeeeee: $post_id   ". serialize($cats));
+		var_dump($param);
+		// die();
+		return $param;
+	}
 	public static function add_product_boxes_sort_order() {
 		update_user_meta(
 			get_current_user_id(),
@@ -284,6 +340,8 @@ class ProductActionsFilters {
 		if ( ! isset( $_POST['query'] ) || ! isset( $_POST['post_id'] ) ) { //phpcs:ignore WordPress.Security.NonceVerification.Missing
 			return $query;
 		}
+		error_log('query');
+		error_log(print_r($query, true));
 		$user_id = get_current_user_id();
 		$post_id = sanitize_text_field( wp_unslash( $_POST['post_id'] ) ); //phpcs:ignore WordPress.Security.NonceVerification.Missing
 		$post    = get_post( $post_id );

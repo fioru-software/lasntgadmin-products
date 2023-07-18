@@ -224,7 +224,7 @@ class QuotasActionsFilters {
 			$quota     = QuotaUtils::get_product_quota( $post_id, false, [ $group->group_id ] );
 			update_post_meta( $post_id, '_quotas_field_' . $group->group_id, esc_attr( $field ) );
 
-			if ( $old_value != $field && $quota === 0 ) {
+			if ( $old_value != $field && 0 === $quota ) {
 				do_action( 'lasntgadmin-products_quotas_field_changed', $post_id, $group->group_id, $old_value, $field );
 			}
 		}

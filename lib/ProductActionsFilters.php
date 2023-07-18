@@ -78,28 +78,6 @@ class ProductActionsFilters {
 		add_filter( 'woocommerce_products_admin_list_table_filters', [ self::class, 'remove_products_filter' ] );
 		add_filter( 'woocommerce_product_tabs', [ self::class, 'remove_product_tab' ], 9999 );
 		add_filter( 'do_meta_boxes', [ self::class, 'wpse33063_move_meta_box' ] );
-<<<<<<< HEAD
-
-		add_action(
-			'registered_post_type',
-			function( $pt ) {
-				if ( ! isset( $_GET['post'] ) || ! in_array( 'product', get_post_types( array( '_builtin' => false ) ) ) ) {
-					return;
-				}
-				$GLOBALS['wp_post_types'][ $pt ]->labels->edit_item = 'Editing ' . get_the_title( $_GET['post'] );
-			}
-		);
-
-		add_filter(
-			'woocommerce_navigation_get_breadcrumbs',
-			function( $breadcrumbs ) {
-				$breadcrumbs[2] = 'Editing ' . get_the_title( $_GET['post'] );
-				return $breadcrumbs;
-			},
-			10
-		);
-=======
->>>>>>> master
 	}
 
 	public static function add_product_boxes_sort_order() {
@@ -228,8 +206,8 @@ class ProductActionsFilters {
 			$product = wc_get_product( $post_id );
 			$sales   = $product->get_total_sales();
 			$total   = $product->get_stock_quantity() + $sales;
-			echo "Capacity ($total)\n<br/> ";
-			echo "Booked ($sales)\n<br/> ";
+			echo esc_attr( "Capacity ($total)\n<br/> " );
+			echo esc_attr( "Booked ($sales)\n<br/> " );
 		}
 	}
 

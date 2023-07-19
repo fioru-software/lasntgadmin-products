@@ -67,8 +67,10 @@ class AdminTableView {
 	public static function handle_filter_request( WP_Query $query ): WP_Query {
 		if ( is_admin() && function_exists( 'get_current_screen' ) ) {
 			$screen = get_current_screen();
-			if ( 'product' === $screen->post_type && 'edit-product' === $screen->id && 'product' === $query->query_vars['post_type'] && AdminTableUtils::is_base_request() ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-				$query->query_vars['post_status'] = [ ProductUtils::$publish_status ];
+			if ( $screen ) {
+				if ( 'product' === $screen->post_type && 'edit-product' === $screen->id && 'product' === $query->query_vars['post_type'] && AdminTableUtils::is_base_request() ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+					$query->query_vars['post_status'] = [ ProductUtils::$publish_status ];
+				}
 			}
 		}//end if
 		return $query;

@@ -197,6 +197,7 @@ class ProductActionsFilters {
 			echo get_field( 'field_63881b84798a5', $post_id ); //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		} elseif ( 'start_date' === $column_name ) {
 			echo get_field( 'field_63881aee31478', $post_id ); //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			echo ' ' . get_field( 'field_63881b0531479', $post_id ); //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		} elseif ( 'organizer' === $column_name ) {
 			$centres = get_field( 'field_63881beb798a7', $post_id ); //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			if ( is_array( $centres ) && count( $centres ) ) {
@@ -206,8 +207,8 @@ class ProductActionsFilters {
 			$product = wc_get_product( $post_id );
 			$sales   = $product->get_total_sales();
 			$total   = $product->get_stock_quantity() + $sales;
-			echo esc_attr( "Capacity ($total)\n<br/> " );
-			echo esc_attr( "Booked ($sales)\n<br/> " );
+			echo ( "Capacity ($total)\n<br/> " ); //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			echo ( "Booked ($sales)\n<br/> " ); //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		}
 	}
 

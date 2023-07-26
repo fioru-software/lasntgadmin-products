@@ -43,50 +43,48 @@ class ProductActionsFilters {
 		add_action( 'pre_get_posts', [ self::class, 'sort_custom_columns_query' ], 99, 1 );
 		add_action( 'add_meta_boxes', [ self::class, 'remove_short_description' ], 999 );
 		add_action( 'posts_where', [ self::class, 'remove_template_products' ], 10, 2 );
-		add_action( 'init', [self::class, 'remove_editor'] );
+		add_action( 'init', [ self::class, 'remove_editor' ] );
 
 		add_action( 'init', [ self::class, 'disable_course_add_button' ] );
 		add_action( 'add_meta_boxes', array( self::class, 'add_product_boxes_sort_order' ), 99 );
-		add_action( 'load-post.php', [self::class, 'edit_product'] );
+		add_action( 'load-post.php', [ self::class, 'edit_product' ] );
 	}
 
-	public static function edit_product()
-	{
-		if(in_array( 'regional_training_centre_manager', wp_get_current_user()->roles ) === false) {
+	public static function edit_product() {
+		if ( in_array( 'regional_training_centre_manager', wp_get_current_user()->roles ) === false ) {
 			return;
 		}
-		if(!isset($_GET['post'])){
+		if ( ! isset( $_GET['post'] ) ) {
 			return;
 		}
 		$post_ID = (int) $_GET['post'];
-		
-		if('product' !== get_post_type($post_ID)){
+
+		if ( 'product' !== get_post_type( $post_ID ) ) {
 			return;
 		}
 
 		$disabled = [
-			"field_638786be96777",
-			"field_63881beb798a7",
-			"field_63881c1ff4453",
-			"field_63881cf7f4457",
-			"field_63878925d6a26",
-			"field_6387890fd6a25",
-			"field_63878939d6a27",
-			"field_63881f7f3e5af",
-			"field_638820173e5b0",
-			"field_63882047beae3",
-			"field_638820d1beae4",
-			"field_63f764087f8c9",
+			'field_638786be96777',
+			'field_63881beb798a7',
+			'field_63881c1ff4453',
+			'field_63881cf7f4457',
+			'field_63878925d6a26',
+			'field_6387890fd6a25',
+			'field_63878939d6a27',
+			'field_63881f7f3e5af',
+			'field_638820173e5b0',
+			'field_63882047beae3',
+			'field_638820d1beae4',
+			'field_63f764087f8c9',
 		];
-		foreach($disabled as $key){
-			add_filter("acf/load_field/key=$key", [self::class, 'my_acf_load_field']);
+		foreach ( $disabled as $key ) {
+			add_filter( "acf/load_field/key=$key", [ self::class, 'my_acf_load_field' ] );
 		}
 		$assets_dir = untrailingslashit( plugin_dir_url( __FILE__ ) ) . '/../assets/';
 		wp_enqueue_script( 'lasntgadmin-disable-selectize-js', ( $assets_dir . 'js/lasntgadmin-disable-selectize.js' ), array( 'jquery' ), '1.7', true );
 	}
 
-	public static function my_acf_load_field($field)
-	{
+	public static function my_acf_load_field( $field ) {
 		$field['disabled'] = 1;
 		return $field;
 	}

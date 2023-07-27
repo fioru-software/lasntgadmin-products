@@ -23,36 +23,36 @@ class AcfFields {
 		add_action( 'acf/load_field/name=training_centre', [ self::class, 'populate_training_centre_select_options' ], 10 );
 	}
 
-    /**
-     * @todo move to AcfFields class in product plugin
-     */
-    public static function get_awarding_body_acf_field_group_id( string $acf_field_value ): string {
-        $field_group_id = '';
-        $awarding_bodies = [
-            'Solas CSCS'     => 'group_638ae5f1ef0b7',
-            'Solas Safepass' => 'group_638ae6c17fe42',
-            'TTM'            => 'group_638ae836b826c',
-            'ATU Sligo'      => 'group_638aea32eb29f',
-            'RSA'            => 'group_638ae8b651fba',
-            'SETU Carlow'    => 'group_638aeb7c2b825',
-            'QQI'            => 'group_6388299addcf9',
-        ];
-        if ( isset( $awarding_bodies[ $acf_field_value ] ) ) {
-            $field_group_id = $awarding_bodies[ $acf_field_value ];
-        }
-        return $field_group_id;
-    }
+	/**
+	 * @todo move to AcfFields class in product plugin
+	 */
+	public static function get_awarding_body_acf_field_group_id( string $acf_field_value ): string {
+		$field_group_id  = '';
+		$awarding_bodies = [
+			'Solas CSCS'     => 'group_638ae5f1ef0b7',
+			'Solas Safepass' => 'group_638ae6c17fe42',
+			'TTM'            => 'group_638ae836b826c',
+			'ATU Sligo'      => 'group_638aea32eb29f',
+			'RSA'            => 'group_638ae8b651fba',
+			'SETU Carlow'    => 'group_638aeb7c2b825',
+			'QQI'            => 'group_6388299addcf9',
+		];
+		if ( isset( $awarding_bodies[ $acf_field_value ] ) ) {
+			$field_group_id = $awarding_bodies[ $acf_field_value ];
+		}
+		return $field_group_id;
+	}
 
-    /**
-     * @todo move to AcfFields class in product plugin
-     */
-    public static function get_water_grant_acf_field_group_id( array $acf_field_values ): string {
-        $field_group_id = '';
-        if( in_array( 'water-grant', $acf_field_values ) ) {
-            $field_group_id = 'group_638aec109ab55';
-        }
-        return $field_group_id;
-    }
+	/**
+	 * @todo move to AcfFields class in product plugin
+	 */
+	public static function get_water_grant_acf_field_group_id( array $acf_field_values ): string {
+		$field_group_id = '';
+		if ( in_array( 'water-grant', $acf_field_values ) ) {
+			$field_group_id = 'group_638aec109ab55';
+		}
+		return $field_group_id;
+	}
 
 	/**
 	 * Fetch local authority options from the groups table.

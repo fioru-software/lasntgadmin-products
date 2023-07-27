@@ -65,7 +65,7 @@ class ProductActionsFilters {
 
 		$disabled = [
 			'field_638786be96777',
-			'field_63881beb798a7',
+			'field_63881c1ff4453',
 			'field_63881c1ff4453',
 			'field_63881cf7f4457',
 			'field_63878925d6a26',
@@ -80,23 +80,22 @@ class ProductActionsFilters {
 		foreach ( $disabled as $key ) {
 			add_filter( "acf/load_field/key=$key", [ self::class, 'my_acf_load_field' ] );
 		}
-		add_filter( "acf/load_field/key=field_63881beb798a7", [ self::class, 'acf_training_centre' ] );
+		add_filter( 'acf/load_field/key=field_63881beb798a7', [ self::class, 'acf_training_centre' ] );
 		$assets_dir = untrailingslashit( plugin_dir_url( __FILE__ ) ) . '/../assets/';
 		wp_enqueue_script( 'lasntgadmin-disable-selectize-js', ( $assets_dir . 'js/lasntgadmin-disable-selectize.js' ), array( 'jquery' ), '1.7', true );
 	}
 
-	public static function acf_training_centre($field)
-	{
-		$centres = GroupUtils::formatted_current_user_tree();
-		$centre_ids = array_keys($centres);
-		$choices = [];
-		foreach($field['choices'] as $id  => $choice){
-			if(in_array($id, $centre_ids) === true){
-				$choices[$id] = $choice;
+	public static function acf_training_centre( $field ) {
+		$centres    = GroupUtils::formatted_current_user_tree();
+		$centre_ids = array_keys( $centres );
+		$choices    = [];
+		foreach ( $field['choices'] as $id  => $choice ) {
+			if ( in_array( $id, $centre_ids ) === true ) {
+				$choices[ $id ] = $choice;
 			}
 		}
 		$field['choices'] = $choices;
-		
+
 		return $field;
 	}
 

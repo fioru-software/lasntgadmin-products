@@ -67,7 +67,6 @@ class ProductActionsFilters {
 			'field_638786be96777',
 			'field_63881c1ff4453',
 			'field_63881c1ff4453',
-			'field_63881cf7f4457',
 			'field_63878925d6a26',
 			'field_6387890fd6a25',
 			'field_63878939d6a27',

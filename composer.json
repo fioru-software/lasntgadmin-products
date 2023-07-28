@@ -1,6 +1,6 @@
 {
     "name": "fioru/lasntgadmin-products",
-    "version": "5.9.22",
+    "version": "5.9.23-rc1",
     "type": "wordpress-plugin",
     "extra": {
         "installer-name": "lasntgadmin-products"

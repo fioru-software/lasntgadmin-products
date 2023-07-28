@@ -81,8 +81,7 @@ class ProductActionsFilters {
 			add_filter( "acf/load_field/key=$key", [ self::class, 'my_acf_load_field' ], 999 );
 		}
 		add_filter( 'acf/load_field/key=field_63881beb798a7', [ self::class, 'acf_training_centre' ] );
-		$assets_dir = untrailingslashit( plugin_dir_url( __FILE__ ) ) . '/../assets/';
-		wp_enqueue_script( 'lasntgadmin-disable-selectize-js', ( $assets_dir . 'js/lasntgadmin-disable-selectize.js' ), array( 'jquery' ), '1.7', true );
+		
 	}
 
 	public static function acf_training_centre( $field ) {

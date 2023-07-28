@@ -43,16 +43,68 @@ class ProductActionsFilters {
 		add_action( 'pre_get_posts', [ self::class, 'sort_custom_columns_query' ], 99, 1 );
 		add_action( 'add_meta_boxes', [ self::class, 'remove_short_description' ], 999 );
 		add_action( 'posts_where', [ self::class, 'remove_template_products' ], 10, 2 );
-
-		add_action(
-			'init',
-			function() {
-				remove_post_type_support( 'product', 'editor' );
-			}
-		);
+		add_action( 'init', [ self::class, 'remove_editor' ] );
 
 		add_action( 'init', [ self::class, 'disable_course_add_button' ] );
 		add_action( 'add_meta_boxes', array( self::class, 'add_product_boxes_sort_order' ), 99 );
+		add_action( 'load-post.php', [ self::class, 'edit_product' ] );
+	}
+
+	public static function edit_product() {
+		if ( in_array( 'regional_training_centre_manager', wp_get_current_user()->roles ) === false ) {
+			return;
+		}
+		if ( ! isset( $_GET['post'] ) ) {
+			return;
+		}
+		$post_ID = (int) $_GET['post'];
+
+		if ( 'product' !== get_post_type( $post_ID ) ) {
+			return;
+		}
+
+		$disabled = [
+			'field_638786be96777',
+			'field_63881c1ff4453',
+			'field_63881c1ff4453',
+			'field_63881cf7f4457',
+			'field_63878925d6a26',
+			'field_6387890fd6a25',
+			'field_63878939d6a27',
+			'field_63881f7f3e5af',
+			'field_638820173e5b0',
+			'field_63882047beae3',
+			'field_638820d1beae4',
+			'field_63f764087f8c9',
+		];
+		foreach ( $disabled as $key ) {
+			add_filter( "acf/load_field/key=$key", [ self::class, 'my_acf_load_field' ], 999 );
+		}
+		add_filter( 'acf/load_field/key=field_63881beb798a7', [ self::class, 'acf_training_centre' ] );
+	}
+
+	public static function acf_training_centre( $field ) {
+		$centres    = GroupUtils::formatted_current_user_tree();
+		$centre_ids = array_keys( $centres );
+		$choices    = [];
+		foreach ( $field['choices'] as $id  => $choice ) {
+			if ( in_array( $id, $centre_ids ) === true ) {
+				$choices[ $id ] = $choice;
+			}
+		}
+		$field['choices'] = $choices;
+
+		return $field;
+	}
+
+	public static function my_acf_load_field( $field ) {
+		$field['disabled']          = 1;
+		$field['readonly']          = 1;
+		$field['conditional_logic'] = [];
+		return $field;
+	}
+	public static function remove_editor() {
+		remove_post_type_support( 'product', 'editor' );
 	}
 
 	public static function add_filters(): void {
@@ -198,16 +250,23 @@ class ProductActionsFilters {
 			echo get_field( 'field_63881b84798a5', $post_id ); //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		} elseif ( 'start_date' === $column_name ) {
 			echo get_field( 'field_63881aee31478', $post_id ); //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			echo ' ' . get_field( 'field_63881b0531479', $post_id ); //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		} elseif ( 'organizer' === $column_name ) {
 			$centres = get_field( 'field_63881beb798a7', $post_id ); //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			if ( is_array( $centres ) && count( $centres ) ) {
 				echo implode( ', ', $centres ); //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			}
+		} elseif ( 'is_in_stock' === $column_name ) {
+			$product = wc_get_product( $post_id );
+			$sales   = $product->get_total_sales();
+			$total   = $product->get_stock_quantity() + $sales;
+			echo ( "Capacity ($total)\n<br/> " ); //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			echo ( "Booked ($sales)\n<br/> " ); //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		}
 	}
 
 	public static function rename_groups_column( $defaults ) {
-		$defaults['groups-read'] = 'Available to';
+		$defaults['groups-read'] = __( 'Available to', 'lasntgadmin' );
 		return $defaults;
 	}
 

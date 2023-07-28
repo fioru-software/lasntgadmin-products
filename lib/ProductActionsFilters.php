@@ -100,8 +100,8 @@ class ProductActionsFilters {
 	}
 
 	public static function my_acf_load_field( $field ) {
-		$field['disabled'] = 1;
-		$field['readonly'] = 1;
+		$field['disabled']          = 1;
+		$field['readonly']          = 1;
 		$field['conditional_logic'] = [];
 		return $field;
 	}

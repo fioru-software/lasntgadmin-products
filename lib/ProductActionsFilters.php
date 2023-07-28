@@ -78,7 +78,7 @@ class ProductActionsFilters {
 			'field_63f764087f8c9',
 		];
 		foreach ( $disabled as $key ) {
-			add_filter( "acf/load_field/key=$key", [ self::class, 'my_acf_load_field' ] );
+			add_filter( "acf/load_field/key=$key", [ self::class, 'my_acf_load_field' ], 999 );
 		}
 		add_filter( 'acf/load_field/key=field_63881beb798a7', [ self::class, 'acf_training_centre' ] );
 		$assets_dir = untrailingslashit( plugin_dir_url( __FILE__ ) ) . '/../assets/';
@@ -101,6 +101,8 @@ class ProductActionsFilters {
 
 	public static function my_acf_load_field( $field ) {
 		$field['disabled'] = 1;
+		$field['readonly'] = 1;
+		$field['conditional_logic'] = [];
 		return $field;
 	}
 	public static function remove_editor() {

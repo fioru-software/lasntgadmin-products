@@ -81,7 +81,6 @@ class ProductActionsFilters {
 			add_filter( "acf/load_field/key=$key", [ self::class, 'my_acf_load_field' ], 999 );
 		}
 		add_filter( 'acf/load_field/key=field_63881beb798a7', [ self::class, 'acf_training_centre' ] );
-		
 	}
 
 	public static function acf_training_centre( $field ) {

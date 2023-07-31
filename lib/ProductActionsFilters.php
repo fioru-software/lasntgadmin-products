@@ -258,17 +258,38 @@ class ProductActionsFilters {
 		} elseif ( 'is_in_stock' === $column_name ) {
 			$product = wc_get_product( $post_id );
 			$sales   = $product->get_total_sales();
-			$args  = array(
+			$args    = array(
 				'post_status' => 'wc-completed',
 				'post_type'   => 'shop_order',
 				'return'      => 'ids',
 				'product'     => $post_id,
 			);
-			$sales = count( wc_get_orders( $args ) );
-			$total = $product->get_stock_quantity() + $sales;
+			$sales   = count( self::get_orders_ids_by_product_id( $post_id ) );
+			$total   = $product->get_stock_quantity() + $sales;
 			echo ( "Capacity ($total)\n<br/> " ); //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			echo ( "Booked ($sales)\n<br/> " ); //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		}//end if
+	}
+
+	private static function get_orders_ids_by_product_id( $product_id ) {
+		global $wpdb;
+
+		$orders_statuses = "'wc-completed'";
+
+		// Get All defined statuses Orders IDs for a defined product ID (or variation ID).
+		return $wpdb->get_col(
+			"
+			SELECT DISTINCT woi.order_id
+			FROM {$wpdb->prefix}woocommerce_order_itemmeta as woim, 
+				{$wpdb->prefix}woocommerce_order_items as woi, 
+				{$wpdb->prefix}posts as p
+			WHERE  woi.order_item_id = woim.order_item_id
+			AND woi.order_id = p.ID
+			AND p.post_status IN ( $orders_statuses )
+			AND woim.meta_key IN ( '_product_id', '_variation_id' )
+			AND woim.meta_value LIKE '$product_id'
+			ORDER BY woi.order_item_id DESC"
+		);
 	}
 
 	public static function rename_groups_column( $defaults ) {

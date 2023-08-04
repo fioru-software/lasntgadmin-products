@@ -5,11 +5,11 @@
 
 namespace Lasntg\Admin\Products;
 
-use Lasntg\Admin\Group\GroupUtils;
 
 use WP_Post;
 use Groups_Group;
 use WP_Query;
+use Lasntg\Admin\Group\GroupUtils;
 
 /**
  * Handle Actions anf filters for products
@@ -264,34 +264,17 @@ class ProductActionsFilters {
 				'return'      => 'ids',
 				'product'     => $post_id,
 			);
-			$sales   = count( self::get_orders_ids_by_product_id( $post_id ) );
+			$order_ids   = ProductUtils::get_orders_ids_by_product_id( $post_id, ['wc-completed', 'wc-hold', 'wc-processing'] );
+			$sales   = ProductUtils::get_total_items($order_ids);
 			$total   = $product->get_stock_quantity() + $sales;
 			echo ( "Capacity ($total)\n<br/> " ); //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			echo ( "Booked ($sales)\n<br/> " ); //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			
+			
 		}//end if
 	}
 
-	private static function get_orders_ids_by_product_id( $product_id ) {
-		global $wpdb;
-
-		$orders_statuses = "'wc-completed'";
-
-		// Get All defined statuses Orders IDs for a defined product ID (or variation ID).
-		return $wpdb->get_col(
-			"
-			SELECT DISTINCT woi.order_id
-			FROM {$wpdb->prefix}woocommerce_order_itemmeta as woim, 
-				{$wpdb->prefix}woocommerce_order_items as woi, 
-				{$wpdb->prefix}posts as p
-			WHERE  woi.order_item_id = woim.order_item_id
-			AND woi.order_id = p.ID
-			AND p.post_status IN ( $orders_statuses )
-			AND woim.meta_key IN ( '_product_id', '_variation_id' )
-			AND woim.meta_value LIKE '$product_id'
-			ORDER BY woi.order_item_id DESC"
-		);
-	}
-
+	
 	public static function rename_groups_column( $defaults ) {
 		$defaults['groups-read'] = __( 'Available to', 'lasntgadmin' );
 		return $defaults;

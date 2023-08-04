@@ -5,7 +5,6 @@
 
 namespace Lasntg\Admin\Products;
 
-
 use WP_Post;
 use Groups_Group;
 use WP_Query;
@@ -256,25 +255,23 @@ class ProductActionsFilters {
 				echo implode( ', ', $centres ); //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			}
 		} elseif ( 'is_in_stock' === $column_name ) {
-			$product = wc_get_product( $post_id );
-			$sales   = $product->get_total_sales();
-			$args    = array(
+			$product   = wc_get_product( $post_id );
+			$sales     = $product->get_total_sales();
+			$args      = array(
 				'post_status' => 'wc-completed',
 				'post_type'   => 'shop_order',
 				'return'      => 'ids',
 				'product'     => $post_id,
 			);
-			$order_ids   = ProductUtils::get_orders_ids_by_product_id( $post_id, ['wc-completed', 'wc-hold', 'wc-processing'] );
-			$sales   = ProductUtils::get_total_items($order_ids);
-			$total   = $product->get_stock_quantity() + $sales;
+			$order_ids = ProductUtils::get_orders_ids_by_product_id( $post_id, [ 'wc-completed', 'wc-hold', 'wc-processing' ] );
+			$sales     = ProductUtils::get_total_items( $order_ids );
+			$total     = $product->get_stock_quantity() + $sales;
 			echo ( "Capacity ($total)\n<br/> " ); //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			echo ( "Booked ($sales)\n<br/> " ); //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-			
-			
 		}//end if
 	}
 
-	
+
 	public static function rename_groups_column( $defaults ) {
 		$defaults['groups-read'] = __( 'Available to', 'lasntgadmin' );
 		return $defaults;

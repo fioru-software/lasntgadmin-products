@@ -263,7 +263,7 @@ class ProductActionsFilters {
 				'return'      => 'ids',
 				'product'     => $post_id,
 			);
-			$order_ids = ProductUtils::get_orders_ids_by_product_id( $post_id, [ 'wc-completed', 'wc-hold', 'wc-processing' ] );
+			$order_ids = ProductUtils::get_orders_ids_by_product_id( $post_id, [ 'wc-completed', 'wc-on-hold', 'wc-processing' ] );
 			$sales     = ProductUtils::get_total_items( $order_ids );
 			$total     = $product->get_stock_quantity() + $sales;
 			echo ( "Capacity ($total)\n<br/> " ); //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped

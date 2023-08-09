@@ -185,4 +185,14 @@ class ProductUtils {
 
 		return $results;
 	}
+
+	public static function get_total_items( $order_ids ) {
+		$total = 0;
+		foreach ( $order_ids as $order_id ) {
+			$order  = wc_get_order( $order_id );
+			$total += $order->get_item_count();
+		}
+
+		return $total;
+	}
 }

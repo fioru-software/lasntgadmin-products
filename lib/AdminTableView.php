@@ -166,7 +166,7 @@ class AdminTableView {
 			$media_id = get_post_meta( $post_id, 'attendee_requirements', true );
 			if ( $media_id ) {
 				$media = wp_get_attachment_url( $media_id );
-				echo sprintf(
+				printf(
 					'<a href="%1$s" target="_blank">%2$s</a>',
 					esc_url( $media ),
 					esc_html( __( 'File', 'lasntgadmin' ) )
@@ -179,7 +179,7 @@ class AdminTableView {
 			$media_id = get_post_meta( $post_id, 'entry_requirements_file', true );
 			if ( $media_id ) {
 				$media = wp_get_attachment_url( $media_id );
-				echo sprintf(
+				printf(
 					'<a href="%1$s" target="_blank">%2$s</a>',
 					esc_url( $media ),
 					esc_html( __( 'File', 'lasntgadmin' ) )

@@ -243,7 +243,7 @@ class QuotasActionsFilters {
 			$product_id = get_the_ID();
 			$orders     = QuotaUtils::get_product_quota( $product_id );
 			if ( 0 == $orders ) {
-				echo sprintf(
+				printf(
 					'<p class="stock out-of-stock">%s</p>',
 					__( 'Not in stock', 'lasntgadmin' ) //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 				);
@@ -251,7 +251,7 @@ class QuotasActionsFilters {
 			foreach ( $items as $values ) {
 				$orders = QuotaUtils::get_product_quota( $values['data']->get_id() );
 				if ( $values['data']->get_id() !== $product_id ) {
-					echo sprintf(
+					printf(
 						'<p class="woocommerce-error">%s</p>',
 						__( 'You can only add one course to cart.', 'lasntgadmin' ) //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 					);

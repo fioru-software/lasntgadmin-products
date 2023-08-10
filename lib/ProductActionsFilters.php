@@ -676,7 +676,7 @@ class ProductActionsFilters {
 		$errors = [];
 		if ( '' === $postarr['_stock'] ) {
 			$errors[] = __( 'Capacity is required.', 'lasntgadmin' );
-		} elseif ( ! empty( $postarr['_stock'] ) && 0 < (int) $postarr['_stock'] ) {
+		} elseif ( ! empty( $postarr['_stock'] ) && 0 > (int) $postarr['_stock'] ) {
 			$errors[] = __( 'Capacity cannot be negative.', 'lasntgadmin' );
 		}
 

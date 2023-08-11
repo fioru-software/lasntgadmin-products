@@ -136,7 +136,6 @@ class ProductUtils {
 	public static function get_products_with_status( string $status ): array {
 		require_once '/var/www/html/wp-admin/includes/post.php';
 		$statuses = get_available_post_statuses( 'product' );
-		error_log( print_r( $statuses, true ) );
 		if ( in_array( $status, get_available_post_statuses( 'product' ) ) ) {
 			$post_ids = get_posts(
 				[

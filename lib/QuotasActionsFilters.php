@@ -89,7 +89,6 @@ class QuotasActionsFilters {
 				),
 			)
 		);
-		
 
 		woocommerce_wp_text_input(
 			array(
@@ -123,11 +122,11 @@ class QuotasActionsFilters {
 			)
 		);
 
-		if($product){
+		if ( $product ) {
 			$order_ids = ProductUtils::get_orders_ids_by_product_id( $post->ID, [ 'wc-completed', 'wc-on-hold', 'wc-processing' ] );
 			$sales     = ProductUtils::get_total_items( $order_ids );
 			$total     = $product->get_stock_quantity() + $sales;
-			
+
 			woocommerce_wp_text_input(
 				array(
 					'id'                => 'total_capacity',
@@ -137,14 +136,14 @@ class QuotasActionsFilters {
 					'value'             => $total,
 					'type'              => 'number',
 					'custom_attributes' => array(
-						'step' => '1',
-						'min'  => '0',
-						'type' => 'number',
-						'readonly' => true
+						'step'     => '1',
+						'min'      => '0',
+						'type'     => 'number',
+						'readonly' => true,
 					),
 				)
 			);
-		}
+		}//end if
 
 		echo '</div>';
 	}

@@ -20,7 +20,8 @@ use Lasntg\Admin\Products\{
 	AcfFields,
 	AdminTableView,
 	PluginUtils,
-	Importer
+	Importer,
+    ProductSchedulerActions
 };
 
 // Register activation and deactivation hooks.
@@ -33,3 +34,4 @@ QuotasActionsFilters::init();
 AcfFields::init();
 AdminTableView::init();
 Importer::init();
+ProductSchedulerActions::init();

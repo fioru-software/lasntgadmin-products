@@ -92,7 +92,7 @@ class ProductUtils {
 				],
 			]
 		);
-		$products = array_map( fn( $post_id) => wc_get_product( $post_id ), $post_ids );
+		$products = array_map( fn( $post_id ) => wc_get_product( $post_id ), $post_ids );
 		return $products;
 	}
 
@@ -124,7 +124,7 @@ class ProductUtils {
 				],
 			]
 		);
-		$products = array_map( fn( $post_id) => wc_get_product( $post_id ), $post_ids );
+		$products = array_map( fn( $post_id ) => wc_get_product( $post_id ), $post_ids );
 		return $products;
 	}
 
@@ -145,7 +145,7 @@ class ProductUtils {
 					'posts_per_page' => -1,
 				]
 			);
-			$products = array_map( fn( $post_id) => wc_get_product( $post_id ), $post_ids );
+			$products = array_map( fn( $post_id ) => wc_get_product( $post_id ), $post_ids );
 			return $products;
 		}
 		return [];

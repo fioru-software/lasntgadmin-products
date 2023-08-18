@@ -80,17 +80,17 @@ class ProductApi {
 	public static function get_products_in_group( WP_REST_Request $req ): array {
 		$group_id = $req->get_param( 'group_id' );
 		$products = ProductUtils::get_products_visible_to_group( $group_id );
-		return array_map( fn( $product) => $product->get_data(), $products );
+		return array_map( fn( $product ) => $product->get_data(), $products );
 	}
 
 	public static function get_products_visible_to_current_user( WP_REST_Request $req ): array {
 		$products = ProductUtils::get_visible_products();
-		return array_map( fn( $product) => $product->get_data(), $products );
+		return array_map( fn( $product ) => $product->get_data(), $products );
 	}
 
 	public static function get_products_with_status( WP_REST_Request $req ): array {
 		$status   = trim( $req->get_param( 'status' ) );
 		$products = ProductUtils::get_products_with_status( $status );
-		return array_map( fn( $product) => $product->get_data(), $products );
+		return array_map( fn( $product ) => $product->get_data(), $products );
 	}
 }

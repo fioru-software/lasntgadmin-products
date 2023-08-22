@@ -12,6 +12,7 @@ class ProductSchedulerActions {
         add_action( 'init', [ self::class, 'queue_async_action' ] );
         // add_action( 'init', [ self::class, 'notify_to_check_course_status' ] );
         add_action( 'lasntgadmin_close_courses', [self::class, 'close_courses'] );
+        add_action( 'lasntgadmin_close_notify', [self::class, 'notify_to_check_course_status'] );
     }
 
     // close course on midnight of start_date
@@ -51,7 +52,7 @@ class ProductSchedulerActions {
         }
     }
     
-    public static function notify_to_check_course_status()
+    public static function notify_to_check_course_status() :void
     {
         $key = 'lasntg_last_notified';
         error_log( 'Processing courses to close for ' . date( 'Y-m-d H:i:s' ) );
@@ -121,6 +122,8 @@ class ProductSchedulerActions {
     public static function queue_async_action() {
 		if ( false === as_has_scheduled_action( 'lasntgadmin_close_courses' ) ) {
             as_schedule_recurring_action( strtotime( '+5 minutes' ), MINUTE_IN_SECONDS, 'lasntgadmin_close_courses' );    
+		}if ( false === as_has_scheduled_action( 'lasntgadmin_close_notify' ) ) {
+            as_schedule_recurring_action( strtotime( '+5 minutes' ), MINUTE_IN_SECONDS, 'lasntgadmin_close_notify' );    
 		}
         
 	}

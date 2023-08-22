@@ -21,7 +21,7 @@ use Lasntg\Admin\Products\{
 	AdminTableView,
 	PluginUtils,
 	Importer,
-    ProductSchedulerActions
+	ProductSchedulerActions
 };
 
 // Register activation and deactivation hooks.

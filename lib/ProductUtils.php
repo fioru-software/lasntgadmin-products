@@ -92,7 +92,7 @@ class ProductUtils {
 				],
 			]
 		);
-		$products = array_map( fn( $post_id) => wc_get_product( $post_id ), $post_ids );
+		$products = array_map( fn( $post_id ) => wc_get_product( $post_id ), $post_ids );
 		return $products;
 	}
 
@@ -124,7 +124,7 @@ class ProductUtils {
 				],
 			]
 		);
-		$products = array_map( fn( $post_id) => wc_get_product( $post_id ), $post_ids );
+		$products = array_map( fn( $post_id ) => wc_get_product( $post_id ), $post_ids );
 		return $products;
 	}
 
@@ -136,7 +136,6 @@ class ProductUtils {
 	public static function get_products_with_status( string $status ): array {
 		require_once '/var/www/html/wp-admin/includes/post.php';
 		$statuses = get_available_post_statuses( 'product' );
-		error_log( print_r( $statuses, true ) );
 		if ( in_array( $status, get_available_post_statuses( 'product' ) ) ) {
 			$post_ids = get_posts(
 				[
@@ -146,7 +145,7 @@ class ProductUtils {
 					'posts_per_page' => -1,
 				]
 			);
-			$products = array_map( fn( $post_id) => wc_get_product( $post_id ), $post_ids );
+			$products = array_map( fn( $post_id ) => wc_get_product( $post_id ), $post_ids );
 			return $products;
 		}
 		return [];

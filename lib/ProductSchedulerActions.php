@@ -45,7 +45,7 @@ class ProductSchedulerActions {
 		foreach ( $posts as $post ) {
 			$product_id = $post->ID;
 			$product    = wc_get_product( $product_id );
-			$product->set_status( ProductUtils::$statuses['closed'] );
+			$product->set_status( 'closed' );
 			$product->save();
 			error_log( "Closed Course #$product_id at " . gmdate( 'Y/m/d H:i:s' ) );
 		}

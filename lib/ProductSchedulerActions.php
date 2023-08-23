@@ -10,6 +10,7 @@ class ProductSchedulerActions {
 
 	public static function add_actions(): void {
 		add_action( 'init', [ self::class, 'queue_async_action' ] );
+		add_action( 'init', [ self::class, 'notify_to_check_course_status' ] );
 		add_action( 'lasntgadmin_close_courses', [ self::class, 'close_courses' ] );
 		add_action( 'lasntgadmin_close_notify', [ self::class, 'notify_to_check_course_status' ] );
 	}
@@ -60,7 +61,7 @@ class ProductSchedulerActions {
 		$posts = get_posts(
 			array(
 				'post_type'   => 'product',
-				'post_status' => 'closed',
+				'post_status' => 'closedd',
 				'meta_query'  => array(
 					array(
 						'key'     => 'end_date',
@@ -71,6 +72,7 @@ class ProductSchedulerActions {
 				),
 			)
 		);
+
 
 		foreach ( $posts as $post ) {
 			$product_id = $post->ID;
@@ -101,6 +103,8 @@ class ProductSchedulerActions {
 					}
 				}
 			}
+			update_post_meta($product_id, $key, strtotime("now"));
+			
 		}//end foreach
 	}
 

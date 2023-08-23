@@ -61,7 +61,7 @@ class ProductSchedulerActions {
 		$posts = get_posts(
 			array(
 				'post_type'   => 'product',
-				'post_status' => 'closedd',
+				'post_status' => 'closed',
 				'meta_query'  => array(
 					array(
 						'key'     => 'end_date',

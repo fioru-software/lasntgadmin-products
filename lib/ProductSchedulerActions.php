@@ -1,25 +1,31 @@
 <?php
 namespace Lasntg\Admin\Products;
 
+use DateTime;
+use DateTimeZone;
 use Lasntg\Admin\Group\GroupUtils;
+use Groups_Group;
 
 class ProductSchedulerActions {
 	public static function init(): void {
 		self::add_actions();
 	}
-
+	private static function get_timezone() {
+		return new DateTimeZone( wp_timezone_string() );
+	}
 	public static function add_actions(): void {
 		add_action( 'init', [ self::class, 'queue_async_action' ] );
-		add_action( 'init', [ self::class, 'notify_to_check_course_status' ] );
+
 		add_action( 'lasntgadmin_close_courses', [ self::class, 'close_courses' ] );
 		add_action( 'lasntgadmin_close_notify', [ self::class, 'notify_to_check_course_status' ] );
 	}
 
 	public static function close_courses(): void {
-		error_log( 'Processing courses to close for ' . gmdate( 'Y-m-d H:i:s' ) );
-		$from_now      = strtotime( '+36 hours' );
-		$from_now_date = gmdate( 'Ymd', $from_now );
-		$from_now_time = gmdate( 'H:i:s', $from_now );
+		$from_now_date = new DateTime( 'now' );
+		$from_now_date->modify( '+36 hours' );
+
+		error_log( 'Processing courses to close at ' . gmdate( 'Y-m-d H:i:s' ) . ' from ' . $from_now_date->format( 'Y-m-d H:i:s' ) );
+		$from_now_time = $from_now_date->format( 'H:i:s' );
 
 		$posts = get_posts(
 			array(
@@ -30,7 +36,7 @@ class ProductSchedulerActions {
 					'relation' => 'AND',
 					array( //phpcs:ignore Universal.Arrays.MixedArrayKeyTypes.ImplicitNumericKey, Universal.Arrays.MixedKeyedUnkeyedArray.Found
 						'key'     => 'start_date',
-						'value'   => $from_now_date,
+						'value'   => $from_now_date->format( 'Ymd' ),
 						'compare' => '=',
 					),
 					array( //phpcs:ignore Universal.Arrays.MixedArrayKeyTypes.ImplicitNumericKey, Universal.Arrays.MixedKeyedUnkeyedArray.Found
@@ -46,7 +52,7 @@ class ProductSchedulerActions {
 		foreach ( $posts as $post ) {
 			$product_id = $post->ID;
 			$product    = wc_get_product( $product_id );
-			$product->set_status( ProductUtils::$publish_status );
+			$product->set_status( 'enrollment_closed' );
 			$product->save();
 			error_log( "Closed Course #$product_id at " . gmdate( 'Y/m/d H:i:s' ) );
 		}
@@ -54,40 +60,54 @@ class ProductSchedulerActions {
 
 	public static function notify_to_check_course_status(): void {
 		$key = 'lasntg_last_notified';
-		error_log( 'Processing courses to close for ' . gmdate( 'Y-m-d H:i:s' ) );
-		$from_now      = strtotime( '-1 week' );
-		$from_now_date = gmdate( 'Ymd', $from_now );
+
+		$from_now = new DateTime( 'now' );
+		$from_now->setTimezone( self::get_timezone() );
+		$from_now->modify( '-3 week' );
+		error_log( 'Processing courses notification at ' . gmdate( 'Y-m-d H:i:s' ) . ' for ' . $from_now->format( 'Y-m-d H:i:s' ) );
 
 		$posts = get_posts(
 			array(
 				'post_type'   => 'product',
-				'post_status' => 'closed',
+				'post_status' => 'enrollment_closed',
 				'meta_query'  => array(
 					array(
 						'key'     => 'end_date',
-						'value'   => $from_now_date,
+						'value'   => $from_now->format( 'Ymd' ),
 						'compare' => '<=',
 					),
 
 				),
 			)
 		);
-
+		$now = new DateTime();
+		$now->setTimezone( self::get_timezone() );
 		foreach ( $posts as $post ) {
 			$product_id = $post->ID;
 			$product    = wc_get_product( $product_id );
 			$last_sent  = get_post_meta( $product_id, $key, true );
+
 			if ( $last_sent && $last_sent > strtotime( '-1 week' ) ) {
 				continue;
 			}
-			$groups   = GroupUtils::get_read_group_ids( $product_id );
-			$end_date = get_post_meta( $product_id, 'end_date', true );
-			$weeks    = ( strtotime( 'now' ) - strtotime( $end_date ) ) / ( 7 * 86400 );
-			$weeks    = floor( $weeks );
+
+			$groups       = GroupUtils::get_read_group_ids( $product_id );
+			$end_date     = get_post_meta( $product_id, 'end_date', true );
+			$end_time     = get_post_meta( $product_id, 'end_time', true );
+			$end_date_str = "$end_date $end_time";
+			$end_date     = DateTime::createFromFormat( 'Ymd H:i:s', $end_date_str );
+
+			$days = $now->diff( $end_date )->days;
+
+			if ( $days < 21 ) {
+				continue;
+			}
+
+			$weeks = floor( $days / 7 );
 
 			$users_to_send = [];
 			foreach ( $groups as $group_id ) {
-				$group = new \Groups_Group( $group_id );
+				$group = new Groups_Group( $group_id );
 				$users = $group->users;
 				if ( ! $users ) {
 					continue;

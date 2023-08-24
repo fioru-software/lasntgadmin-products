@@ -15,7 +15,7 @@ class ProductSchedulerActions {
 		add_action( 'lasntgadmin_close_notify', [ self::class, 'notify_to_check_course_status' ] );
 	}
 
-     public static function close_courses(): void {
+	public static function close_courses(): void {
 		error_log( 'Processing courses to close for ' . gmdate( 'Y-m-d H:i:s' ) );
 		$from_now      = strtotime( '+36 hours' );
 		$from_now_date = gmdate( 'Ymd', $from_now );
@@ -46,7 +46,7 @@ class ProductSchedulerActions {
 		foreach ( $posts as $post ) {
 			$product_id = $post->ID;
 			$product    = wc_get_product( $product_id );
-			$product->set_status( 'closed' );
+			$product->set_status( ProductUtils::$publish_status );
 			$product->save();
 			error_log( "Closed Course #$product_id at " . gmdate( 'Y/m/d H:i:s' ) );
 		}
@@ -72,7 +72,6 @@ class ProductSchedulerActions {
 				),
 			)
 		);
-
 
 		foreach ( $posts as $post ) {
 			$product_id = $post->ID;
@@ -103,8 +102,7 @@ class ProductSchedulerActions {
 					}
 				}
 			}
-			update_post_meta($product_id, $key, strtotime("now"));
-			
+			update_post_meta( $product_id, $key, strtotime( 'now' ) );
 		}//end foreach
 	}
 

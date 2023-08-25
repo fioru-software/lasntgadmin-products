@@ -15,6 +15,7 @@ class ProductSchedulerActions {
 	}
 	public static function add_actions(): void {
 		add_action( 'init', [ self::class, 'queue_async_action' ] );
+		add_action( 'init', [ self::class, 'close_courses' ] );
 
 		add_action( 'lasntgadmin_close_courses', [ self::class, 'close_courses' ] );
 		add_action( 'lasntgadmin_close_notify', [ self::class, 'notify_to_check_course_status' ] );
@@ -22,9 +23,11 @@ class ProductSchedulerActions {
 
 	public static function close_courses(): void {
 		$from_now_date = new DateTime( 'now' );
+		$from_now_date->setTimezone(self::get_timezone());
 		$from_now_date->modify( '+36 hours' );
 
 		error_log( 'Processing courses to close at ' . gmdate( 'Y-m-d H:i:s' ) . ' from ' . $from_now_date->format( 'Y-m-d H:i:s' ) );
+		
 		$from_now_time = $from_now_date->format( 'H:i:s' );
 
 		$posts = get_posts(
@@ -129,10 +132,10 @@ class ProductSchedulerActions {
 	private static function send_notification_mail( $product, $user, $weeks ): void {
 		$name    = $product->get_name();
 		$email   = $user->user_email;
-		$subject = "The {$name} end date passed by more than $weeks week(s) ago, please check course status.";
+		$subject = "LASNTG OBS course status reminder.";
 
 		$link    = admin_url( 'post.php?post=' . $product->get_id() ) . '&action=edit';
-		$body    = "The {$name} end date passed by more than $weeks week(s) ago, please check course status. <a href='$link'>Click here to change status</a> ";
+		$body    = "Hi! <br/> The course {$name} END DATE passed by more than $weeks week(s) ago, please check course status. <a href='$link'>Click here to change status</a> ";
 		$headers = array( 'Content-Type: text/html; charset=UTF-8' );
 
 		wp_mail( $email, $subject, $body, $headers );

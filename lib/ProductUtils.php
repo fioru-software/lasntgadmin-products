@@ -115,7 +115,7 @@ class ProductUtils {
 						'key'     => 'groups-read',
 						'compare' => 'IN',
 						'type'    => 'NUMERIC',
-						'value'   => GroupUtils::get_current_users_group_ids(),
+						'value'   => GroupUtils::get_current_users_group_ids_deep(),
 					],
 					[ // phpcs:ignore Universal.Arrays.MixedKeyedUnkeyedArray.Found
 						'key'     => 'groups-read',

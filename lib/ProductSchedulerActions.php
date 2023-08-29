@@ -23,11 +23,11 @@ class ProductSchedulerActions {
 
 	public static function close_courses(): void {
 		$from_now_date = new DateTime( 'now' );
-		$from_now_date->setTimezone(self::get_timezone());
+		$from_now_date->setTimezone( self::get_timezone() );
 		$from_now_date->modify( '+36 hours' );
 
 		error_log( 'Processing courses to close at ' . gmdate( 'Y-m-d H:i:s' ) . ' from ' . $from_now_date->format( 'Y-m-d H:i:s' ) );
-		
+
 		$from_now_time = $from_now_date->format( 'H:i:s' );
 
 		$posts = get_posts(
@@ -132,7 +132,7 @@ class ProductSchedulerActions {
 	private static function send_notification_mail( $product, $user, $weeks ): void {
 		$name    = $product->get_name();
 		$email   = $user->user_email;
-		$subject = "LASNTG OBS course status reminder.";
+		$subject = 'LASNTG OBS course status reminder.';
 
 		$link    = admin_url( 'post.php?post=' . $product->get_id() ) . '&action=edit';
 		$body    = "Hi! <br/> The course {$name} END DATE passed by more than $weeks week(s) ago, please check course status. <a href='$link'>Click here to change status</a> ";

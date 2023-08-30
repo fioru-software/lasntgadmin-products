@@ -46,13 +46,11 @@ class AdminTableView {
 	 * @see self::filter_products_for_regional_training_centre_managers
 	 */
 	public static function bypass_posts_where_for_regional_training_centre_managers( bool $apply, string $where, WP_Query $query ) {
-		if ( ! is_search() && is_admin() && function_exists( 'get_current_screen' ) ) {
+		if ( ! is_search() && is_admin() && function_exists( 'get_current_screen' ) && wc_current_user_has_role( 'regional_training_centre_manager' ) ) {
 			$screen = get_current_screen();
 			if ( ! is_null( $screen ) ) {
 				if ( 'product' === $screen->post_type && 'edit-product' === $screen->id && 'product' === $query->query_vars['post_type'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-					if ( wc_current_user_has_role( 'regional_training_centre_manager' ) ) {
-						$apply = false;
-					}
+					$apply = false;
 				}
 			}
 		}
@@ -64,16 +62,14 @@ class AdminTableView {
 	 */
 	public static function filter_products_for_regional_training_centre_managers( string $where, WP_Query $query ) {
 
-		if ( ! is_search() && is_admin() && function_exists( 'get_current_screen' ) ) {
+		if ( ! is_search() && is_admin() && function_exists( 'get_current_screen' ) && wc_current_user_has_role( 'regional_training_centre_manager' ) ) {
 			$screen = get_current_screen();
 			if ( ! is_null( $screen ) ) {
 				if ( 'product' === $screen->post_type && 'edit-product' === $screen->id && 'product' === $query->query_vars['post_type'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-					if ( wc_current_user_has_role( 'regional_training_centre_manager' ) ) {
-						$where .= GroupUtils::append_to_posts_where(
-							'product',
-							GroupUtils::get_current_users_group_ids_deep()
-						);
-					}
+					$where .= GroupUtils::append_to_posts_where(
+						'product',
+						GroupUtils::get_current_users_group_ids_deep()
+					);
 				}
 			}
 		}

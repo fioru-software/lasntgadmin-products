@@ -32,6 +32,48 @@ class AdminTableView {
 
 		add_filter( 'parse_query', [ self::class, 'handle_filter_request' ] );
 		add_filter( 'views_edit-product', [ self::class, 'views_edit_product' ] );
+
+		/**
+		 * RTC Managers need the Group plugin's Administer Groups permission, so that they can assign groups when creating users,
+		 * but this setting also allows them to see all products. These two filters work together to filter products by group
+		 * for RTC Managers.
+		 */
+		add_filter( 'groups_post_access_posts_where_apply', [ self::class, 'bypass_posts_where_for_regional_training_centre_managers' ], 10, 3 );
+		add_filter( 'groups_post_access_posts_where', [ self::class, 'filter_products_for_regional_training_centre_managers' ], 10, 2 );
+	}
+
+	/**
+	 * @see self::filter_products_for_regional_training_centre_managers
+	 */
+	public static function bypass_posts_where_for_regional_training_centre_managers( bool $apply, string $where, WP_Query $query ) {
+		if ( ! is_search() && is_admin() && function_exists( 'get_current_screen' ) && wc_current_user_has_role( 'regional_training_centre_manager' ) ) {
+			$screen = get_current_screen();
+			if ( ! is_null( $screen ) ) {
+				if ( 'product' === $screen->post_type && 'edit-product' === $screen->id && 'product' === $query->query_vars['post_type'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+					$apply = false;
+				}
+			}
+		}
+		return $apply;
+	}
+
+	/**
+	 * @see self::bypass_posts_where_for_regional_training_centre_managers
+	 */
+	public static function filter_products_for_regional_training_centre_managers( string $where, WP_Query $query ) {
+
+		if ( ! is_search() && is_admin() && function_exists( 'get_current_screen' ) && wc_current_user_has_role( 'regional_training_centre_manager' ) ) {
+			$screen = get_current_screen();
+			if ( ! is_null( $screen ) ) {
+				if ( 'product' === $screen->post_type && 'edit-product' === $screen->id && 'product' === $query->query_vars['post_type'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+					$where .= GroupUtils::append_to_posts_where(
+						'product',
+						GroupUtils::get_current_users_group_ids_deep()
+					);
+				}
+			}
+		}
+		return $where;
 	}
 
 

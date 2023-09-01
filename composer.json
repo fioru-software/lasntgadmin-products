@@ -23,33 +23,54 @@
         "secure": "security-checker security:check composer.lock",
         "all": ["@lint", "@check", "@test", "@secure"]
     },
-    "repositories": [{
+    "repositories": [
+        {
             "type": "vcs",
-            "url": "git@github.com:fioru-software/lasntgadmin-grant-funded-payment-gateway.git"
+            "url":  "git@github.com:fioru-software/lasntgadmin-attendees.git"
         },
         {
             "type": "vcs",
-            "url": "git@github.com:fioru-software/lasntgadmin-groups.git"
+            "url":  "git@github.com:fioru-software/lasntgadmin-users.git"
         },
         {
             "type": "vcs",
-            "url": "git@github.com:fioru-software/lasntgadmin-attendees.git"
+            "url":  "git@github.com:fioru-software/lasntgadmin-subscriptions.git"
         },
         {
             "type": "vcs",
-            "url": "git@github.com:fioru-software/lasntgadmin-users.git"
+            "url":  "git@github.com:fioru-software/lasntgadmin-groups.git"
         },
         {
             "type": "vcs",
-            "url": "git@github.com:fioru-software/lasntgadmin-orders.git"
+            "url":  "git@github.com:fioru-software/lasntgadmin-orders.git"
+        },
+        {
+            "type": "vcs",
+            "url":  "git@github.com:fioru-software/lasntgadmin-grant-funded-payment-gateway.git"
+        },
+        {
+            "type": "vcs",
+            "url":  "git@github.com:fioru-software/lasntgadmin-products.git"
+        },
+        {
+            "type": "vcs",
+            "url":  "git@github.com:fioru-software/lasntgadmin-translate.git"
+        },
+        {
+            "type": "vcs",
+            "url":  "git@github.com:fioru-software/lasntgadmin-theme.git"
+        },
+        {
+            "type": "vcs",
+            "url":  "git@github.com:fioru-software/lasntgadmin-dashboard.git"
         }
     ],
     "require": {
         "composer/installers": "~2.0",
         "fioru/lasntgadmin-grant-funded-payment-gateway": "^1.0.8",
-        "fioru/lasntgadmin-attendees": "^3.1.0",
+        "fioru/lasntgadmin-attendees": "^3.7.11",
         "fioru/lasntgadmin-users": "^3.0.2",
-        "fioru/lasntgadmin-orders": "^1.5",
+        "fioru/lasntgadmin-orders": "^1.7.18",
         "fioru/lasntgadmin-groups": "^1.5.6"
     },
     "require-dev": {

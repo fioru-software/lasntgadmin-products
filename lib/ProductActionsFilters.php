@@ -49,10 +49,72 @@ class ProductActionsFilters {
 		add_action( 'load-post.php', [ self::class, 'edit_product' ] );
 	}
 
+	public static function add_filters(): void {
+		add_filter( 'wp_insert_post_data', [ self::class, 'filter_post_data' ], 99, 2 );
+		add_filter( 'wp_insert_post', [ self::class, 'cancel_orders' ], 10, 3 );
+		add_filter( 'post_updated_messages', [ self::class, 'post_updated_messages_filter' ], 500 );
+
+		add_filter( 'woocommerce_product_meta_start', [ self::class, 'woocommerce_get_availability_text' ], 10, 2 );
+		add_filter( 'woocommerce_is_purchasable', [ self::class, 'product_is_in_stock' ], 15, 2 );
+
+		add_filter( 'woocommerce_product_query', [ self::class, 'woocommerce_product_query' ], 15, 1 );
+
+		// media library.
+		add_filter( 'ajax_query_attachments_args', [ self::class, 'show_groups_attachments' ] );
+
+		add_filter( 'manage_product_posts_columns', [ self::class, 'add_more_columns' ] );
+		add_filter( 'manage_product_posts_columns', [ self::class, 'rename_groups_column' ], 99 );
+		add_filter( 'manage_edit-product_sortable_columns', [ self::class, 'sortable_venue' ] );
+
+		// show products in private client group to anonymous shoppers.
+		add_filter( 'groups_post_access_posts_where_apply', [ self::class, 'filter_products_apply' ], 20, 3 );
+		add_filter( 'woocommerce_product_is_visible', [ self::class, 'product_is_visible' ], 11, 2 );
+
+		add_filter( 'woocommerce_products_admin_list_table_filters', [ self::class, 'remove_products_filter' ] );
+		add_filter( 'woocommerce_product_tabs', [ self::class, 'remove_product_tab' ], 9999 );
+		add_filter( 'do_meta_boxes', [ self::class, 'wpse33063_move_meta_box' ] );
+
+		//add_filter( 'groups_access_meta_boxes_groups_get_groups_options', [ self::class, 'filter_groups_available_for_product_visiblity_restriction' ] );
+		//add_filter( 'groups_admin_posts_restrict_manage_posts_get_groups_options', [ self::class, 'filter_groups_available_for_product_visiblity_restriction' ] );
+	}
+
+    public static function filter_visible_products( array $options ) {
+        return [
+            'order_by' => 'name',
+            'order'    => 'ASC',
+            'exclude_by_name' => 'Registered',
+            'include' => GroupUtils::get_current_users_group_ids()
+        ];
+    }
+
+	public static function filter_groups_available_for_product_visiblity_restriction( array $options ) {
+
+        if ( function_exists( 'get_current_screen' ) ) {
+            $screen = get_current_screen();    
+            if ( ! is_null( $screen ) ) {
+                if ( 'product' === $screen->post_type && 'edit-product' === $screen->id ) {
+
+                    $options = [
+                        'order_by' => 'name',
+                        'order'    => 'ASC',
+                        'exclude_by_name' => 'Registered',
+                        'include' => GroupUtils::get_current_users_group_ids()
+                    ];
+
+                    if( wc_current_user_has_role( 'regional_training_centre_manager' ) ) {
+                        unset($options['include']);
+                    }
+                }
+            }
+        }
+
+        return $options;
+	}
+
 	public static function edit_product() {
-		if ( in_array( 'regional_training_centre_manager', wp_get_current_user()->roles ) === false ) {
-			return;
-		}
+        if( ! wc_current_user_has_role( 'regional_training_centre_manager' ) ) {
+            return;
+        }
 		if ( ! isset( $_GET['post'] ) ) {
 			return;
 		}
@@ -103,32 +165,6 @@ class ProductActionsFilters {
 	}
 	public static function remove_editor() {
 		remove_post_type_support( 'product', 'editor' );
-	}
-
-	public static function add_filters(): void {
-		add_filter( 'wp_insert_post_data', [ self::class, 'filter_post_data' ], 99, 2 );
-		add_filter( 'wp_insert_post', [ self::class, 'cancel_orders' ], 10, 3 );
-		add_filter( 'post_updated_messages', [ self::class, 'post_updated_messages_filter' ], 500 );
-
-		add_filter( 'woocommerce_product_meta_start', [ self::class, 'woocommerce_get_availability_text' ], 10, 2 );
-		add_filter( 'woocommerce_is_purchasable', [ self::class, 'product_is_in_stock' ], 15, 2 );
-
-		add_filter( 'woocommerce_product_query', [ self::class, 'woocommerce_product_query' ], 15, 1 );
-
-		// media library.
-		add_filter( 'ajax_query_attachments_args', [ self::class, 'show_groups_attachments' ] );
-
-		add_filter( 'manage_product_posts_columns', [ self::class, 'add_more_columns' ] );
-		add_filter( 'manage_product_posts_columns', [ self::class, 'rename_groups_column' ], 99 );
-		add_filter( 'manage_edit-product_sortable_columns', [ self::class, 'sortable_venue' ] );
-
-		// show products in private client group to anonymous shoppers.
-		add_filter( 'groups_post_access_posts_where_apply', [ self::class, 'filter_products_apply' ], 20, 3 );
-		add_filter( 'woocommerce_product_is_visible', [ self::class, 'product_is_visible' ], 11, 2 );
-
-		add_filter( 'woocommerce_products_admin_list_table_filters', [ self::class, 'remove_products_filter' ] );
-		add_filter( 'woocommerce_product_tabs', [ self::class, 'remove_product_tab' ], 9999 );
-		add_filter( 'do_meta_boxes', [ self::class, 'wpse33063_move_meta_box' ] );
 	}
 
 	public static function add_product_boxes_sort_order() {
@@ -368,9 +404,7 @@ class ProductActionsFilters {
 		// admin has access to all.
 		if ( empty( $selected_group_id ) ) {
 			// assumption that national_manager will be a member of all groups.
-			if ( current_user_can( 'manage_options' )
-				|| in_array( 'national_manager', wp_get_current_user()->roles ) !== false
-			) {
+			if ( current_user_can( 'manage_options' ) || wc_current_user_has_role( 'national_manager' ) ) {
 				return $query;
 			}
 			$user_ids = [];

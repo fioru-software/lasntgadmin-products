@@ -73,48 +73,12 @@ class ProductActionsFilters {
 		add_filter( 'woocommerce_products_admin_list_table_filters', [ self::class, 'remove_products_filter' ] );
 		add_filter( 'woocommerce_product_tabs', [ self::class, 'remove_product_tab' ], 9999 );
 		add_filter( 'do_meta_boxes', [ self::class, 'wpse33063_move_meta_box' ] );
-
-		//add_filter( 'groups_access_meta_boxes_groups_get_groups_options', [ self::class, 'filter_groups_available_for_product_visiblity_restriction' ] );
-		//add_filter( 'groups_admin_posts_restrict_manage_posts_get_groups_options', [ self::class, 'filter_groups_available_for_product_visiblity_restriction' ] );
-	}
-
-    public static function filter_visible_products( array $options ) {
-        return [
-            'order_by' => 'name',
-            'order'    => 'ASC',
-            'exclude_by_name' => 'Registered',
-            'include' => GroupUtils::get_current_users_group_ids()
-        ];
-    }
-
-	public static function filter_groups_available_for_product_visiblity_restriction( array $options ) {
-
-        if ( function_exists( 'get_current_screen' ) ) {
-            $screen = get_current_screen();    
-            if ( ! is_null( $screen ) ) {
-                if ( 'product' === $screen->post_type && 'edit-product' === $screen->id ) {
-
-                    $options = [
-                        'order_by' => 'name',
-                        'order'    => 'ASC',
-                        'exclude_by_name' => 'Registered',
-                        'include' => GroupUtils::get_current_users_group_ids()
-                    ];
-
-                    if( wc_current_user_has_role( 'regional_training_centre_manager' ) ) {
-                        unset($options['include']);
-                    }
-                }
-            }
-        }
-
-        return $options;
 	}
 
 	public static function edit_product() {
-        if( ! wc_current_user_has_role( 'regional_training_centre_manager' ) ) {
-            return;
-        }
+		if ( ! wc_current_user_has_role( 'regional_training_centre_manager' ) ) {
+			return;
+		}
 		if ( ! isset( $_GET['post'] ) ) {
 			return;
 		}

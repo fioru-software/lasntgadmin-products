@@ -19,6 +19,7 @@ use Lasntg\Admin\Products\{
 	ProductActionsFilters,
 	AcfFields,
 	AdminTableView,
+	AdminEditView,
 	PluginUtils,
 	Importer,
 	ProductSchedulerActions
@@ -33,5 +34,6 @@ ProductActionsFilters::init();
 QuotasActionsFilters::init();
 AcfFields::init();
 AdminTableView::init();
+AdminEditView::init();
 Importer::init();
 ProductSchedulerActions::init();

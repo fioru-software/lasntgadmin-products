@@ -9,6 +9,9 @@ use DOMDocument;
 
 use WP_User, WP_Query;
 
+/**
+ * Product list page.
+ */
 class AdminTableView {
 
 	public static function init() {
@@ -41,26 +44,8 @@ class AdminTableView {
 		add_filter( 'groups_post_access_posts_where_apply', [ self::class, 'apply_default_product_list_filter_by_group_membership' ], 10, 3 );
 		add_filter( 'groups_post_access_posts_where', [ self::class, 'filter_product_list_for_regional_training_centre_managers' ], 10, 2 );
 
-		// Product edit page groups metabox filter.
-		add_filter( 'groups_access_meta_boxes_groups_get_groups_options', [ self::class, 'get_group_options_for_product_visbility_restriction_metabox' ] );
-
 		// Product list page groups filter.
 		add_filter( 'groups_admin_posts_restrict_manage_posts_get_groups_options', [ self::class, 'get_group_options_for_product_list_page_filter' ] );
-	}
-
-	/**
-	 * Product edit page groups metabox filter dropdown.
-	 *
-	 * @see https://github.com/fioru-software/lasntgadmin-itthinx-groups/blob/master/lib/access/class-groups-access-meta-boxes.php#L211
-	 */
-	public static function get_group_options_for_product_visbility_restriction_metabox( array $options ): array {
-		$user_groups = GroupUtils::get_current_users_group_ids();
-		$options     = [
-			'order_by' => 'parent_id',
-			'order'    => 'ASC',
-			'include'  => $user_groups,
-		];
-		return $options;
 	}
 
 	/**

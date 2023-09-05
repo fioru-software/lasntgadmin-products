@@ -99,7 +99,6 @@ INSERT INTO `wp_groups_group` VALUES
 (37,NULL, NULL,1,'2022-10-14 13:22:23','Roscrea Training Centre',NULL),
 (38,NULL, NULL,1,'2022-10-14 13:22:40','Stranorlar Training Centre',NULL);
 
-
 /*!40000 ALTER TABLE `wp_groups_group` ENABLE KEYS */;
 UNLOCK TABLES;
 

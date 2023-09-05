@@ -9,6 +9,9 @@ use DOMDocument;
 
 use WP_User, WP_Query;
 
+/**
+ * Product list page.
+ */
 class AdminTableView {
 
 	public static function init() {
@@ -34,18 +37,35 @@ class AdminTableView {
 		add_filter( 'views_edit-product', [ self::class, 'views_edit_product' ] );
 
 		/**
-		 * RTC Managers need the Group plugin's Administer Groups permission, so that they can assign groups when creating users,
-		 * but this setting also allows them to see all products. These two filters work together to filter products by group
-		 * for RTC Managers.
+		 * RTC Managers need the Group plugin's Administer Groups permission, so that they can assign groups when creating users.
+		 * This permission also allows them to see all products.
+		 * These two filters work together to show products with same group membership as the RTC manager or products authored by the RTC Manager.
 		 */
-		add_filter( 'groups_post_access_posts_where_apply', [ self::class, 'bypass_posts_where_for_regional_training_centre_managers' ], 10, 3 );
-		add_filter( 'groups_post_access_posts_where', [ self::class, 'filter_products_for_regional_training_centre_managers' ], 10, 2 );
+		add_filter( 'groups_post_access_posts_where_apply', [ self::class, 'apply_default_product_list_filter_by_group_membership' ], 10, 3 );
+		add_filter( 'groups_post_access_posts_where', [ self::class, 'filter_product_list_for_regional_training_centre_managers' ], 10, 2 );
+
+		// Product list page groups filter.
+		add_filter( 'groups_admin_posts_restrict_manage_posts_get_groups_options', [ self::class, 'get_group_options_for_product_list_page_filter' ] );
 	}
 
 	/**
-	 * @see self::filter_products_for_regional_training_centre_managers
+	 * Product list page groups filter dropdown.
+	 *
+	 * @see https://github.com/fioru-software/lasntgadmin-itthinx-groups/blob/master/lib/admin/class-groups-admin-posts.php#L166
 	 */
-	public static function bypass_posts_where_for_regional_training_centre_managers( bool $apply, string $where, WP_Query $query ) {
+	public static function get_group_options_for_product_list_page_filter( array $options ): array {
+		// When altering options here, please ensure to limit to products only.
+		return $options;
+	}
+
+
+	/**
+	 * Product list page, should we apply the default product list filtered by group membership?
+	 * Don't apply when role is regional_training_centre_manager
+	 *
+	 * @see https://github.com/fioru-software/lasntgadmin-itthinx-groups/blob/master/lib/access/class-groups-post-access.php#L223
+	 */
+	public static function apply_default_product_list_filter_by_group_membership( bool $apply, string $where, WP_Query $query ): bool {
 		if ( ! is_search() && is_admin() && function_exists( 'get_current_screen' ) && wc_current_user_has_role( 'regional_training_centre_manager' ) ) {
 			$screen = get_current_screen();
 			if ( ! is_null( $screen ) ) {
@@ -58,9 +78,11 @@ class AdminTableView {
 	}
 
 	/**
-	 * @see self::bypass_posts_where_for_regional_training_centre_managers
+	 * Product list page, filter product list by group membership or author.
+	 *
+	 * @see https://github.com/fioru-software/lasntgadmin-itthinx-groups/blob/master/lib/access/class-groups-post-access.php#L352
 	 */
-	public static function filter_products_for_regional_training_centre_managers( string $where, WP_Query $query ) {
+	public static function filter_product_list_for_regional_training_centre_managers( string $where, WP_Query $query ): string {
 
 		if ( ! is_search() && is_admin() && function_exists( 'get_current_screen' ) && wc_current_user_has_role( 'regional_training_centre_manager' ) ) {
 			$screen = get_current_screen();
@@ -69,6 +91,10 @@ class AdminTableView {
 					$where .= GroupUtils::append_to_posts_where(
 						'product',
 						GroupUtils::get_current_users_group_ids_deep()
+					);
+					$where .= sprintf(
+						" OR ( post_type = 'product' AND post_status NOT IN ( 'auto-draft', 'template', 'trash' ) AND post_author = %d )",
+						get_current_user_id()
 					);
 				}
 			}

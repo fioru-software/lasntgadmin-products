@@ -3,7 +3,7 @@
  * Plugin Name:       LASNTG Products
  * Plugin URI:        https://github.com/fioru-software/lasntgadmin-products
  * Description:       Lasntg Products
- * Version:           5.11.4
+ * Version:           5.11.5
  * Requires PHP:      7.2
  * Text Domain:       lasntgadmin
  * Domain Path:       /languages
@@ -19,6 +19,7 @@ use Lasntg\Admin\Products\{
 	ProductActionsFilters,
 	AcfFields,
 	AdminTableView,
+	AdminEditView,
 	PluginUtils,
 	Importer,
 	ProductSchedulerActions
@@ -33,5 +34,6 @@ ProductActionsFilters::init();
 QuotasActionsFilters::init();
 AcfFields::init();
 AdminTableView::init();
+AdminEditView::init();
 Importer::init();
 ProductSchedulerActions::init();

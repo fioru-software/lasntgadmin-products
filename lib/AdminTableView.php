@@ -84,21 +84,30 @@ class AdminTableView {
 	 */
 	public static function filter_product_list_for_regional_training_centre_managers( string $where, WP_Query $query ): string {
 
-		if ( ! is_search() && is_admin() && function_exists( 'get_current_screen' ) && wc_current_user_has_role( 'regional_training_centre_manager' ) ) {
+		if ( ! is_search() && is_admin() && is_archive() && function_exists( 'get_current_screen' ) && wc_current_user_has_role( 'regional_training_centre_manager' ) ) {
 			$screen = get_current_screen();
+
 			if ( ! is_null( $screen ) ) {
 				if ( 'product' === $screen->post_type && 'edit-product' === $screen->id && 'product' === $query->query_vars['post_type'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 					$where .= GroupUtils::append_to_posts_where(
 						'product',
 						GroupUtils::get_current_users_group_ids_deep()
 					);
-					$where .= sprintf(
-						" OR ( post_type = 'product' AND post_status NOT IN ( 'auto-draft', 'template', 'trash' ) AND post_author = %d )",
-						get_current_user_id()
-					);
+					if ( empty( $query->get( 'post_status' ) ) ) {
+						$where .= sprintf(
+							" OR ( post_type = 'product' AND post_status NOT IN ( 'auto-draft', 'template', 'trash' ) AND post_author = %d )",
+							get_current_user_id()
+						);
+					} else {
+						$where .= sprintf(
+							" OR ( post_type = 'product' AND post_status = '%s' AND post_author = %d )",
+							esc_sql( $query->get( 'post_status' ) ),
+							get_current_user_id()
+						);
+					}
 				}
 			}
-		}
+		}//end if
 		return $where;
 	}
 

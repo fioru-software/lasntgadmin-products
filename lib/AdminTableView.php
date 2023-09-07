@@ -5,7 +5,7 @@ namespace Lasntg\Admin\Products;
 use Lasntg\Admin\Group\GroupUtils;
 use Lasntg\Admin\Products\{ QuotaUtils, AdminTableUtils };
 
-use DOMDocument;
+use DOMDocument, stdClass;
 
 use WP_User, WP_Query;
 
@@ -33,9 +33,6 @@ class AdminTableView {
 		add_filter( 'post_row_actions', [ self::class, 'modify_list_row_actions' ], 10, 2 );
 		add_filter( 'woocommerce_duplicate_product_capability', [ self::class, 'woocommerce_duplicate_product_capability' ] );
 
-		add_filter( 'parse_query', [ self::class, 'handle_filter_request' ] );
-		add_filter( 'views_edit-product', [ self::class, 'views_edit_product' ] );
-
 		/**
 		 * RTC Managers need the Group plugin's Administer Groups permission, so that they can assign groups when creating users.
 		 * This permission also allows them to see all products.
@@ -46,6 +43,37 @@ class AdminTableView {
 
 		// Product list page groups filter.
 		add_filter( 'groups_admin_posts_restrict_manage_posts_get_groups_options', [ self::class, 'get_group_options_for_product_list_page_filter' ] );
+
+		add_filter( 'parse_query', [ self::class, 'handle_filter_request' ] );
+		add_filter( 'views_edit-product', [ self::class, 'views_edit_product' ] );
+
+        add_filter( 'wp_dropdown_cats', [ self::class, 'dropdown_cats' ], 10, 2 );
+	}
+
+    /**
+     * Remove incorrect row count from category filter dropdowns.
+     *
+     * @see https://developer.wordpress.org/reference/hooks/wp_dropdown_cats/
+     */
+    public static function dropdown_cats( string $output, array $parsed_args ): string {
+        return preg_replace( '/(&nbsp;){2}(\(\d+\))/', '', $output );
+    }
+
+	/**
+	 * Default filter is post_status = open_for_enrollment
+	 */
+	public static function handle_filter_request( WP_Query $query ): WP_Query {
+		if ( is_admin() && function_exists( 'get_current_screen' ) ) {
+			$screen = get_current_screen();
+			if ( $screen ) {
+				if ( 'product' === $screen->post_type && 'edit-product' === $screen->id && 'product' === $query->query_vars['post_type'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+                    if( ! is_search() && AdminTableUtils::is_base_request() ) {
+                        $query->set('post_status', [ ProductUtils::$publish_status ] );
+                    } 
+				}
+			}
+		}//end if
+		return $query;
 	}
 
 	/**
@@ -66,7 +94,7 @@ class AdminTableView {
 	 * @see https://github.com/fioru-software/lasntgadmin-itthinx-groups/blob/master/lib/access/class-groups-post-access.php#L223
 	 */
 	public static function apply_default_product_list_filter_by_group_membership( bool $apply, string $where, WP_Query $query ): bool {
-		if ( ! is_search() && is_admin() && function_exists( 'get_current_screen' ) && wc_current_user_has_role( 'regional_training_centre_manager' ) ) {
+		if ( is_admin() && function_exists( 'get_current_screen' ) && wc_current_user_has_role( 'regional_training_centre_manager' ) ) {
 			$screen = get_current_screen();
 			if ( ! is_null( $screen ) ) {
 				if ( 'product' === $screen->post_type && 'edit-product' === $screen->id && 'product' === $query->query_vars['post_type'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
@@ -84,27 +112,54 @@ class AdminTableView {
 	 */
 	public static function filter_product_list_for_regional_training_centre_managers( string $where, WP_Query $query ): string {
 
-		if ( ! is_search() && is_admin() && is_archive() && function_exists( 'get_current_screen' ) && wc_current_user_has_role( 'regional_training_centre_manager' ) ) {
+		if ( is_admin() && is_archive() && function_exists( 'get_current_screen' ) && wc_current_user_has_role( 'regional_training_centre_manager' ) ) {
 			$screen = get_current_screen();
 
 			if ( ! is_null( $screen ) ) {
 				if ( 'product' === $screen->post_type && 'edit-product' === $screen->id && 'product' === $query->query_vars['post_type'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+
+                    // filter by group membership
 					$where .= GroupUtils::append_to_posts_where(
 						'product',
 						GroupUtils::get_current_users_group_ids_deep()
 					);
-					if ( empty( $query->get( 'post_status' ) ) ) {
-						$where .= sprintf(
-							" OR ( post_type = 'product' AND post_status NOT IN ( 'auto-draft', 'template', 'trash' ) AND post_author = %d )",
-							get_current_user_id()
-						);
-					} else {
-						$where .= sprintf(
-							" OR ( post_type = 'product' AND post_status = '%s' AND post_author = %d )",
-							esc_sql( $query->get( 'post_status' ) ),
-							get_current_user_id()
-						);
-					}
+
+                    $post_status = $query->get( 'post_status' );
+                    if( ! is_search() ) {
+                        if( empty( $post_status ) ) { // no filter
+                            $where .= sprintf(
+                                " OR ( post_type = 'product' AND post_status NOT IN ( 'auto-draft', 'template', 'trash' ) AND post_author = %d )",
+                                get_current_user_id()
+                            );
+                        } else { // Filter by clicking post status link
+                            $where .= sprintf(
+                                " OR ( post_type = 'product' AND post_status IN ( '%s' ) AND post_author = %d )",
+                                is_array( $post_status ) ? implode("','", $post_status ) : esc_sql( $post_status ),
+                                get_current_user_id()
+                            );
+                        }
+                    }
+
+                    /**
+                     * Filtered by dropdown 
+                     */
+                    if( is_search() && is_tax() ) {
+                        $taxonomy_id = get_queried_object_id();
+                        if( empty( $post_status ) ) { 
+                            $where .= sprintf(
+                                " OR ( wp_term_relationships.term_taxonomy_id IN (%d) && post_type = 'product' AND post_author = %d )",
+                                $taxonomy_id,
+                                get_current_user_id()
+                            );
+                        } else {
+                            $where .= sprintf(
+                                " OR ( wp_term_relationships.term_taxonomy_id IN (%d) && post_type = 'product'  AND post_status IN ( '%s' ) AND post_author = %d )",
+                                $taxonomy_id,
+                                is_array( $post_status ) ? implode("','", $post_status ) : esc_sql( $post_status ),
+                                get_current_user_id()
+                            );
+                        }
+                    }
 				}
 			}
 		}//end if
@@ -136,21 +191,6 @@ class AdminTableView {
 			);
 		}
 		return $views;
-	}
-
-	/**
-	 * Default filter is post_status = open_for_enrollment
-	 */
-	public static function handle_filter_request( WP_Query $query ): WP_Query {
-		if ( is_admin() && function_exists( 'get_current_screen' ) ) {
-			$screen = get_current_screen();
-			if ( $screen ) {
-				if ( 'product' === $screen->post_type && 'edit-product' === $screen->id && 'product' === $query->query_vars['post_type'] && AdminTableUtils::is_base_request() ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-					$query->query_vars['post_status'] = [ ProductUtils::$publish_status ];
-				}
-			}
-		}//end if
-		return $query;
 	}
 
 	public static function woocommerce_duplicate_product_capability() {

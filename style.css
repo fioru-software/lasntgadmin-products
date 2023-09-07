@@ -10,3 +10,5 @@ table.wp-list-table .column-entry_requirements,
  table.wp-list-table .column-_minimum_capacity {
     width: 5%;
 }
+
+.subsubsub a .count { display: none; }

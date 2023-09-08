@@ -47,17 +47,17 @@ class AdminTableView {
 		add_filter( 'parse_query', [ self::class, 'handle_filter_request' ] );
 		add_filter( 'views_edit-product', [ self::class, 'views_edit_product' ] );
 
-        add_filter( 'wp_dropdown_cats', [ self::class, 'dropdown_cats' ], 10, 2 );
+		add_filter( 'wp_dropdown_cats', [ self::class, 'dropdown_cats' ], 10, 2 );
 	}
 
-    /**
-     * Remove incorrect row count from category filter dropdowns.
-     *
-     * @see https://developer.wordpress.org/reference/hooks/wp_dropdown_cats/
-     */
-    public static function dropdown_cats( string $output, array $parsed_args ): string {
-        return preg_replace( '/(&nbsp;){2}(\(\d+\))/', '', $output );
-    }
+	/**
+	 * Remove incorrect row count from category filter dropdowns.
+	 *
+	 * @see https://developer.wordpress.org/reference/hooks/wp_dropdown_cats/
+	 */
+	public static function dropdown_cats( string $output, array $parsed_args ): string {
+		return preg_replace( '/(&nbsp;){2}(\(\d+\))/', '', $output );
+	}
 
 	/**
 	 * Default filter is post_status = open_for_enrollment
@@ -67,9 +67,9 @@ class AdminTableView {
 			$screen = get_current_screen();
 			if ( $screen ) {
 				if ( 'product' === $screen->post_type && 'edit-product' === $screen->id && 'product' === $query->query_vars['post_type'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-                    if( ! is_search() && AdminTableUtils::is_base_request() ) {
-                        $query->set('post_status', [ ProductUtils::$publish_status ] );
-                    } 
+					if ( ! is_search() && AdminTableUtils::is_base_request() ) {
+						$query->set( 'post_status', [ ProductUtils::$publish_status ] );
+					}
 				}
 			}
 		}//end if
@@ -118,50 +118,55 @@ class AdminTableView {
 			if ( ! is_null( $screen ) ) {
 				if ( 'product' === $screen->post_type && 'edit-product' === $screen->id && 'product' === $query->query_vars['post_type'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
-                    // filter by group membership
+					// Filter by group membership.
 					$where .= GroupUtils::append_to_posts_where(
 						'product',
 						GroupUtils::get_current_users_group_ids_deep()
 					);
 
-                    $post_status = $query->get( 'post_status' );
-                    if( ! is_search() ) {
-                        if( empty( $post_status ) ) { // no filter
-                            $where .= sprintf(
-                                " OR ( post_type = 'product' AND post_status NOT IN ( 'auto-draft', 'template', 'trash' ) AND post_author = %d )",
-                                get_current_user_id()
-                            );
-                        } else { // Filter by clicking post status link
-                            $where .= sprintf(
-                                " OR ( post_type = 'product' AND post_status IN ( '%s' ) AND post_author = %d )",
-                                is_array( $post_status ) ? implode("','", $post_status ) : esc_sql( $post_status ),
-                                get_current_user_id()
-                            );
-                        }
-                    }
+					$post_status = $query->get( 'post_status' );
 
-                    /**
-                     * Filtered by dropdown 
-                     */
-                    if( is_search() && is_tax() ) {
-                        $taxonomy_id = get_queried_object_id();
-                        if( empty( $post_status ) ) { 
-                            $where .= sprintf(
-                                " OR ( wp_term_relationships.term_taxonomy_id IN (%d) && post_type = 'product' AND post_author = %d )",
-                                $taxonomy_id,
-                                get_current_user_id()
-                            );
-                        } else {
-                            $where .= sprintf(
-                                " OR ( wp_term_relationships.term_taxonomy_id IN (%d) && post_type = 'product'  AND post_status IN ( '%s' ) AND post_author = %d )",
-                                $taxonomy_id,
-                                is_array( $post_status ) ? implode("','", $post_status ) : esc_sql( $post_status ),
-                                get_current_user_id()
-                            );
-                        }
-                    }
-				}
-			}
+					if ( ! is_search() ) {
+						if ( empty( $post_status ) ) {
+							// Not filtered.
+							$where .= sprintf(
+								" OR ( post_type = 'product' AND post_status NOT IN ( 'auto-draft', 'template', 'trash' ) AND post_author = %d )",
+								get_current_user_id()
+							);
+						} else {
+							// Filtered by clicking post status link.
+							$where .= sprintf(
+								" OR ( post_type = 'product' AND post_status IN ( '%s' ) AND post_author = %d )",
+								is_array( $post_status ) ? implode( "','", $post_status ) : esc_sql( $post_status ),
+								get_current_user_id()
+							);
+						}
+					}
+
+					/**
+					 * Filtered by category dropdown
+					 */
+					if ( is_search() && is_tax() ) {
+						$taxonomy_id = get_queried_object_id();
+						if ( empty( $post_status ) ) {
+							// Post status is all.
+							$where .= sprintf(
+								" OR ( wp_term_relationships.term_taxonomy_id IN (%d) && post_type = 'product' AND post_author = %d )",
+								$taxonomy_id,
+								get_current_user_id()
+							);
+						} else {
+							// Post status is something other than all.
+							$where .= sprintf(
+								" OR ( wp_term_relationships.term_taxonomy_id IN (%d) && post_type = 'product'  AND post_status IN ( '%s' ) AND post_author = %d )",
+								$taxonomy_id,
+								is_array( $post_status ) ? implode( "','", $post_status ) : esc_sql( $post_status ),
+								get_current_user_id()
+							);
+						}
+					}
+				}//end if
+			}//end if
 		}//end if
 		return $where;
 	}

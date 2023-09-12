@@ -19,6 +19,7 @@ services:
       volumes:
         - .:/usr/local/src
         - ../lasntgadmin-orders:/var/www/html/wp-content/plugins/lasntgadmin-orders
+        - ../lasntgadmin-itthinx-groups:/var/www/html/wp-content/plugins/groups
         - ../lasntgadmin-groups:/var/www/html/wp-content/plugins/lasntgadmin-groups
         - ../lasntgadmin-attendees:/var/www/html/wp-content/plugins/lasntgadmin-attendees
       ports:

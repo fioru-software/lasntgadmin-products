@@ -204,18 +204,28 @@ class AdminTableView {
 
 	public static function modify_list_row_actions( $actions, $post ) {
 		if ( 'product' === $post->post_type ) {
-			unset( $actions['view'] );
-			$actions['attendees'] = sprintf(
-				'<a href="%1$s">%2$s</a>',
-				esc_url( admin_url( sprintf( 'edit.php?post_type=attendee&product_id=%d', $post->ID ) ) ),
-				esc_html( __( 'Attendees', 'lasntgadmin' ) )
-			);
-			$actions['orders']    = sprintf(
-				'<a href="%1$s">%2$s</a>',
-				esc_url( admin_url( sprintf( 'edit.php?post_type=shop_order&product_id=%d', $post->ID ) ) ),
-				esc_html( __( 'Orders', 'lasntgadmin' ) )
-			);
-		}
+			if ( 'template' === $post->post_status ) {
+				if ( wc_current_user_has_role( 'regional_training_centre_manager' ) ) {
+					unset( $actions['view'] );
+					unset( $actions['trash'] );
+					unset( $actions['edit'] );
+				}
+			}
+
+			if ( 'template' !== $post->post_status ) {
+				unset( $actions['view'] );
+				$actions['attendees'] = sprintf(
+					'<a href="%1$s">%2$s</a>',
+					esc_url( admin_url( sprintf( 'edit.php?post_type=attendee&product_id=%d', $post->ID ) ) ),
+					esc_html( __( 'Attendees', 'lasntgadmin' ) )
+				);
+				$actions['orders']    = sprintf(
+					'<a href="%1$s">%2$s</a>',
+					esc_url( admin_url( sprintf( 'edit.php?post_type=shop_order&product_id=%d', $post->ID ) ) ),
+					esc_html( __( 'Orders', 'lasntgadmin' ) )
+				);
+			}
+		}//end if
 		return $actions;
 	}
 

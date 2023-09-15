@@ -110,6 +110,7 @@ class Capabilities {
 			'upload_files',
 			'edit_products',
 			'edit_posts',
+            'edit_others_products', // required when removing attendee from paid order, which requires product stock to be incremented.
 		];
 	}
 

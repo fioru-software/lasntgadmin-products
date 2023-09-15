@@ -32,13 +32,13 @@ class AdminTableView {
 		add_filter( 'login_redirect', [ self::class, 'redirect_to_product_list' ], 10, 3 );
 		add_filter( 'woocommerce_duplicate_product_capability', [ self::class, 'woocommerce_duplicate_product_capability' ] );
 
-        /**
-         * Training officers require the edit_others_products cap, when removing attendee from paid order, 
-         * which also increments product stock, but we don't want them to edit products via the UI.
-         */
+		/**
+		 * Training officers require the edit_others_products cap, when removing attendee from paid order,
+		 * which also increments product stock, but we don't want them to edit products via the UI.
+		 */
 		add_filter( 'post_row_actions', [ self::class, 'modify_list_row_actions' ], 10, 2 );
-        add_filter( 'bulk_actions-edit-product', [ self::class, 'modify_product_bulk_actions' ] );    
-        add_filter( 'get_edit_post_link', [ self::class, 'modify_edit_product_link' ], 10, 3 );
+		add_filter( 'bulk_actions-edit-product', [ self::class, 'modify_product_bulk_actions' ] );
+		add_filter( 'get_edit_post_link', [ self::class, 'modify_edit_product_link' ], 10, 3 );
 
 		/**
 		 * RTC Managers need the Group plugin's Administer Groups permission, so that they can assign groups when creating users.
@@ -57,23 +57,23 @@ class AdminTableView {
 		add_filter( 'wp_dropdown_cats', [ self::class, 'dropdown_cats' ], 10, 2 );
 	}
 
-    public static function modify_edit_product_link( string $link, int $post_id, string $context): string  {    
-        if( wc_current_user_has_role( 'training_officer' ) || wc_current_user_has_role( 'fire_training_officer' ) ) {    
-            $link = home_url($_SERVER['REQUEST_URI']);;    
-        }    
-        return $link;    
-    }
+	public static function modify_edit_product_link( string $link, int $post_id, string $context ): string {
+		if ( wc_current_user_has_role( 'training_officer' ) || wc_current_user_has_role( 'fire_training_officer' ) ) {
+			$link = '#';
+		}
+		return $link;
+	}
 
-    public static function modify_product_bulk_actions( array $actions ): array  {
-        /**
-         * Training officers require the edit_others_products cap, when removing attendee from paid order, 
-         * which also increments product stock, but we don't want them to edit products via the UI.
-         */
-        if( wc_current_user_has_role( 'training_officer' ) || wc_current_user_has_role( 'fire_training_officer' ) ) {
-            unset( $actions['edit'] );
-        }
-        return $actions;
-    }
+	public static function modify_product_bulk_actions( array $actions ): array {
+		/**
+		 * Training officers require the edit_others_products cap, when removing attendee from paid order,
+		 * which also increments product stock, but we don't want them to edit products via the UI.
+		 */
+		if ( wc_current_user_has_role( 'training_officer' ) || wc_current_user_has_role( 'fire_training_officer' ) ) {
+			unset( $actions['edit'] );
+		}
+		return $actions;
+	}
 
 	/**
 	 * Remove incorrect row count from category filter dropdowns.
@@ -230,13 +230,13 @@ class AdminTableView {
 	public static function modify_list_row_actions( $actions, $post ) {
 		if ( 'product' === $post->post_type ) {
 
-            /**                                                                                                      
-             * Training officers require the edit_others_products cap, when removing attendee from paid order, 
-             * which also increments product stock, but we don't want them to edit products via the UI.
-             */         
-            if( wc_current_user_has_role( 'training_officer' ) || wc_current_user_has_role( 'fire_training_officer' ) ) {
-                unset( $actions['edit'] );
-            }
+			/**
+			 * Training officers require the edit_others_products cap, when removing attendee from paid order,
+			 * which also increments product stock, but we don't want them to edit products via the UI.
+			 */
+			if ( wc_current_user_has_role( 'training_officer' ) || wc_current_user_has_role( 'fire_training_officer' ) ) {
+				unset( $actions['edit'] );
+			}
 
 			unset( $actions['view'] );
 

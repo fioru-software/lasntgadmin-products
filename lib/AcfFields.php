@@ -60,6 +60,7 @@ class AcfFields {
 	public static function populate_training_centre_select_options( array $field ): array {
 		$training_centres = GroupUtils::get_all_training_centre_groups();
 
+		$field['choices'] = [];
 		foreach ( $training_centres as $training_centre ) {
 			$field['choices'][ $training_centre->group_id ] = $training_centre->name;
 		}
@@ -72,6 +73,7 @@ class AcfFields {
 	public static function populate_funding_source_select_options( array $field ): array {
 		$funding_sources = FundingSourceUtils::get_all();
 
+		$field['choices'] = [];
 		foreach ( $funding_sources as $funding_source ) {
 			$field['choices'][ $funding_source->slug ] = $funding_source->name;
 		}
@@ -81,6 +83,7 @@ class AcfFields {
 	public static function populate_grant_year_select_options( array $field ): array {
 		$grant_years = GrantYearUtils::get_all();
 
+		$field['choices']         = [];
 		$field['choices'][ null ] = 'Not funded';
 		foreach ( $grant_years as $grant_year ) {
 			$field['choices'][ $grant_year ] = $grant_year;

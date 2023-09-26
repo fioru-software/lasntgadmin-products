@@ -3,6 +3,7 @@
 namespace Lasntg\Admin\Products;
 
 use Lasntg\Admin\Group\GroupUtils;
+use Lasntg\Admin\Orders\OrderUtils;
 
 use WC_Product;
 
@@ -153,41 +154,9 @@ class ProductUtils {
 
 	/**
 	 * @deprecated
-	 * @see self::get_order_ids_by_product_id()
 	 */
-	public static function get_orders_ids_by_product_id( $product_id, $order_status = [ 'wc-processing', 'wc-completed' ] ) {
-		return self::get_order_ids_by_product_id( $product_id, $order_status );
-	}
-
-	/**
-	 * Get all order id's for a given product id.
-	 * Caching the result for 10 seconds, so WordPress doesn't run the query multiple times.
-	 */
-	public static function get_order_ids_by_product_id( $product_id, $order_status = [ 'wc-completed', 'wc-on-hold' ] ) {
-		global $wpdb;
-
-		$order_statuses = implode( "','", $order_status );
-		$transient_id   = md5( "$product_id$order_statuses" );
-		$order_ids      = get_transient( $transient_id );
-
-		if ( false === $order_ids ) {
-			// It wasn't there, so regenerate the data and save the transient.
-			$statement = $wpdb->prepare(
-				'SELECT order_items.order_id ' .
-				"FROM {$wpdb->prefix}woocommerce_order_items as order_items " .
-				"LEFT JOIN {$wpdb->prefix}woocommerce_order_itemmeta as order_item_meta ON order_items.order_item_id = order_item_meta.order_item_id " .
-				"LEFT JOIN {$wpdb->posts} AS posts ON order_items.order_id = posts.ID " .
-				"WHERE posts.post_type = 'shop_order' " .
-				"AND posts.post_status IN ( '$order_statuses' ) " . // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-				"AND order_items.order_item_type = 'line_item' " .
-				"AND order_item_meta.meta_key = '_product_id' " .
-				'AND order_item_meta.meta_value = %d',
-				$product_id
-			);
-			$order_ids = $wpdb->get_col( $statement ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
-			set_transient( $transient_id, $order_ids, MINUTE_IN_SECONDS / 6 );
-		}
-		return $order_ids;
+	public static function get_orders_ids_by_product_id( int $product_id, array $order_status = [ 'wc-processing', 'wc-completed' ] ): array {
+		return OrderUtils::get_order_ids_by_product_id( $product_id, 0, $order_status );
 	}
 
 	public static function get_total_items( $order_ids ) {

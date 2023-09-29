@@ -222,7 +222,7 @@ class ProductActionsFilters {
 			$query->set( 'meta_query', $meta_query );
 			$query->set( 'orderby', 'meta_value' );
 		}
-		if ( 'start date' == strtolower( $orderby ) ) {
+		if ( is_string( $orderby ) && 'start date' == strtolower( $orderby ) ) {
 			$meta_query = array(
 				'relation' => 'OR',
 				array( //phpcs:ignore Universal.Arrays.MixedArrayKeyTypes.ImplicitNumericKey, Universal.Arrays.MixedKeyedUnkeyedArray.Found

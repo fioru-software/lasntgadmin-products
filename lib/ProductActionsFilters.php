@@ -56,6 +56,7 @@ class ProductActionsFilters {
 
 		add_filter( 'woocommerce_product_meta_start', [ self::class, 'woocommerce_get_availability_text' ], 10, 2 );
 		add_filter( 'woocommerce_is_purchasable', [ self::class, 'product_is_in_stock' ], 15, 2 );
+		add_filter( 'woocommerce_is_purchasable', [ self::class, 'set_product_to_purchasable' ], 1, 2 );
 
 		add_filter( 'woocommerce_product_query', [ self::class, 'woocommerce_product_query' ], 15, 1 );
 
@@ -74,7 +75,12 @@ class ProductActionsFilters {
 		add_filter( 'woocommerce_product_tabs', [ self::class, 'remove_product_tab' ], 9999 );
 		add_filter( 'do_meta_boxes', [ self::class, 'wpse33063_move_meta_box' ] );
 	}
-
+	public static function set_product_to_purchasable( $is_in_stock, $product ) {
+		if ( ProductUtils::$publish_status === $product->get_status() ) {
+			return true;
+		}
+		return false;
+	}
 	public static function edit_product() {
 		if ( ! wc_current_user_has_role( 'regional_training_centre_manager' ) ) {
 			return;
@@ -216,7 +222,7 @@ class ProductActionsFilters {
 			$query->set( 'meta_query', $meta_query );
 			$query->set( 'orderby', 'meta_value' );
 		}
-		if ( 'start date' == strtolower( $orderby ) ) {
+		if ( is_string( $orderby ) && 'start date' == strtolower( $orderby ) ) {
 			$meta_query = array(
 				'relation' => 'OR',
 				array( //phpcs:ignore Universal.Arrays.MixedArrayKeyTypes.ImplicitNumericKey, Universal.Arrays.MixedKeyedUnkeyedArray.Found
@@ -480,7 +486,7 @@ class ProductActionsFilters {
 	public static function product_is_in_stock( $is_in_stock, $product ): bool {
 		$group_ids = GroupUtils::get_read_group_ids( $product->get_id() );
 
-		if ( count( $group_ids ) > 1 && ! in_array( 33, $group_ids ) ) {
+		if ( false === in_array( 33, $group_ids, false ) ) {
 			return false;
 		}
 		if ( ProductUtils::$publish_status === $product->get_status() ) {

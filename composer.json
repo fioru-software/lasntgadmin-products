@@ -70,7 +70,7 @@
         "fioru/lasntgadmin-grant-funded-payment-gateway": "^1.0.8",
         "fioru/lasntgadmin-attendees": "^3.7.11",
         "fioru/lasntgadmin-users": "^3.0.2",
-        "fioru/lasntgadmin-orders": "^1.7.18",
+        "fioru/lasntgadmin-orders": "^1.7.29",
         "fioru/lasntgadmin-groups": "^1.5.6"
     },
     "require-dev": {

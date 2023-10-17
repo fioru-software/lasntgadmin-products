@@ -47,6 +47,7 @@ class ProductActionsFilters {
 		add_action( 'init', [ self::class, 'disable_course_add_button' ] );
 		add_action( 'add_meta_boxes', array( self::class, 'add_product_boxes_sort_order' ), 99 );
 		add_action( 'load-post.php', [ self::class, 'edit_product' ] );
+		add_action( 'woocommerce_order_status_changed', [ self::class, 'status_changed' ], 10, 3 );
 	}
 
 	public static function add_filters(): void {
@@ -76,7 +77,8 @@ class ProductActionsFilters {
 		add_filter( 'woocommerce_product_tabs', [ self::class, 'remove_product_tab' ], 9999 );
 		add_filter( 'do_meta_boxes', [ self::class, 'wpse33063_move_meta_box' ] );
 	}
-	public static function set_product_to_purchasable( $is_in_stock, $product ) {
+
+	public static function set_product_to_purchasable( $is_in_stock, $product ): bool {
 		if ( ProductUtils::$publish_status === $product->get_status() ) {
 			return true;
 		}

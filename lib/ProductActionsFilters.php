@@ -267,11 +267,11 @@ class ProductActionsFilters {
 			$order_ids = ProductUtils::get_orders_ids_by_product_id( $post_id, [ 'wc-completed', 'wc-on-hold', 'wc-processing' ] );
 			$sales     = ProductUtils::get_total_items( $order_ids );
 			$total     = $product->get_stock_quantity();
-			echo $total; //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			echo $total . ( 0 === $total ?? ' Full' ); //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		} elseif ( 'places_booked' === $column_name ) {
 			$order_ids = ProductUtils::get_orders_ids_by_product_id( $post_id, [ 'wc-completed', 'wc-on-hold', 'wc-processing' ] );
 			$sales     = ProductUtils::get_total_items( $order_ids );
-			echo $sales; //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			echo "<span class='text-green'>$sales</span>"; //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		}//end if
 	}
 
@@ -293,7 +293,7 @@ class ProductActionsFilters {
 
 	public static function add_more_columns( $defaults ) {
 		$assets_dir = untrailingslashit( plugin_dir_url( __FILE__ ) ) . '/../assets/';
-		wp_enqueue_style( 'admin-columns-css', $assets_dir . 'styles/admin-column.css', '1.0.2' );
+		wp_enqueue_style( 'admin-columns-css', $assets_dir . 'styles/admin-column.css', '1.0.3' );
 
 		$defaults['places_available'] = __( 'Places Available', 'lasntgadmin' );
 		$defaults['places_booked']    = __( 'Places Booked', 'lasntgadmin' );

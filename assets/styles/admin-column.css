@@ -13,3 +13,7 @@ select[name='stock_status']{
 .subsubsub > .byorder{
     display: none;
 }
+
+.text-green{
+    color: green;
+}

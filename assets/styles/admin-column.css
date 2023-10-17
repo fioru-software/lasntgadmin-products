@@ -2,6 +2,8 @@
 .column-start_date, 
 .column-organizer, 
 .column-groups-read,
+.column-places_booked,
+.places_available,
 .sortable{
     width: 10%;
 }

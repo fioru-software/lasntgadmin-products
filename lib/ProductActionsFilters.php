@@ -269,7 +269,7 @@ class ProductActionsFilters {
 			$order_ids = ProductUtils::get_orders_ids_by_product_id( $post_id, [ 'wc-completed', 'wc-on-hold', 'wc-processing' ] );
 			$sales     = ProductUtils::get_total_items( $order_ids );
 			$total     = $product->get_stock_quantity();
-			echo $total . ( 0 === $total ?? ' Full' ); //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			echo $total . ( 0 === $total ? ' <span class="text-red">Full</span>' : '' ); //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		} elseif ( 'places_booked' === $column_name ) {
 			$order_ids = ProductUtils::get_orders_ids_by_product_id( $post_id, [ 'wc-completed', 'wc-on-hold', 'wc-processing' ] );
 			$sales     = ProductUtils::get_total_items( $order_ids );

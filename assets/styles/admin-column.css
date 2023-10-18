@@ -17,3 +17,6 @@ select[name='stock_status']{
 .text-green{
     color: green;
 }
+.text-red{
+    color: red;
+}

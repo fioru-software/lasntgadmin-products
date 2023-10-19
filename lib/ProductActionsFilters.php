@@ -47,6 +47,7 @@ class ProductActionsFilters {
 		add_action( 'init', [ self::class, 'disable_course_add_button' ] );
 		add_action( 'add_meta_boxes', array( self::class, 'add_product_boxes_sort_order' ), 99 );
 		add_action( 'load-post.php', [ self::class, 'edit_product' ] );
+		add_action( 'woocommerce_order_status_changed', [ self::class, 'status_changed' ], 10, 3 );
 	}
 
 	public static function add_filters(): void {
@@ -63,8 +64,9 @@ class ProductActionsFilters {
 		// media library.
 		add_filter( 'ajax_query_attachments_args', [ self::class, 'show_groups_attachments' ] );
 
-		add_filter( 'manage_product_posts_columns', [ self::class, 'add_more_columns' ] );
+		add_filter( 'manage_product_posts_columns', [ self::class, 'add_more_columns' ], 11 );
 		add_filter( 'manage_product_posts_columns', [ self::class, 'rename_groups_column' ], 99 );
+		add_filter( 'manage_product_posts_columns', [ self::class, 'organize_columns' ], 99 );
 		add_filter( 'manage_edit-product_sortable_columns', [ self::class, 'sortable_venue' ] );
 
 		// show products in private client group to anonymous shoppers.
@@ -75,7 +77,8 @@ class ProductActionsFilters {
 		add_filter( 'woocommerce_product_tabs', [ self::class, 'remove_product_tab' ], 9999 );
 		add_filter( 'do_meta_boxes', [ self::class, 'wpse33063_move_meta_box' ] );
 	}
-	public static function set_product_to_purchasable( $is_in_stock, $product ) {
+
+	public static function set_product_to_purchasable( $is_in_stock, $product ): bool {
 		if ( ProductUtils::$publish_status === $product->get_status() ) {
 			return true;
 		}
@@ -260,37 +263,49 @@ class ProductActionsFilters {
 			if ( is_array( $centres ) && count( $centres ) ) {
 				echo implode( ', ', $centres ); //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			}
-		} elseif ( 'is_in_stock' === $column_name ) {
-			$product   = wc_get_product( $post_id );
-			$sales     = $product->get_total_sales();
-			$args      = array(
-				'post_status' => 'wc-completed',
-				'post_type'   => 'shop_order',
-				'return'      => 'ids',
-				'product'     => $post_id,
-			);
+		} elseif ( 'places_available' === $column_name ) {
+			$product = wc_get_product( $post_id );
+
 			$order_ids = ProductUtils::get_orders_ids_by_product_id( $post_id, [ 'wc-completed', 'wc-on-hold', 'wc-processing' ] );
 			$sales     = ProductUtils::get_total_items( $order_ids );
-			$total     = $product->get_stock_quantity() + $sales;
-			echo ( "Capacity ($total)\n<br/> " ); //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-			echo ( "Booked ($sales)\n<br/> " ); //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			$total     = $product->get_stock_quantity();
+			echo $total . ( 0 === $total ? ' <span class="text-red">(Full)</span>' : '' ); //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		} elseif ( 'places_booked' === $column_name ) {
+			$order_ids = ProductUtils::get_orders_ids_by_product_id( $post_id, [ 'wc-completed', 'wc-on-hold', 'wc-processing' ] );
+			$sales     = ProductUtils::get_total_items( $order_ids );
+			echo "<span class='text-green'>$sales</span>"; //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		}//end if
 	}
 
+	public static function organize_columns( $defaults ) {
+		unset( $defaults['product_cat'] );
+		unset( $defaults['_minimum_capacity'] );
+		unset( $defaults['group_quota'] );
+		unset( $defaults['groups-read'] );
+		unset( $defaults['is_in_stock'] );
+
+		return $defaults;
+	}
 
 	public static function rename_groups_column( $defaults ) {
 		$defaults['groups-read'] = __( 'Available to', 'lasntgadmin' );
+
 		return $defaults;
 	}
 
 	public static function add_more_columns( $defaults ) {
 		$assets_dir = untrailingslashit( plugin_dir_url( __FILE__ ) ) . '/../assets/';
-		wp_enqueue_style( 'admin-columns-css', $assets_dir . 'styles/admin-column.css', '1.0.2' );
+		wp_enqueue_style( 'admin-columns-css', $assets_dir . 'styles/admin-column.css', '1.0.4' );
 
-		$defaults['venue']              = 'Venue';
-		$defaults['start_date']         = 'Start Date';
-		$defaults['entry_requirements'] = 'Course Details';
-		$defaults['organizer']          = 'Organizer';
+		$defaults['places_available'] = __( 'Places Available', 'lasntgadmin' );
+		$defaults['places_booked']    = __( 'Places Booked', 'lasntgadmin' );
+		$defaults['venue']            = __( 'Venue', 'lasntgadmin' );
+
+		$defaults['start_date'] = __( 'Start Date', 'lasntgadmin' );
+
+		$defaults['organizer'] = __( 'Organizer', 'lasntgadmin' );
+
+		$defaults['entry_requirements'] = __( 'Course Brochures', 'lasntgadmin' );
 
 		return $defaults;
 	}
@@ -585,7 +600,7 @@ class ProductActionsFilters {
 		$assets_dir = untrailingslashit( plugin_dir_url( __FILE__ ) ) . '/../assets/';
 		wp_enqueue_script( 'lasntgadmin-products-admin-js', ( $assets_dir . 'js/lasntgadmin-admin.js' ), array( 'jquery' ), '1.7', true );
 
-		wp_enqueue_style( 'admin-columns', $assets_dir . 'styles/product-admin.css', [], '1.0.1' );
+		wp_enqueue_style( 'admin-columns', $assets_dir . 'styles/product-admin.css', [], '1.0.2' );
 		wp_localize_script(
 			'lasntgadmin-products-admin-js',
 			'lasntgadmin_products_admin_localize',

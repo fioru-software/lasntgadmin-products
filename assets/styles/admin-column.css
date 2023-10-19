@@ -2,6 +2,8 @@
 .column-start_date, 
 .column-organizer, 
 .column-groups-read,
+.column-places_booked,
+.places_available,
 .sortable{
     width: 10%;
 }
@@ -10,4 +12,11 @@ select[name='stock_status']{
 }
 .subsubsub > .byorder{
     display: none;
+}
+
+.text-green{
+    color: green;
+}
+.text-red{
+    color: red;
 }

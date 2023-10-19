@@ -53,10 +53,16 @@ class ProductSchedulerActions {
 		);
 
 		foreach ( $posts as $post ) {
-			$product_id = $post->ID;
-			$product    = wc_get_product( $product_id );
+			$product_id     = $post->ID;
+			$meta_key       = 'lasntg_enrollment_closed';
+			$already_closed = get_post_meta( $product_id, $meta_key, true );
+			if ( $already_closed ) {
+				continue;
+			}
+			$product = wc_get_product( $product_id );
 			$product->set_status( 'enrollment_closed' );
 			$product->save();
+			update_post_meta( $product_id, $meta_key, 1 );
 			error_log( "Closed Course #$product_id at " . gmdate( 'Y/m/d H:i:s' ) );
 		}
 	}

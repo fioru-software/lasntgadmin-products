@@ -65,6 +65,7 @@ class ProductActionsFilters {
 		add_filter( 'ajax_query_attachments_args', [ self::class, 'show_groups_attachments' ] );
 
 		add_filter( 'manage_product_posts_columns', [ self::class, 'add_more_columns' ], 11 );
+		add_filter( 'manage_product_posts_columns', [ self::class, 'add_columns_css' ], 1 );
 		add_filter( 'manage_product_posts_columns', [ self::class, 'rename_groups_column' ], 99 );
 		add_filter( 'manage_product_posts_columns', [ self::class, 'organize_columns' ], 99 );
 		add_filter( 'manage_edit-product_sortable_columns', [ self::class, 'sortable_venue' ] );
@@ -292,10 +293,15 @@ class ProductActionsFilters {
 
 		return $defaults;
 	}
-
-	public static function add_more_columns( $defaults ) {
+	public static function add_columns_css($defaults)
+	{
 		$assets_dir = untrailingslashit( plugin_dir_url( __FILE__ ) ) . '/../assets/';
 		wp_enqueue_style( 'admin-columns-css', $assets_dir . 'styles/admin-column.css', '1.0.4' );
+		return $defaults;
+	}
+
+	public static function add_more_columns( $defaults ) {
+		
 
 		$defaults['places_available'] = __( 'Places Available', 'lasntgadmin' );
 		$defaults['places_booked']    = __( 'Places Booked', 'lasntgadmin' );

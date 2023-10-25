@@ -43,16 +43,10 @@ class AcfFields {
 		return $field_group_id;
 	}
 
-	/**
-	 * @todo move to AcfFields class in product plugin
-	 */
-	public static function get_water_grant_acf_field_group_id( array $acf_field_values ): string {
-		$field_group_id = '';
-		if ( in_array( 'water-grant', $acf_field_values ) ) {
-			$field_group_id = 'group_638aec109ab55';
-		}
-		return $field_group_id;
+	public static function get_water_grant_acf_field_group_id(): string {
+		return 'group_638aec109ab55';
 	}
+
 
 	/**
 	 * Fetch local authority options from the groups table.

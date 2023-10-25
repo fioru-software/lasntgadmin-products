@@ -293,15 +293,13 @@ class ProductActionsFilters {
 
 		return $defaults;
 	}
-	public static function add_columns_css($defaults)
-	{
+	public static function add_columns_css( $defaults ) {
 		$assets_dir = untrailingslashit( plugin_dir_url( __FILE__ ) ) . '/../assets/';
-		wp_enqueue_style( 'admin-columns-css', $assets_dir . 'styles/admin-column.css', '1.0.4' );
+		wp_enqueue_style( 'admin-columns', $assets_dir . 'styles/admin-column.css', '1.1.0' );
 		return $defaults;
 	}
 
 	public static function add_more_columns( $defaults ) {
-		
 
 		$defaults['places_available'] = __( 'Places Available', 'lasntgadmin' );
 		$defaults['places_booked']    = __( 'Places Booked', 'lasntgadmin' );

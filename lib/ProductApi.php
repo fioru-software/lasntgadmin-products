@@ -79,7 +79,7 @@ class ProductApi {
 	 */
 	public static function get_products_in_group( WP_REST_Request $req ): array {
 		$group_id = $req->get_param( 'group_id' );
-		$status = ProductUtils::$publish_status;
+		$status   = ProductUtils::$publish_status;
 		$products = ProductUtils::get_products_visible_to_group( $group_id, $status );
 		return array_map( fn( $product ) => $product->get_data(), $products );
 	}

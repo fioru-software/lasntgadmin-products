@@ -68,7 +68,7 @@ class ProductUtils {
 	/**
 	 * Get products with specific group membership.
 	 *
-	 * @param int $group_id The group id.
+	 * @param int    $group_id The group id.
 	 * @param string $status The course status eg. open_for_enrollment.
 	 * @return WC_Product[]
 	 */
@@ -79,8 +79,8 @@ class ProductUtils {
 	}
 
 	/**
-	 * @param int $group_id
-	 * @param string|string[] $status
+	 * @param int             $group_id Group product is visible to.
+	 * @param string|string[] $status Product status.
 	 * @return int[] Course ids.
 	 */
 	public static function get_product_ids_visible_to_group( int $group_id, $status ): array {

@@ -68,14 +68,26 @@ class ProductUtils {
 	/**
 	 * Get products with specific group membership.
 	 *
-	 * @param int $group_id The group id.
+	 * @param int    $group_id The group id.
+	 * @param string $status The course status eg. open_for_enrollment.
 	 * @return WC_Product[]
 	 */
-	public static function get_products_visible_to_group( int $group_id ): array {
+	public static function get_products_visible_to_group( int $group_id, string $status ): array {
+		$post_ids = self::get_product_ids_visible_to_group( $group_id, $status );
+		$products = array_map( fn( $post_id ) => wc_get_product( $post_id ), $post_ids );
+		return $products;
+	}
+
+	/**
+	 * @param int             $group_id Group product is visible to.
+	 * @param string|string[] $status Product status.
+	 * @return int[] Course ids.
+	 */
+	public static function get_product_ids_visible_to_group( int $group_id, $status ): array {
 		$post_ids = get_posts(
 			[
 				'fields'         => 'ids',
-				'post_status'    => self::$publish_status,
+				'post_status'    => $status,
 				'post_type'      => 'product',
 				'posts_per_page' => -1,
 				'meta_query'     => [
@@ -93,8 +105,7 @@ class ProductUtils {
 				],
 			]
 		);
-		$products = array_map( fn( $post_id ) => wc_get_product( $post_id ), $post_ids );
-		return $products;
+		return $post_ids;
 	}
 
 	/**

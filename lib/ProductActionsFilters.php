@@ -295,7 +295,7 @@ class ProductActionsFilters {
 	}
 	public static function add_columns_css( $defaults ) {
 		$assets_dir = untrailingslashit( plugin_dir_url( __FILE__ ) ) . '/../assets/';
-		wp_enqueue_style( 'admin-columns', $assets_dir . 'styles/admin-column.css', [], '1.1.0' );
+		wp_enqueue_style( 'admin-columns', $assets_dir . 'styles/admin-column.css', [], '1.1.1' );
 		return $defaults;
 	}
 

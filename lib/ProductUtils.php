@@ -118,7 +118,7 @@ class ProductUtils {
 		$post_ids = get_posts(
 			[
 				'fields'         => 'ids',
-				'post_status'    => self::$publish_status,
+				'post_status'    => [ self::$publish_status, 'date_passed' ],
 				'post_type'      => 'product',
 				'posts_per_page' => -1,
 				'meta_query'     => [

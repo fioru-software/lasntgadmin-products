@@ -24,7 +24,7 @@ class ProductSchedulerActions {
 	public static function close_courses(): void {
 		$from_now_date = new DateTime( 'now' );
 		$from_now_date->setTimezone( self::get_timezone() );
-		$from_now_date->modify( '+36 hours' );
+		$from_now_date->modify( '+8 hours' );
 
 		error_log( 'Processing courses to close at ' . gmdate( 'Y-m-d H:i:s' ) . ' from ' . $from_now_date->format( 'Y-m-d H:i:s' ) );
 

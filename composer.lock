@@ -4,7 +4,11 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
+<<<<<<< HEAD
     "content-hash": "69046e319040e9c659b22c42c5cf4a17",
+=======
+    "content-hash": "2c627147dee8b8c2d4e2f324b066eb0e",
+>>>>>>> 4b7666d (made groups a dep)
     "packages": [
         {
             "name": "composer/installers",
@@ -515,6 +519,32 @@
                 "issues": "https://github.com/fioru-software/lasntgadmin-groups/issues"
             },
             "time": "2023-09-04T13:44:59+00:00"
+        },
+        {
+            "name": "fioru/lasntgadmin-itthinx-groups",
+            "version": "2.19.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/fioru-software/lasntgadmin-itthinx-groups.git",
+                "reference": "a0f9cf23761f2df1847f1083a49616249828c355"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/fioru-software/lasntgadmin-itthinx-groups/zipball/a0f9cf23761f2df1847f1083a49616249828c355",
+                "reference": "a0f9cf23761f2df1847f1083a49616249828c355",
+                "shasum": ""
+            },
+            "require": {
+                "composer/installers": "~2.0"
+            },
+            "type": "wordpress-plugin",
+            "extra": {
+                "installer-name": "lasntgadmin-itthinx-groups"
+            },
+            "support": {
+                "source": "https://github.com/fioru-software/lasntgadmin-itthinx-groups/tree/2.19.0"
+            },
+            "time": "2023-12-08T12:52:48+00:00"
         },
         {
             "name": "fioru/lasntgadmin-orders",

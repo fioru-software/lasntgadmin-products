@@ -47,7 +47,6 @@ class ProductActionsFilters {
 		add_action( 'init', [ self::class, 'disable_course_add_button' ] );
 		add_action( 'add_meta_boxes', array( self::class, 'add_product_boxes_sort_order' ), 99 );
 		add_action( 'load-post.php', [ self::class, 'edit_product' ] );
-		
 	}
 
 	public static function add_filters(): void {
@@ -307,7 +306,7 @@ class ProductActionsFilters {
 
 		$defaults['start_date'] = __( 'Start Date', 'lasntgadmin' );
 
-		$defaults['organizer'] = __( 'Organizer', 'lasntgadmin' );
+		$defaults['organizer'] = __( 'Organiser', 'lasntgadmin' );
 
 		$defaults['entry_requirements'] = __( 'Course Brochures', 'lasntgadmin' );
 

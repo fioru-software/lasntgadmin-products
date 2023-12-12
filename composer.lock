@@ -4,11 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-<<<<<<< HEAD
-    "content-hash": "69046e319040e9c659b22c42c5cf4a17",
-=======
-    "content-hash": "2c627147dee8b8c2d4e2f324b066eb0e",
->>>>>>> 4b7666d (made groups a dep)
+    "content-hash": "28758281205fc95c3dafe856890db76c",
     "packages": [
         {
             "name": "composer/installers",
@@ -375,29 +371,16 @@
         },
         {
             "name": "fioru/lasntgadmin-grant-funded-payment-gateway",
-<<<<<<< HEAD
-            "version": "1.6.0",
+            "version": "1.6.2-rc1",
             "source": {
                 "type": "git",
                 "url": "git@github.com:fioru-software/lasntgadmin-grant-funded-payment-gateway.git",
-                "reference": "adfe0f28e2618ec19bf0179db36ab2542877a00a"
+                "reference": "838e84a64059ab1e893e032a81d464058eaf708f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fioru-software/lasntgadmin-grant-funded-payment-gateway/zipball/adfe0f28e2618ec19bf0179db36ab2542877a00a",
-                "reference": "adfe0f28e2618ec19bf0179db36ab2542877a00a",
-=======
-            "version": "1.6.1",
-            "source": {
-                "type": "git",
-                "url": "git@github.com:fioru-software/lasntgadmin-grant-funded-payment-gateway.git",
-                "reference": "9a891e498ef1e14804bb3a774ce1df7c0be9d032"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/fioru-software/lasntgadmin-grant-funded-payment-gateway/zipball/9a891e498ef1e14804bb3a774ce1df7c0be9d032",
-                "reference": "9a891e498ef1e14804bb3a774ce1df7c0be9d032",
->>>>>>> 8a0c752 (add hidden fields for disabled selects)
+                "url": "https://api.github.com/repos/fioru-software/lasntgadmin-grant-funded-payment-gateway/zipball/838e84a64059ab1e893e032a81d464058eaf708f",
+                "reference": "838e84a64059ab1e893e032a81d464058eaf708f",
                 "shasum": ""
             },
             "require": {
@@ -456,17 +439,10 @@
                 ]
             },
             "support": {
-<<<<<<< HEAD
-                "source": "https://github.com/fioru-software/lasntgadmin-grant-funded-payment-gateway/tree/1.6.0",
+                "source": "https://github.com/fioru-software/lasntgadmin-grant-funded-payment-gateway/tree/1.6.2-rc1",
                 "issues": "https://github.com/fioru-software/lasntgadmin-grant-funded-payment-gateway/issues"
             },
-            "time": "2023-11-02T11:48:41+00:00"
-=======
-                "source": "https://github.com/fioru-software/lasntgadmin-grant-funded-payment-gateway/tree/1.6.1",
-                "issues": "https://github.com/fioru-software/lasntgadmin-grant-funded-payment-gateway/issues"
-            },
-            "time": "2023-12-08T12:01:16+00:00"
->>>>>>> 8a0c752 (add hidden fields for disabled selects)
+            "time": "2023-12-11T16:18:03+00:00"
         },
         {
             "name": "fioru/lasntgadmin-groups",
@@ -568,29 +544,16 @@
         },
         {
             "name": "fioru/lasntgadmin-orders",
-<<<<<<< HEAD
-            "version": "1.7.35-rc1",
+            "version": "1.7.37-rc1",
             "source": {
                 "type": "git",
                 "url": "git@github.com:fioru-software/lasntgadmin-orders.git",
-                "reference": "e151f4c8a93a3e0921f1e05dedbf61167c38a0c8"
+                "reference": "36fa1079f9012c7060a06c5910380b6cc30cf336"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fioru-software/lasntgadmin-orders/zipball/e151f4c8a93a3e0921f1e05dedbf61167c38a0c8",
-                "reference": "e151f4c8a93a3e0921f1e05dedbf61167c38a0c8",
-=======
-            "version": "1.7.36",
-            "source": {
-                "type": "git",
-                "url": "git@github.com:fioru-software/lasntgadmin-orders.git",
-                "reference": "f427763c0bb24a2e5f3b555c5ec91c09b9fbc069"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/fioru-software/lasntgadmin-orders/zipball/f427763c0bb24a2e5f3b555c5ec91c09b9fbc069",
-                "reference": "f427763c0bb24a2e5f3b555c5ec91c09b9fbc069",
->>>>>>> 8a0c752 (add hidden fields for disabled selects)
+                "url": "https://api.github.com/repos/fioru-software/lasntgadmin-orders/zipball/36fa1079f9012c7060a06c5910380b6cc30cf336",
+                "reference": "36fa1079f9012c7060a06c5910380b6cc30cf336",
                 "shasum": ""
             },
             "require": {
@@ -654,29 +617,10 @@
                 ]
             },
             "support": {
-<<<<<<< HEAD
-                "source": "https://github.com/fioru-software/lasntgadmin-orders/tree/1.7.35-rc1",
+                "source": "https://github.com/fioru-software/lasntgadmin-orders/tree/1.7.37-rc1",
                 "issues": "https://github.com/fioru-software/lasntgadmin-orders/issues"
             },
-            "time": "2023-11-03T14:03:16+00:00"
-        },
-        {
-            "name": "fioru/lasntgadmin-subscriptions",
-            "version": "2.1.16",
-            "source": {
-                "type": "git",
-                "url": "git@github.com:fioru-software/lasntgadmin-subscriptions.git",
-                "reference": "b2d6e8c1556c66752eaf2362e182031bc837deea"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/fioru-software/lasntgadmin-subscriptions/zipball/b2d6e8c1556c66752eaf2362e182031bc837deea",
-                "reference": "b2d6e8c1556c66752eaf2362e182031bc837deea",
-=======
-                "source": "https://github.com/fioru-software/lasntgadmin-orders/tree/1.7.36",
-                "issues": "https://github.com/fioru-software/lasntgadmin-orders/issues"
-            },
-            "time": "2023-12-06T10:09:37+00:00"
+            "time": "2023-12-11T16:09:09+00:00"
         },
         {
             "name": "fioru/lasntgadmin-subscriptions",
@@ -690,7 +634,6 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/fioru-software/lasntgadmin-subscriptions/zipball/16a1c10fdd45f541b3664bb4b0d0a8897fc3fb14",
                 "reference": "16a1c10fdd45f541b3664bb4b0d0a8897fc3fb14",
->>>>>>> 8a0c752 (add hidden fields for disabled selects)
                 "shasum": ""
             },
             "require": {
@@ -752,17 +695,10 @@
                 ]
             },
             "support": {
-<<<<<<< HEAD
-                "source": "https://github.com/fioru-software/lasntgadmin-subscriptions/tree/2.1.16",
-                "issues": "https://github.com/fioru-software/lasntgadmin-subscriptions/issues"
-            },
-            "time": "2023-11-02T06:56:42+00:00"
-=======
                 "source": "https://github.com/fioru-software/lasntgadmin-subscriptions/tree/2.1.17-rc3",
                 "issues": "https://github.com/fioru-software/lasntgadmin-subscriptions/issues"
             },
             "time": "2023-12-07T02:36:13+00:00"
->>>>>>> 8a0c752 (add hidden fields for disabled selects)
         },
         {
             "name": "fioru/lasntgadmin-theme",
@@ -1882,25 +1818,25 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/instantiator.git",
-                "reference": "0a0fa9780f5d4e507415a065172d26a98d02047b"
+                "reference": "12be2483e1f0e850b353e26869e4e6c038459501"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/instantiator/zipball/0a0fa9780f5d4e507415a065172d26a98d02047b",
-                "reference": "0a0fa9780f5d4e507415a065172d26a98d02047b",
+                "url": "https://api.github.com/repos/doctrine/instantiator/zipball/12be2483e1f0e850b353e26869e4e6c038459501",
+                "reference": "12be2483e1f0e850b353e26869e4e6c038459501",
                 "shasum": ""
             },
             "require": {
                 "php": "^7.1 || ^8.0"
             },
             "require-dev": {
-                "doctrine/coding-standard": "^9 || ^11",
+                "doctrine/coding-standard": "^9 || ^12",
                 "ext-pdo": "*",
                 "ext-phar": "*",
                 "phpbench/phpbench": "^0.16 || ^1",
                 "phpstan/phpstan": "^1.4",
                 "phpstan/phpstan-phpunit": "^1",
-                "phpunit/phpunit": "^7.5 || ^8.5 || ^9.5",
+                "phpunit/phpunit": "^7.5 || ^8.5 || ^9.6",
                 "vimeo/psalm": "^4.30 || ^5.4"
             },
             "type": "library",
@@ -1928,7 +1864,7 @@
             ],
             "support": {
                 "issues": "https://github.com/doctrine/instantiator/issues",
-                "source": "https://github.com/doctrine/instantiator/tree/1.5.0"
+                "source": "https://github.com/doctrine/instantiator/tree/1.5.x"
             },
             "funding": [
                 {
@@ -1944,11 +1880,11 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-12-30T00:15:36+00:00"
+            "time": "2023-12-09T14:16:53+00:00"
         },
         {
             "name": "enlightn/security-checker",
-            "version": "dev-main",
+            "version": "1.x-dev",
             "source": {
                 "type": "git",
                 "url": "https://github.com/enlightn/security-checker.git",
@@ -1974,7 +1910,6 @@
                 "friendsofphp/php-cs-fixer": "^2.18|^3.0",
                 "phpunit/phpunit": "^5.5|^6|^7|^8|^9"
             },
-            "default-branch": true,
             "bin": [
                 "security-checker"
             ],
@@ -2649,12 +2584,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/nikic/PHP-Parser.git",
-                "reference": "2a5e81f7caae572f096f5cc83d0ef75687127e1c"
+                "reference": "1bcbb2179f97633e98bbbc87044ee2611c7d7999"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/2a5e81f7caae572f096f5cc83d0ef75687127e1c",
-                "reference": "2a5e81f7caae572f096f5cc83d0ef75687127e1c",
+                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/1bcbb2179f97633e98bbbc87044ee2611c7d7999",
+                "reference": "1bcbb2179f97633e98bbbc87044ee2611c7d7999",
                 "shasum": ""
             },
             "require": {
@@ -2697,7 +2632,7 @@
                 "issues": "https://github.com/nikic/PHP-Parser/issues",
                 "source": "https://github.com/nikic/PHP-Parser/tree/4.x"
             },
-            "time": "2023-11-28T19:10:38+00:00"
+            "time": "2023-12-10T21:03:43+00:00"
         },
         {
             "name": "overtrue/phplint",
@@ -3020,12 +2955,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHPCompatibility/PHPCompatibilityWP.git",
-                "reference": "a1d8194a8442be9b7087136f5ec6cb2125716c8d"
+                "reference": "02e4bf7d1f6b64f09abd93cae49166f1dae1f701"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHPCompatibility/PHPCompatibilityWP/zipball/a1d8194a8442be9b7087136f5ec6cb2125716c8d",
-                "reference": "a1d8194a8442be9b7087136f5ec6cb2125716c8d",
+                "url": "https://api.github.com/repos/PHPCompatibility/PHPCompatibilityWP/zipball/02e4bf7d1f6b64f09abd93cae49166f1dae1f701",
+                "reference": "02e4bf7d1f6b64f09abd93cae49166f1dae1f701",
                 "shasum": ""
             },
             "require": {
@@ -3066,9 +3001,10 @@
             ],
             "support": {
                 "issues": "https://github.com/PHPCompatibility/PHPCompatibilityWP/issues",
+                "security": "https://github.com/PHPCompatibility/PHPCompatibilityWP/security/policy",
                 "source": "https://github.com/PHPCompatibility/PHPCompatibilityWP"
             },
-            "time": "2023-11-14T01:21:01+00:00"
+            "time": "2023-12-08T17:31:57+00:00"
         },
         {
             "name": "phpcsstandards/phpcsextra",
@@ -3076,34 +3012,25 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHPCSStandards/PHPCSExtra.git",
-<<<<<<< HEAD
-                "reference": "9ca16b21ac556f6dd1b338329b12ac3cb2a9c62e"
+                "reference": "11d387c6642b6e4acaf0bd9bf5203b8cca1ec489"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHPCSStandards/PHPCSExtra/zipball/9ca16b21ac556f6dd1b338329b12ac3cb2a9c62e",
-                "reference": "9ca16b21ac556f6dd1b338329b12ac3cb2a9c62e",
-=======
-                "reference": "78b2cae1e9de1c05f0416de6f9a658cbb83ac324"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/PHPCSStandards/PHPCSExtra/zipball/78b2cae1e9de1c05f0416de6f9a658cbb83ac324",
-                "reference": "78b2cae1e9de1c05f0416de6f9a658cbb83ac324",
->>>>>>> 8a0c752 (add hidden fields for disabled selects)
+                "url": "https://api.github.com/repos/PHPCSStandards/PHPCSExtra/zipball/11d387c6642b6e4acaf0bd9bf5203b8cca1ec489",
+                "reference": "11d387c6642b6e4acaf0bd9bf5203b8cca1ec489",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.4",
-                "phpcsstandards/phpcsutils": "^1.0.8",
-                "squizlabs/php_codesniffer": "^3.7.1"
+                "phpcsstandards/phpcsutils": "^1.0.9",
+                "squizlabs/php_codesniffer": "^3.8.0"
             },
             "require-dev": {
                 "php-parallel-lint/php-console-highlighter": "^1.0",
                 "php-parallel-lint/php-parallel-lint": "^1.3.2",
                 "phpcsstandards/phpcsdevcs": "^1.1.6",
                 "phpcsstandards/phpcsdevtools": "^1.2.1",
-                "phpunit/phpunit": "^4.5 || ^5.0 || ^6.0 || ^7.0"
+                "phpunit/phpunit": "^4.5 || ^5.0 || ^6.0 || ^7.0 || ^8.0 || ^9.0"
             },
             "default-branch": true,
             "type": "phpcodesniffer-standard",
@@ -3142,9 +3069,6 @@
                 "security": "https://github.com/PHPCSStandards/PHPCSExtra/security/policy",
                 "source": "https://github.com/PHPCSStandards/PHPCSExtra"
             },
-<<<<<<< HEAD
-            "time": "2023-11-29T01:20:16+00:00"
-=======
             "funding": [
                 {
                     "url": "https://github.com/PHPCSStandards",
@@ -3159,8 +3083,7 @@
                     "type": "open_collective"
                 }
             ],
-            "time": "2023-12-02T14:30:12+00:00"
->>>>>>> 8a0c752 (add hidden fields for disabled selects)
+            "time": "2023-12-08T16:49:07+00:00"
         },
         {
             "name": "phpcsstandards/phpcsutils",
@@ -3168,27 +3091,18 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHPCSStandards/PHPCSUtils.git",
-<<<<<<< HEAD
-                "reference": "f76bab4ac55d559a22c24dafe1f35c0b940b5c02"
+                "reference": "7ce595672008088280161470266240d39a4025a3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHPCSStandards/PHPCSUtils/zipball/f76bab4ac55d559a22c24dafe1f35c0b940b5c02",
-                "reference": "f76bab4ac55d559a22c24dafe1f35c0b940b5c02",
-=======
-                "reference": "dc93c9a450cda59ba305f44e1bc07af871dbb504"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/PHPCSStandards/PHPCSUtils/zipball/dc93c9a450cda59ba305f44e1bc07af871dbb504",
-                "reference": "dc93c9a450cda59ba305f44e1bc07af871dbb504",
->>>>>>> 8a0c752 (add hidden fields for disabled selects)
+                "url": "https://api.github.com/repos/PHPCSStandards/PHPCSUtils/zipball/7ce595672008088280161470266240d39a4025a3",
+                "reference": "7ce595672008088280161470266240d39a4025a3",
                 "shasum": ""
             },
             "require": {
                 "dealerdirect/phpcodesniffer-composer-installer": "^0.4.1 || ^0.5 || ^0.6.2 || ^0.7 || ^1.0",
                 "php": ">=5.4",
-                "squizlabs/php_codesniffer": "^3.7.1 || 4.0.x-dev@dev"
+                "squizlabs/php_codesniffer": "^3.8.0 || 4.0.x-dev@dev"
             },
             "require-dev": {
                 "ext-filter": "*",
@@ -3244,9 +3158,6 @@
                 "security": "https://github.com/PHPCSStandards/PHPCSUtils/security/policy",
                 "source": "https://github.com/PHPCSStandards/PHPCSUtils"
             },
-<<<<<<< HEAD
-            "time": "2023-11-24T21:05:41+00:00"
-=======
             "funding": [
                 {
                     "url": "https://github.com/PHPCSStandards",
@@ -3261,8 +3172,7 @@
                     "type": "open_collective"
                 }
             ],
-            "time": "2023-12-07T02:05:24+00:00"
->>>>>>> 8a0c752 (add hidden fields for disabled selects)
+            "time": "2023-12-11T10:09:05+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",
@@ -3270,21 +3180,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/php-code-coverage.git",
-<<<<<<< HEAD
-                "reference": "ce38eacbf713811e349b59a3a95e15d194c2f76f"
+                "reference": "c5c980612b3f295820b6f8ebfa18634157952547"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/ce38eacbf713811e349b59a3a95e15d194c2f76f",
-                "reference": "ce38eacbf713811e349b59a3a95e15d194c2f76f",
-=======
-                "reference": "1be69e7c30c80d0030f83aa6b698085dc09a76b0"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/1be69e7c30c80d0030f83aa6b698085dc09a76b0",
-                "reference": "1be69e7c30c80d0030f83aa6b698085dc09a76b0",
->>>>>>> 8a0c752 (add hidden fields for disabled selects)
+                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/c5c980612b3f295820b6f8ebfa18634157952547",
+                "reference": "c5c980612b3f295820b6f8ebfa18634157952547",
                 "shasum": ""
             },
             "require": {
@@ -3349,11 +3250,7 @@
                     "type": "github"
                 }
             ],
-<<<<<<< HEAD
-            "time": "2023-11-27T14:34:10+00:00"
-=======
-            "time": "2023-12-05T06:34:36+00:00"
->>>>>>> 8a0c752 (add hidden fields for disabled selects)
+            "time": "2023-12-09T13:10:20+00:00"
         },
         {
             "name": "phpunit/php-file-iterator",
@@ -3602,21 +3499,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-<<<<<<< HEAD
-                "reference": "70004109dbe3f1ee5fc29551240d04471a3cdd09"
+                "reference": "28db91cfdf7cfe10a082438191482c5ec56f21a8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/70004109dbe3f1ee5fc29551240d04471a3cdd09",
-                "reference": "70004109dbe3f1ee5fc29551240d04471a3cdd09",
-=======
-                "reference": "81d37c3952bf2dfebb13d415d5dbe1619d1e9062"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/81d37c3952bf2dfebb13d415d5dbe1619d1e9062",
-                "reference": "81d37c3952bf2dfebb13d415d5dbe1619d1e9062",
->>>>>>> 8a0c752 (add hidden fields for disabled selects)
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/28db91cfdf7cfe10a082438191482c5ec56f21a8",
+                "reference": "28db91cfdf7cfe10a082438191482c5ec56f21a8",
                 "shasum": ""
             },
             "require": {
@@ -3706,11 +3594,7 @@
                     "type": "tidelift"
                 }
             ],
-<<<<<<< HEAD
-            "time": "2023-11-29T12:09:43+00:00"
-=======
-            "time": "2023-12-07T14:35:50+00:00"
->>>>>>> 8a0c752 (add hidden fields for disabled selects)
+            "time": "2023-12-09T13:11:12+00:00"
         },
         {
             "name": "psr/container",
@@ -4779,23 +4663,13 @@
             "version": "dev-master",
             "source": {
                 "type": "git",
-<<<<<<< HEAD
-                "url": "https://github.com/squizlabs/PHP_CodeSniffer.git",
-                "reference": "7763e2e1f773cb0615ed8afa133189fc804f583d"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/squizlabs/PHP_CodeSniffer/zipball/7763e2e1f773cb0615ed8afa133189fc804f583d",
-                "reference": "7763e2e1f773cb0615ed8afa133189fc804f583d",
-=======
                 "url": "https://github.com/PHPCSStandards/PHP_CodeSniffer.git",
-                "reference": "5805f7a4e4958dbb5e944ef1e6edae0a303765e7"
+                "reference": "040f675a5020a62ddc9c46344d9cf26658e2b04e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHPCSStandards/PHP_CodeSniffer/zipball/5805f7a4e4958dbb5e944ef1e6edae0a303765e7",
-                "reference": "5805f7a4e4958dbb5e944ef1e6edae0a303765e7",
->>>>>>> 8a0c752 (add hidden fields for disabled selects)
+                "url": "https://api.github.com/repos/PHPCSStandards/PHP_CodeSniffer/zipball/040f675a5020a62ddc9c46344d9cf26658e2b04e",
+                "reference": "040f675a5020a62ddc9c46344d9cf26658e2b04e",
                 "shasum": ""
             },
             "require": {
@@ -4809,8 +4683,8 @@
             },
             "default-branch": true,
             "bin": [
-                "bin/phpcs",
-                "bin/phpcbf"
+                "bin/phpcbf",
+                "bin/phpcs"
             ],
             "type": "library",
             "extra": {
@@ -4849,9 +4723,6 @@
                 "source": "https://github.com/PHPCSStandards/PHP_CodeSniffer",
                 "wiki": "https://github.com/PHPCSStandards/PHP_CodeSniffer/wiki"
             },
-<<<<<<< HEAD
-            "time": "2023-11-02T00:47:31+00:00"
-=======
             "funding": [
                 {
                     "url": "https://github.com/PHPCSStandards",
@@ -4866,8 +4737,7 @@
                     "type": "open_collective"
                 }
             ],
-            "time": "2023-12-08T12:32:31+00:00"
->>>>>>> 8a0c752 (add hidden fields for disabled selects)
+            "time": "2023-12-11T21:00:05+00:00"
         },
         {
             "name": "symfony/console",
@@ -4875,21 +4745,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/console.git",
-<<<<<<< HEAD
-                "reference": "c70df1ffaf23a8d340bded3cfab1b86752ad6ed7"
+                "reference": "4b4d8cd118484aa604ec519062113dd87abde18c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/console/zipball/c70df1ffaf23a8d340bded3cfab1b86752ad6ed7",
-                "reference": "c70df1ffaf23a8d340bded3cfab1b86752ad6ed7",
-=======
-                "reference": "bbfa50869b15f460480a45a0938c7599af6dcee3"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/symfony/console/zipball/bbfa50869b15f460480a45a0938c7599af6dcee3",
-                "reference": "bbfa50869b15f460480a45a0938c7599af6dcee3",
->>>>>>> 8a0c752 (add hidden fields for disabled selects)
+                "url": "https://api.github.com/repos/symfony/console/zipball/4b4d8cd118484aa604ec519062113dd87abde18c",
+                "reference": "4b4d8cd118484aa604ec519062113dd87abde18c",
                 "shasum": ""
             },
             "require": {
@@ -4975,11 +4836,7 @@
                     "type": "tidelift"
                 }
             ],
-<<<<<<< HEAD
-            "time": "2023-11-18T18:23:04+00:00"
-=======
-            "time": "2023-12-08T11:28:45+00:00"
->>>>>>> 8a0c752 (add hidden fields for disabled selects)
+            "time": "2023-12-08T13:33:03+00:00"
         },
         {
             "name": "symfony/deprecation-contracts",
@@ -5723,12 +5580,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/string.git",
-                "reference": "91bf4453d65d8231688a04376c3a40efe0770f04"
+                "reference": "e3f98bfc7885c957488f443df82d97814a3ce061"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/string/zipball/91bf4453d65d8231688a04376c3a40efe0770f04",
-                "reference": "91bf4453d65d8231688a04376c3a40efe0770f04",
+                "url": "https://api.github.com/repos/symfony/string/zipball/e3f98bfc7885c957488f443df82d97814a3ce061",
+                "reference": "e3f98bfc7885c957488f443df82d97814a3ce061",
                 "shasum": ""
             },
             "require": {
@@ -5801,7 +5658,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-11-26T13:43:46+00:00"
+            "time": "2023-12-09T13:20:28+00:00"
         },
         {
             "name": "symfony/yaml",
@@ -5934,21 +5791,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/WordPress/WordPress-Coding-Standards.git",
-<<<<<<< HEAD
-                "reference": "fe7895876b6ea344fa87bb82a2fbce73f90e9897"
+                "reference": "5f0c8a7ebdde0314ea5e30f76375a10c7d6f3910"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/WordPress/WordPress-Coding-Standards/zipball/fe7895876b6ea344fa87bb82a2fbce73f90e9897",
-                "reference": "fe7895876b6ea344fa87bb82a2fbce73f90e9897",
-=======
-                "reference": "17cc5850f147fbe0a2dd0a5d3c7849911775b542"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/WordPress/WordPress-Coding-Standards/zipball/17cc5850f147fbe0a2dd0a5d3c7849911775b542",
-                "reference": "17cc5850f147fbe0a2dd0a5d3c7849911775b542",
->>>>>>> 8a0c752 (add hidden fields for disabled selects)
+                "url": "https://api.github.com/repos/WordPress/WordPress-Coding-Standards/zipball/5f0c8a7ebdde0314ea5e30f76375a10c7d6f3910",
+                "reference": "5f0c8a7ebdde0314ea5e30f76375a10c7d6f3910",
                 "shasum": ""
             },
             "require": {
@@ -5957,16 +5805,16 @@
                 "ext-tokenizer": "*",
                 "ext-xmlreader": "*",
                 "php": ">=5.4",
-                "phpcsstandards/phpcsextra": "^1.2.0",
-                "phpcsstandards/phpcsutils": "^1.0.8",
-                "squizlabs/php_codesniffer": "^3.7.2"
+                "phpcsstandards/phpcsextra": "^1.2.1",
+                "phpcsstandards/phpcsutils": "^1.0.9",
+                "squizlabs/php_codesniffer": "^3.8.0"
             },
             "require-dev": {
                 "php-parallel-lint/php-console-highlighter": "^1.0.0",
                 "php-parallel-lint/php-parallel-lint": "^1.3.2",
                 "phpcompatibility/php-compatibility": "^9.0",
                 "phpcsstandards/phpcsdevtools": "^1.2.0",
-                "phpunit/phpunit": "^4.0 || ^5.0 || ^6.0 || ^7.0"
+                "phpunit/phpunit": "^4.0 || ^5.0 || ^6.0 || ^7.0 || ^8.0 || ^9.0"
             },
             "suggest": {
                 "ext-iconv": "For improved results",
@@ -5998,15 +5846,11 @@
             },
             "funding": [
                 {
-                    "url": "https://opencollective.com/thewpcc/contribute/wp-php-63406",
+                    "url": "https://opencollective.com/php_codesniffer",
                     "type": "custom"
                 }
             ],
-<<<<<<< HEAD
-            "time": "2023-11-23T08:44:49+00:00"
-=======
-            "time": "2023-12-03T22:21:24+00:00"
->>>>>>> 8a0c752 (add hidden fields for disabled selects)
+            "time": "2023-12-12T12:04:55+00:00"
         },
         {
             "name": "yoast/phpunit-polyfills",
@@ -6073,8 +5917,7 @@
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
-        "wp-coding-standards/wpcs": 20,
-        "enlightn/security-checker": 20
+        "wp-coding-standards/wpcs": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,

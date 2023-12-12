@@ -140,7 +140,7 @@ class ProductActionsFilters {
 	 * @see https://www.advancedcustomfields.com/resources/acf-render_field/
 	 */
 	public static function add_hidden_field( array $field ): void {
-		if ( 'select' === $field['type'] ) {
+		if ( in_array( $field['type'], [ 'select', 'checkbox', 'radio', 'true_false' ] ) ) {
 			if ( 1 === $field['multiple'] ) {
 				foreach ( $field['value'] as $value ) {
 					printf( "<input type='hidden' name='%s[]' value='%s' />", esc_attr( $field['name'] ), esc_attr( $value ) );
@@ -159,7 +159,7 @@ class ProductActionsFilters {
 	 * @see https://www.advancedcustomfields.com/resources/acf-load_field/
 	 */
 	public static function disable_field( array $field ): array {
-		if ( 'select' === $field['type'] ) {
+		if ( in_array( $field['type'], [ 'select', 'checkbox', 'radio', 'true_false' ] ) ) {
 			$field['disabled'] = 1;
 		}
 		$field['readonly']          = 1;

@@ -40,7 +40,7 @@ class ProductSchedulerActions {
 					array( //phpcs:ignore Universal.Arrays.MixedArrayKeyTypes.ImplicitNumericKey, Universal.Arrays.MixedKeyedUnkeyedArray.Found
 						'key'     => 'start_date',
 						'value'   => $from_now_date->format( 'Ymd' ),
-						'compare' => '=',
+						'compare' => '<=',
 					),
 					array( //phpcs:ignore Universal.Arrays.MixedArrayKeyTypes.ImplicitNumericKey, Universal.Arrays.MixedKeyedUnkeyedArray.Found
 						'key'     => 'start_time',
@@ -54,7 +54,7 @@ class ProductSchedulerActions {
 
 		foreach ( $posts as $post ) {
 			$product_id     = $post->ID;
-			$meta_key       = 'lasntg_enrollment_closed';
+			$meta_key       = 'lasntg_enrollment_closed_' . $product_id;
 			$already_closed = get_post_meta( $product_id, $meta_key, true );
 			if ( $already_closed ) {
 				continue;

@@ -111,7 +111,8 @@ class ProductActionsFilters {
 			'field_63f764087f8c9',
 		];
 		foreach ( $disabled as $key ) {
-			add_filter( "acf/load_field/key=$key", [ self::class, 'my_acf_load_field' ], 999 );
+			add_filter( "acf/load_field/key=$key", [ self::class, 'disable_field' ], 999 );
+			add_filter( "acf/render_field/key=$key", [ self::class, 'add_hidden_field' ], 999 );
 		}
 		add_filter( 'acf/load_field/key=field_63881beb798a7', [ self::class, 'acf_training_centre' ] );
 	}
@@ -130,12 +131,42 @@ class ProductActionsFilters {
 		return $field;
 	}
 
-	public static function my_acf_load_field( $field ) {
-		$field['disabled']          = 1;
+	/**
+	 * Values of disabled fields are not included in POST data, whereas values of readonly fields are.
+	 * Unfortunately, the readonly attribute is not supported or relevant to <select> or input types that are already not mutable.
+	 * Hence we need to add a duplicate hidden field, so the values are included in the POST data.
+	 *
+	 * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/readonly
+	 * @see https://www.advancedcustomfields.com/resources/acf-render_field/
+	 */
+	public static function add_hidden_field( array $field ): void {
+		if ( in_array( $field['type'], [ 'select', 'checkbox', 'radio', 'true_false' ] ) ) {
+			if ( 1 === $field['multiple'] ) {
+				foreach ( $field['value'] as $value ) {
+					printf( "<input type='hidden' name='%s[]' value='%s' />", esc_attr( $field['name'] ), esc_attr( $value ) );
+				}
+			} else {
+					printf( "<input type='hidden' name='%s' value='%s' />", esc_attr( $field['name'] ), esc_attr( $field['value'] ) );
+			}
+		}
+	}
+
+	/**
+	 * Values of disabled fields are not included in POST data, whereas values of readonly fields are.
+	 * Unfortunately, the readonly attribute is not supported or relevant to <select> or input types that are already not mutable.
+	 *
+	 * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/readonly
+	 * @see https://www.advancedcustomfields.com/resources/acf-load_field/
+	 */
+	public static function disable_field( array $field ): array {
+		if ( in_array( $field['type'], [ 'select', 'checkbox', 'radio', 'true_false' ] ) ) {
+			$field['disabled'] = 1;
+		}
 		$field['readonly']          = 1;
 		$field['conditional_logic'] = [];
 		return $field;
 	}
+
 	public static function remove_editor() {
 		remove_post_type_support( 'product', 'editor' );
 	}

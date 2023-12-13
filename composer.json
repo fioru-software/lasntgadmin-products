@@ -1,6 +1,6 @@
 {
     "name": "fioru/lasntgadmin-products",
-    "version": "5.12.5",
+    "version": "5.12.6",
     "type": "wordpress-plugin",
     "extra": {
         "installer-name": "lasntgadmin-products"
@@ -27,6 +27,10 @@
         {
             "type": "vcs",
             "url":  "git@github.com:fioru-software/lasntgadmin-attendees.git"
+        },
+        {
+            "type": "vcs",
+            "url":  "git@github.com:fioru-software/lasntgadmin-itthinx-groups.git"
         },
         {
             "type": "vcs",
@@ -71,7 +75,8 @@
         "fioru/lasntgadmin-attendees": "^3.7.11",
         "fioru/lasntgadmin-users": "^3.0.2",
         "fioru/lasntgadmin-orders": "^1.7.29",
-        "fioru/lasntgadmin-groups": "^1.5.6"
+        "fioru/lasntgadmin-groups": "^1.5.6",
+        "fioru/lasntgadmin-itthinx-groups": "^2.19.0"
     },
     "require-dev": {
         "fakerphp/faker": "^1.19",
@@ -83,7 +88,7 @@
         "dealerdirect/phpcodesniffer-composer-installer": "^0.7",
         "phpcompatibility/php-compatibility": "^9.3",
         "wp-coding-standards/wpcs": "dev-develop",
-        "enlightn/security-checker": "dev-main"
+        "enlightn/security-checker": "^1.11.0"
     },
     "minimum-stability": "dev",
     "config": {

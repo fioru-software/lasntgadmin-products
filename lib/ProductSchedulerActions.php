@@ -148,10 +148,12 @@ class ProductSchedulerActions {
 	}
 
 	public static function queue_async_action() {
-		if ( false === as_has_scheduled_action( 'lasntgadmin_close_courses' ) ) {
-			as_schedule_recurring_action( strtotime( '+5 minutes' ), MINUTE_IN_SECONDS, 'lasntgadmin_close_courses' );
-		}if ( false === as_has_scheduled_action( 'lasntgadmin_close_notify' ) ) {
-			as_schedule_recurring_action( strtotime( '+5 minutes' ), MINUTE_IN_SECONDS, 'lasntgadmin_close_notify' );
+		if ( function_exists( 'as_has_scheduled_action' ) ) {
+			if ( false === as_has_scheduled_action( 'lasntgadmin_close_courses' ) ) {
+				as_schedule_recurring_action( strtotime( '+5 minutes' ), MINUTE_IN_SECONDS, 'lasntgadmin_close_courses' );
+			}if ( false === as_has_scheduled_action( 'lasntgadmin_close_notify' ) ) {
+				as_schedule_recurring_action( strtotime( '+5 minutes' ), MINUTE_IN_SECONDS, 'lasntgadmin_close_notify' );
+			}
 		}
 	}
 }

@@ -24,7 +24,8 @@ class QuotaUtils {
 
 
 	/**
-	 * Get the remaining quota
+	 * Course quota isn't reduced by an completed order.
+	 * More suitable method name is get_quota().
 	 *
 	 * @param  integer $product_id post/product id.
 	 * @param  integer $group_id the group id.

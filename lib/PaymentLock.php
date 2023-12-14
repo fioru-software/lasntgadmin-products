@@ -5,7 +5,7 @@ namespace Lasntg\Admin\Products;
 use WC_Product;
 
 /**
- * The payment lock prevents two payments for the same product to be processed simultaneously, 
+ * The payment lock prevents two payments for the same product to be processed simultaneously,
  * which could result in negative stock.
  */
 class PaymentLock {

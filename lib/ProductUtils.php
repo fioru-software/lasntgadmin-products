@@ -166,7 +166,7 @@ class ProductUtils {
 	/**
 	 * @deprecated
 	 */
-	public static function get_orders_ids_by_product_id( int $product_id, array $order_status = [ 'wc-processing', 'wc-completed' ] ): array {
+	public static function get_orders_ids_by_product_id( int $product_id, array $order_status = [ 'wc-processing', 'wc-completed', 'wc-on-hold' ] ): array {
 		return OrderUtils::get_order_ids_by_product_id( $product_id, 0, $order_status );
 	}
 

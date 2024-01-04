@@ -36,4 +36,4 @@ AcfFields::init();
 AdminTableView::init();
 AdminEditView::init();
 Importer::init();
-//ProductSchedulerActions::init();
+ProductSchedulerActions::init();

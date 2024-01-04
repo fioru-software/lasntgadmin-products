@@ -103,7 +103,7 @@ class ProductSchedulerActions {
 			$end_date     = DateTime::createFromFormat( 'Ymd H:i:s', $end_date_str );
 
 			$interval = $now->diff( $end_date );
-			$days = is_a( $interval, 'DateInterval' ) ? $interval->days : 0;
+			$days     = is_a( $interval, 'DateInterval' ) ? $interval->days : 0;
 
 			if ( $days < 21 ) {
 				continue;

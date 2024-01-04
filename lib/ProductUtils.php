@@ -136,11 +136,14 @@ class ProductUtils {
 				],
 			]
 		);
-		$products = array_map( function( $post_id ) { 
-			$product = wc_get_product( $post_id ); 
-			$product->update_meta_data("reserved_stock_quantity", wc_get_held_stock_quantity( $product ) );
-			return $product;
-		}, $post_ids );
+		$products = array_map(
+			function ( $post_id ) {
+				$product = wc_get_product( $post_id );
+				$product->update_meta_data( 'reserved_stock_quantity', wc_get_held_stock_quantity( $product ) );
+				return $product;
+			},
+			$post_ids
+		);
 		return $products;
 	}
 

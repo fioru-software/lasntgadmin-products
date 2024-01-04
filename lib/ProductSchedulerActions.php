@@ -26,8 +26,6 @@ class ProductSchedulerActions {
 		$from_now_date->setTimezone( self::get_timezone() );
 		$from_now_date->modify( '+8 hours' );
 
-		error_log( 'Processing courses to close at ' . gmdate( 'Y-m-d H:i:s' ) . ' from ' . $from_now_date->format( 'Y-m-d H:i:s' ) );
-
 		$from_now_time = $from_now_date->format( 'H:i:s' );
 
 		$posts = get_posts(
@@ -63,7 +61,6 @@ class ProductSchedulerActions {
 			$product->set_status( 'enrollment_closed' );
 			$product->save();
 			update_post_meta( $product_id, $meta_key, 1 );
-			error_log( "Closed Course #$product_id at " . gmdate( 'Y/m/d H:i:s' ) );
 		}
 	}
 
@@ -73,7 +70,6 @@ class ProductSchedulerActions {
 		$from_now = new DateTime( 'now' );
 		$from_now->setTimezone( self::get_timezone() );
 		$from_now->modify( '-3 week' );
-		error_log( 'Processing courses notification at ' . gmdate( 'Y-m-d H:i:s' ) . ' for ' . $from_now->format( 'Y-m-d H:i:s' ) );
 
 		$posts = get_posts(
 			array(
@@ -106,7 +102,8 @@ class ProductSchedulerActions {
 			$end_date_str = "$end_date $end_time";
 			$end_date     = DateTime::createFromFormat( 'Ymd H:i:s', $end_date_str );
 
-			$days = $now->diff( $end_date )->days;
+			$interval = $now->diff( $end_date );
+			$days     = is_a( $interval, 'DateInterval' ) ? $interval->days : 0;
 
 			if ( $days < 21 ) {
 				continue;

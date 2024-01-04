@@ -136,7 +136,14 @@ class ProductUtils {
 				],
 			]
 		);
-		$products = array_map( fn( $post_id ) => wc_get_product( $post_id ), $post_ids );
+		$products = array_map(
+			function ( $post_id ) {
+				$product = wc_get_product( $post_id );
+				$product->update_meta_data( 'reserved_stock_quantity', wc_get_held_stock_quantity( $product ) );
+				return $product;
+			},
+			$post_ids
+		);
 		return $products;
 	}
 
@@ -166,7 +173,7 @@ class ProductUtils {
 	/**
 	 * @deprecated
 	 */
-	public static function get_orders_ids_by_product_id( int $product_id, array $order_status = [ 'wc-processing', 'wc-completed' ] ): array {
+	public static function get_orders_ids_by_product_id( int $product_id, array $order_status = [ 'wc-processing', 'wc-completed', 'wc-on-hold' ] ): array {
 		return OrderUtils::get_order_ids_by_product_id( $product_id, 0, $order_status );
 	}
 

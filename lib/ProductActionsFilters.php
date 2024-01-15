@@ -76,8 +76,13 @@ class ProductActionsFilters {
 		add_filter( 'woocommerce_products_admin_list_table_filters', [ self::class, 'remove_products_filter' ] );
 		add_filter( 'woocommerce_product_tabs', [ self::class, 'remove_product_tab' ], 9999 );
 		add_filter( 'do_meta_boxes', [ self::class, 'wpse33063_move_meta_box' ] );
+		add_filter( 'user_has_cap', [ self::class, 'temporarily_disable_cap_administer_group' ], 10, 3 );
 	}
 
+	public static function temporarily_disable_cap_administer_group($allcaps, $caps, $args)
+	{
+		return $allcaps;
+	}
 	public static function set_product_to_purchasable( $is_in_stock, $product ): bool {
 		if ( ProductUtils::$publish_status === $product->get_status() ) {
 			return true;

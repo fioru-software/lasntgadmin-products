@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Product Actions Filter
  */
@@ -14,6 +15,7 @@ use Lasntg\Admin\Group\GroupUtils;
  * Handle Actions anf filters for products
  */
 class ProductActionsFilters {
+
 
 	/**
 	 * Iniates actions and filters regarding Product
@@ -84,12 +86,12 @@ class ProductActionsFilters {
 		if ( in_array( 'groups_admin_groups', $args ) !== true ) {
 			return $allcaps;
 		}
-		if ( current_user_can( 'manage_options' ) ) {
-			return $allcaps;
-		}
 		if ( ! is_search() && is_admin() && function_exists( 'get_current_screen' ) ) {
 			$screen = get_current_screen();
 			if ( ! is_null( $screen ) ) {
+				if ( current_user_can( 'manage_options' ) ) {
+					return $allcaps;
+				}
 				if ( 'product' === $screen->post_type && 'product' === $screen->id && 'edit' === $screen->parent_base ) {
 					$allcaps['groups_admin_groups'] = false;
 				}
@@ -324,7 +326,7 @@ class ProductActionsFilters {
 			$order_ids = ProductUtils::get_orders_ids_by_product_id( $post_id, [ 'wc-completed', 'wc-on-hold', 'wc-processing' ] );
 			$sales     = ProductUtils::get_total_items( $order_ids );
 			echo "<span class='text-green'>$sales</span>"; //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-		}//end if
+		} //end if
 	}
 
 	public static function organize_columns( $defaults ) {
@@ -462,7 +464,7 @@ class ProductActionsFilters {
 			$user_ids            = array_unique( $user_ids );
 			$query['author__in'] = $users;
 			return $query;
-		}//end if
+		} //end if
 		$user_groups = GroupUtils::get_group_ids_by_user_id( $user_id );
 
 		if ( current_user_can( 'manage_options' ) || in_array( $selected_group_id, $user_groups ) !== false ) {

@@ -14,6 +14,7 @@ use Lasntg\Admin\Group\GroupUtils;
  * Handle Actions anf filters for products
  */
 class ProductActionsFilters {
+
 	/**
 	 * Iniates actions and filters regarding Product
 	 *
@@ -79,8 +80,21 @@ class ProductActionsFilters {
 		add_filter( 'user_has_cap', [ self::class, 'temporarily_disable_cap_administer_group' ], 10, 3 );
 	}
 
-	public static function temporarily_disable_cap_administer_group($allcaps, $caps, $args)
-	{
+	public static function temporarily_disable_cap_administer_group( $allcaps, $caps, $args ) {
+		if ( in_array( 'groups_admin_groups', $args ) !== true ) {
+			return $allcaps;
+		}
+		if ( current_user_can( 'manage_options' ) ) {
+			return $allcaps;
+		}
+		if ( ! is_search() && is_admin() && function_exists( 'get_current_screen' ) ) {
+			$screen = get_current_screen();
+			if ( ! is_null( $screen ) ) {
+				if ( 'product' === $screen->post_type && 'product' === $screen->id && 'edit' === $screen->parent_base ) {
+					$allcaps['groups_admin_groups'] = false;
+				}
+			}
+		}
 		return $allcaps;
 	}
 	public static function set_product_to_purchasable( $is_in_stock, $product ): bool {
@@ -151,7 +165,7 @@ class ProductActionsFilters {
 					printf( "<input type='hidden' name='%s[]' value='%s' />", esc_attr( $field['name'] ), esc_attr( $value ) );
 				}
 			} else {
-					printf( "<input type='hidden' name='%s' value='%s' />", esc_attr( $field['name'] ), esc_attr( $field['value'] ) );
+				printf( "<input type='hidden' name='%s' value='%s' />", esc_attr( $field['name'] ), esc_attr( $field['value'] ) );
 			}
 		}
 	}
@@ -398,7 +412,8 @@ class ProductActionsFilters {
 					max-width: -webkit-calc(33% - 12px);
 					max-width: calc(33% - 12px);
 				}
-				#edit-slug-box{
+
+				#edit-slug-box {
 					display: none !important;
 				}
 			</style>
@@ -513,14 +528,14 @@ class ProductActionsFilters {
 		// check the product has private group or it's blank.
 		$args = array(
 			'relation' => 'OR',
-			array(//phpcs:ignore Universal.Arrays.MixedArrayKeyTypes.ImplicitNumericKey, Universal.Arrays.MixedKeyedUnkeyedArray.Found
+			array( //phpcs:ignore Universal.Arrays.MixedArrayKeyTypes.ImplicitNumericKey, Universal.Arrays.MixedKeyedUnkeyedArray.Found
 				'key'     => 'groups-read',
 				'value'   => 33,
 				// private client group id is 33.
 				'compare' => '=',
 				'type'    => 'NUMERIC',
 			),
-			array(//phpcs:ignore Universal.Arrays.MixedArrayKeyTypes.ImplicitNumericKey, Universal.Arrays.MixedKeyedUnkeyedArray.Found
+			array( //phpcs:ignore Universal.Arrays.MixedArrayKeyTypes.ImplicitNumericKey, Universal.Arrays.MixedKeyedUnkeyedArray.Found
 				'key'     => 'groups-read',
 				'compare' => 'NOT EXISTS',
 			),

@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Product Actions Filter
  */
@@ -326,7 +325,7 @@ class ProductActionsFilters {
 			$order_ids = ProductUtils::get_orders_ids_by_product_id( $post_id, [ 'wc-completed', 'wc-on-hold', 'wc-processing' ] );
 			$sales     = ProductUtils::get_total_items( $order_ids );
 			echo "<span class='text-green'>$sales</span>"; //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-		} //end if
+		}//end if
 	}
 
 	public static function organize_columns( $defaults ) {
@@ -464,7 +463,7 @@ class ProductActionsFilters {
 			$user_ids            = array_unique( $user_ids );
 			$query['author__in'] = $users;
 			return $query;
-		} //end if
+		}//end if
 		$user_groups = GroupUtils::get_group_ids_by_user_id( $user_id );
 
 		if ( current_user_can( 'manage_options' ) || in_array( $selected_group_id, $user_groups ) !== false ) {

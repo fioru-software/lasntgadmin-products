@@ -15,6 +15,7 @@ use Lasntg\Admin\Group\GroupUtils;
  */
 class ProductActionsFilters {
 
+
 	/**
 	 * Iniates actions and filters regarding Product
 	 *
@@ -84,12 +85,12 @@ class ProductActionsFilters {
 		if ( in_array( 'groups_admin_groups', $args ) !== true ) {
 			return $allcaps;
 		}
-		if ( current_user_can( 'manage_options' ) ) {
-			return $allcaps;
-		}
 		if ( ! is_search() && is_admin() && function_exists( 'get_current_screen' ) ) {
 			$screen = get_current_screen();
 			if ( ! is_null( $screen ) ) {
+				if ( current_user_can( 'manage_options' ) ) {
+					return $allcaps;
+				}
 				if ( 'product' === $screen->post_type && 'product' === $screen->id && 'edit' === $screen->parent_base ) {
 					$allcaps['groups_admin_groups'] = false;
 				}

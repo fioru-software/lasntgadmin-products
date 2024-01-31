@@ -21,11 +21,31 @@ class AcfFields {
 		add_action( 'acf/load_field/name=funding_sources', [ self::class, 'populate_funding_source_select_options' ], 10 );
 		add_action( 'acf/load_field/name=grant_year', [ self::class, 'populate_grant_year_select_options' ], 10 );
 		add_action( 'acf/load_field/name=training_centre', [ self::class, 'populate_training_centre_select_options' ], 10 );
+		add_action( 'acf/load_field', [ self::class, 'set_course_template_fields_optional' ] );
 	}
 
 	/**
-	 * @todo move to AcfFields class in product plugin
+	 * When editing a course template
+	 * then all fields are optional
 	 */
+	public static function set_course_template_fields_optional( array $field ): array {
+		if ( is_admin() && function_exists( 'get_current_screen' ) ) {
+			$screen = get_current_screen();
+			if ( ! is_null( $screen ) ) {
+				if ( 'product' === $screen->post_type && 'edit' === $screen->parent_base && 'product' === $screen->id ) {
+					if ( isset( $_GET['post'] ) ) {
+						$post_id = intval( $_GET['post'] );
+						$post    = get_post( $post_id );
+						if ( 'template' === $post->post_status ) {
+							$field['required'] = 0;
+						}
+					}
+				}
+			}
+		}
+		return $field;
+	}
+
 	public static function get_awarding_body_acf_field_group_id( string $acf_field_value ): string {
 		$field_group_id  = '';
 		$awarding_bodies = [

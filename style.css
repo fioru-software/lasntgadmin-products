@@ -1,14 +1,25 @@
-table.wp-list-table .column-create_order, 
-table.wp-list-table .column-entry_requirements, 
-table.wp-list-table .column-attendee_requirements, 
-table.wp-list-table .column-_minimum_capacity {
-    width: 11%;
+
+table.wp-list-table th#price,
+table.wp-list-table th#places_available,
+table.wp-list-table th#places_booked,
+table.wp-list-table th#venue,
+table.wp-list-table th#start_date,
+table.wp-list-table th#organizer,
+table.wp-list-table th#entry_requirements, 
+table.wp-list-table th#course_info,
+table.wp-list-table th#create_order {
+	width: fit-content;
 }
-table.wp-list-table .column-group_quota,
-table.wp-list-table .column-attendee_requirements,
-table.wp-list-table .column-entry_requirements,
- table.wp-list-table .column-_minimum_capacity {
-    width: 5%;
+
+/**
+ * Truncates the course info column with an ellipsis. 
+ * When clicked the white-space property is toggled to show/hide complete textarea content.
+ * @see /assets/js/admin-table-view.js
+ */
+table.wp-list-table td.column-course_info {
+	text-overflow: ellipsis;
+	overflow: hidden;
+	white-space: nowrap;
 }
 
 .subsubsub a .count { display: none; }

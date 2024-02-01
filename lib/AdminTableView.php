@@ -279,6 +279,7 @@ class AdminTableView {
 
 	public static function modify_existing_columns( array $columns ): array {
 		$columns['_minimum_capacity'] = __( 'Min Capacity', 'lasntgadmin' );
+		$columns['course_info']       = __( 'Course Info', 'lasntgadmin' );
 		// hide unwanted columns.
 		unset( $columns['sku'] );
 		unset( $columns['product_tag'] );
@@ -323,8 +324,11 @@ class AdminTableView {
 		if ( current_user_can( 'publish_shop_orders' ) && 'group_quota' === $column ) {
 			echo self::render_group_quota( $post_id ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		}
-		if ( '_minimum_capacity' === $column ) {
-			echo esc_attr( get_post_meta( $post_id, '_minimum_capacity', true ) );
+		if ( 'course_info' === $column ) {
+			echo esc_attr( get_post_meta( $post_id, 'course_info', true ) );
+		}
+		if ( 'minimum_capacity' === $column ) {
+			echo esc_attr( get_post_meta( $post_id, 'minimum_capacity', true ) );
 		}
 		if ( 'entry_requirements' === $column ) {
 			$media_id = get_post_meta( $post_id, 'entry_requirements', true );
@@ -386,12 +390,21 @@ class AdminTableView {
 
 	public static function enqueue_assets( string $hook ): void {
 		$post_type = property_exists( get_current_screen(), 'post_type' ) ? get_current_screen()->post_type : false;
-		$name      = sprintf( '%s', PluginUtils::get_kebab_case_name() );
+		$name      = sprintf( '%s-admin-table-view', PluginUtils::get_kebab_case_name() );
 
 		if ( ! in_array( $hook, [ 'edit.php' ] ) || 'product' !== $post_type ) {
 			return;
 		}
 		$plugin_data = get_plugin_data( PluginUtils::get_absolute_plugin_filepath() );
+
+		wp_register_script(
+			$name,
+			plugins_url( sprintf( '%s/assets/js/admin-table-view.js', PluginUtils::get_kebab_case_name() ) ),
+			[ 'jquery' ],
+			$plugin_data['Version']
+		);
+		wp_enqueue_script( $name );
+
 		// Load our style.css.
 		wp_register_style(
 			$name,

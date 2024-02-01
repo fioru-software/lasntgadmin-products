@@ -29,7 +29,7 @@ class AdminEditView {
 	 * @see https://github.com/fioru-software/lasntgadmin-itthinx-groups/blob/master/lib/access/class-groups-access-meta-boxes.php#L211
 	 */
 	public static function get_group_options_for_product_visbility_restriction_metabox( array $options ): array {
-		if ( ! is_search() && is_admin() && function_exists( 'get_current_screen' ) ) {
+		if ( is_admin() && ! is_search() && function_exists( 'get_current_screen' ) ) {
 			$screen = get_current_screen();
 			if ( ! is_null( $screen ) ) {
 				if ( 'product' === $screen->post_type && 'product' === $screen->id && 'edit' === $screen->parent_base ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended

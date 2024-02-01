@@ -85,7 +85,7 @@ class ProductActionsFilters {
 		if ( in_array( 'groups_admin_groups', $args ) !== true ) {
 			return $allcaps;
 		}
-		if ( ! is_search() && is_admin() && function_exists( 'get_current_screen' ) ) {
+		if ( is_admin() && ! is_search() && function_exists( 'get_current_screen' ) ) {
 			$screen = get_current_screen();
 			if ( ! is_null( $screen ) ) {
 				if ( current_user_can( 'manage_options' ) ) {

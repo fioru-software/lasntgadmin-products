@@ -65,12 +65,6 @@ class ProductActionsFilters {
 		// media library.
 		add_filter( 'ajax_query_attachments_args', [ self::class, 'show_groups_attachments' ] );
 
-		add_filter( 'manage_product_posts_columns', [ self::class, 'add_more_columns' ], 11 );
-		add_filter( 'manage_product_posts_columns', [ self::class, 'add_columns_css' ], 1 );
-		add_filter( 'manage_product_posts_columns', [ self::class, 'rename_groups_column' ], 99 );
-		add_filter( 'manage_product_posts_columns', [ self::class, 'organize_columns' ], 99 );
-		add_filter( 'manage_edit-product_sortable_columns', [ self::class, 'sortable_venue' ] );
-
 		// show products in private client group to anonymous shoppers.
 		add_filter( 'groups_post_access_posts_where_apply', [ self::class, 'filter_products_apply' ], 20, 3 );
 		add_filter( 'woocommerce_product_is_visible', [ self::class, 'product_is_visible' ], 11, 2 );
@@ -85,7 +79,7 @@ class ProductActionsFilters {
 		if ( in_array( 'groups_admin_groups', $args ) !== true ) {
 			return $allcaps;
 		}
-		if ( is_admin() && ! is_search() && function_exists( 'get_current_screen' ) ) {
+		if ( ! is_search() && is_admin() && function_exists( 'get_current_screen' ) ) {
 			$screen = get_current_screen();
 			if ( ! is_null( $screen ) ) {
 				if ( current_user_can( 'manage_options' ) ) {
@@ -293,12 +287,6 @@ class ProductActionsFilters {
 		}
 	}
 
-	public static function sortable_venue( $columns ) {
-		$columns['venue']      = __( 'Venue', 'lasntgadmin' );
-		$columns['start_date'] = __( 'Start Date', 'lasntgadmin' );
-
-		return $columns;
-	}
 
 	/**
 	 * @todo Escape the output.
@@ -328,38 +316,8 @@ class ProductActionsFilters {
 		}//end if
 	}
 
-	public static function organize_columns( $defaults ) {
-		unset( $defaults['product_cat'] );
-		unset( $defaults['_minimum_capacity'] );
-		unset( $defaults['group_quota'] );
-		unset( $defaults['groups-read'] );
-		unset( $defaults['is_in_stock'] );
-
-		return $defaults;
-	}
-
 	public static function rename_groups_column( $defaults ) {
 		$defaults['groups-read'] = __( 'Available to', 'lasntgadmin' );
-
-		return $defaults;
-	}
-	public static function add_columns_css( $defaults ) {
-		$assets_dir = untrailingslashit( plugin_dir_url( __FILE__ ) ) . '/../assets/';
-		wp_enqueue_style( 'admin-columns', $assets_dir . 'styles/admin-column.css', [], '1.1.1' );
-		return $defaults;
-	}
-
-	public static function add_more_columns( $defaults ) {
-
-		$defaults['places_available'] = __( 'Places Available', 'lasntgadmin' );
-		$defaults['places_booked']    = __( 'Places Booked', 'lasntgadmin' );
-		$defaults['venue']            = __( 'Venue', 'lasntgadmin' );
-
-		$defaults['start_date'] = __( 'Start Date', 'lasntgadmin' );
-
-		$defaults['organizer'] = __( 'Organiser', 'lasntgadmin' );
-
-		$defaults['entry_requirements'] = __( 'Course Brochures', 'lasntgadmin' );
 
 		return $defaults;
 	}

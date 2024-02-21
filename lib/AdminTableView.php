@@ -300,7 +300,8 @@ class AdminTableView {
 		$columns['places_booked']    = __( 'Places Booked', 'lasntgadmin' );
 		$columns['venue']            = __( 'Venue', 'lasntgadmin' );
 
-		$columns['start_date'] = __( 'Start Date', 'lasntgadmin' );
+		$columns['start_date']      = __( 'Start Date', 'lasntgadmin' );
+		$columns['course_duration'] = __( 'Duration', 'lasntgadmin' );
 
 		$columns['organizer'] = __( 'Organiser', 'lasntgadmin' );
 
@@ -308,7 +309,6 @@ class AdminTableView {
 
 		$columns['_minimum_capacity'] = __( 'Min Capacity', 'lasntgadmin' );
 		$columns['course_info']       = __( 'Info', 'lasntgadmin' );
-		$columns['course_duration']   = __( 'Duration', 'lasntgadmin' );
 		$columns['groups-read']       = __( 'Available to', 'lasntgadmin' );
 		// hide unwanted columns.
 		unset( $columns['sku'] );
@@ -364,7 +364,11 @@ class AdminTableView {
 			echo esc_attr( get_post_meta( $post_id, 'course_info', true ) );
 		}
 		if ( 'course_duration' === $column ) {
-			echo esc_attr( get_field( 'field_63881b63798a4', $post_id ) );
+			$duration = esc_attr( get_field( 'field_63881b63798a4', $post_id ) );
+			if ( $duration ) {
+				$duration .= ' Days';
+			}
+			echo esc_attr( $duration );
 		}
 		if ( 'minimum_capacity' === $column ) {
 			echo esc_attr( get_post_meta( $post_id, 'minimum_capacity', true ) );

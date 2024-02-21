@@ -40,7 +40,6 @@ class ProductActionsFilters {
 
 		add_action( 'wp_enqueue_media', [ self::class, 'wp_enqueue_media' ] );
 
-		
 		add_action( 'pre_get_posts', [ self::class, 'sort_custom_columns_query' ], 99, 1 );
 		add_action( 'add_meta_boxes', [ self::class, 'remove_short_description' ], 999 );
 		add_action( 'posts_where', [ self::class, 'remove_template_products' ], 10, 2 );

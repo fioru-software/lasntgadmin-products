@@ -48,6 +48,18 @@ class ProductActionsFilters {
 		add_action( 'init', [ self::class, 'disable_course_add_button' ] );
 		add_action( 'add_meta_boxes', array( self::class, 'add_product_boxes_sort_order' ), 99 );
 		add_action( 'load-post.php', [ self::class, 'edit_product' ] );
+
+		add_action(
+			'wp_print_scripts',
+			function ( $handles ) {
+
+				wp_dequeue_script( 'wp-tinymce-lists' );
+				wp_deregister_script( 'wp-tinymce-lists' );
+
+				wp_dequeue_script( 'wp-block-library' );
+				wp_deregister_script( 'wp-block-library' );
+			}
+		);
 	}
 
 	public static function add_filters(): void {
@@ -610,7 +622,7 @@ class ProductActionsFilters {
 			return;
 		}
 		$assets_dir = untrailingslashit( plugin_dir_url( __FILE__ ) ) . '/../assets/';
-		wp_enqueue_script( 'lasntgadmin-products-admin-js', ( $assets_dir . 'js/lasntgadmin-admin.js' ), array( 'jquery' ), '1.7', true );
+		wp_enqueue_script( 'lasntgadmin-products-admin-js', ( $assets_dir . 'js/lasntgadmin-admin.js' ), array( 'jquery' ), '1.8.2', true );
 
 		wp_enqueue_style( 'product-css', $assets_dir . 'styles/product-admin.css', [], '1.0.2' );
 		wp_localize_script(

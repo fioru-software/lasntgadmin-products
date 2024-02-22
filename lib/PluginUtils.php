@@ -29,4 +29,20 @@ class PluginUtils {
 	public static function get_absolute_plugin_filepath(): string {
 		return sprintf( '%s/%s.php', self::get_absolute_plugin_path(), self::get_kebab_case_name() );
 	}
+
+	private static function get_data(): array {
+		return get_plugin_data(
+			sprintf(
+				'%s/wp-content/plugins/%s/%s.php',
+				rtrim( ABSPATH, '/' ),
+				self::get_kebab_case_name(),
+				self::get_kebab_case_name()
+			)
+		);
+	}
+
+	public static function get_version(): string {
+		$data = self::get_data();
+		return $data['Version'];
+	}
 }

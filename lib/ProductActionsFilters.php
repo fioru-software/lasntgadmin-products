@@ -50,7 +50,7 @@ class ProductActionsFilters {
 		add_action( 'load-post.php', [ self::class, 'edit_product' ] );
 
 		add_action(
-			'wp_print_scripts',
+			'admin_print_scripts',
 			[ self::class, 'wp_print_scripts' ]
 		);
 

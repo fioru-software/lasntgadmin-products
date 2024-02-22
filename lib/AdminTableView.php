@@ -25,9 +25,11 @@ class AdminTableView {
 	}
 
 	private static function add_filters() {
-		add_filter( 'manage_product_posts_columns', [ self::class, 'modify_existing_columns' ], 15 );
-		add_filter( 'manage_product_posts_columns', [ self::class, 'add_group_quota_column' ], 15 );
+
+		add_filter( 'manage_product_posts_columns', [ self::class, 'add_columns_css' ], 1 );
 		add_filter( 'manage_product_posts_columns', [ self::class, 'add_order_create_column' ], 20 );
+		add_filter( 'manage_product_posts_columns', [ self::class, 'add_group_quota_column' ], 15 );
+		add_filter( 'manage_product_posts_columns', [ self::class, 'modify_existing_columns' ], 15 );
 		add_filter( 'post_row_actions', [ self::class, 'modify_product_row_actions' ] );
 		add_filter( 'login_redirect', [ self::class, 'redirect_to_product_list' ], 10, 3 );
 		add_filter( 'woocommerce_duplicate_product_capability', [ self::class, 'woocommerce_duplicate_product_capability' ] );
@@ -55,8 +57,23 @@ class AdminTableView {
 		add_filter( 'views_edit-product', [ self::class, 'views_edit_product' ] );
 
 		add_filter( 'wp_dropdown_cats', [ self::class, 'dropdown_cats' ], 10, 2 );
+
+		add_filter( 'manage_edit-product_sortable_columns', [ self::class, 'sortable_venue' ] );
 	}
 
+	public static function add_columns_css( $defaults ) {
+		$assets_dir = untrailingslashit( plugin_dir_url( __FILE__ ) ) . '/../assets/';
+		wp_enqueue_style( 'admin-columns', $assets_dir . 'styles/admin-column.css', [], '1.1.1' );
+		return $defaults;
+	}
+
+
+	public static function sortable_venue( $columns ) {
+		$columns['venue']      = __( 'Venue', 'lasntgadmin' );
+		$columns['start_date'] = __( 'Start Date', 'lasntgadmin' );
+
+		return $columns;
+	}
 	public static function modify_edit_product_link( string $link, int $post_id, string $context ): string {
 		if ( wc_current_user_has_role( 'training_officer' ) || wc_current_user_has_role( 'fire_training_officer' ) ) {
 			$link = '#';
@@ -278,14 +295,33 @@ class AdminTableView {
 	}
 
 	public static function modify_existing_columns( array $columns ): array {
+
+		$columns['places_available'] = __( 'Places Available', 'lasntgadmin' );
+		$columns['places_booked']    = __( 'Places Booked', 'lasntgadmin' );
+		$columns['venue']            = __( 'Venue', 'lasntgadmin' );
+
+		$columns['start_date']      = __( 'Start Date', 'lasntgadmin' );
+		$columns['course_duration'] = __( 'Duration', 'lasntgadmin' );
+
+		$columns['organizer'] = __( 'Organiser', 'lasntgadmin' );
+
+		$columns['entry_requirements'] = __( 'Course Brochures', 'lasntgadmin' );
+
 		$columns['_minimum_capacity'] = __( 'Min Capacity', 'lasntgadmin' );
-		$columns['course_info']       = __( 'Course Info', 'lasntgadmin' );
+		$columns['course_info']       = __( 'Info', 'lasntgadmin' );
+		$columns['groups-read']       = __( 'Available to', 'lasntgadmin' );
 		// hide unwanted columns.
 		unset( $columns['sku'] );
 		unset( $columns['product_tag'] );
 		unset( $columns['featured'] );
 		unset( $columns['thumb'] );
 		unset( $columns['date'] );
+
+		unset( $columns['product_cat'] );
+		unset( $columns['_minimum_capacity'] );
+		unset( $columns['group_quota'] );
+		unset( $columns['groups-read'] );
+		unset( $columns['is_in_stock'] );
 		return $columns;
 	}
 
@@ -296,7 +332,7 @@ class AdminTableView {
 		if ( current_user_can( 'publish_shop_orders' ) ) {
 			$columns['create_order'] = __( 'Order', 'lasntgadmin' );
 		}
-		$columns['product_cat'] = __( 'Category', 'lasntgadmin' );
+
 		return $columns;
 	}
 
@@ -326,6 +362,13 @@ class AdminTableView {
 		}
 		if ( 'course_info' === $column ) {
 			echo esc_attr( get_post_meta( $post_id, 'course_info', true ) );
+		}
+		if ( 'course_duration' === $column ) {
+			$duration = esc_attr( get_field( 'field_63881b63798a4', $post_id ) );
+			if ( $duration ) {
+				$duration .= ' Days';
+			}
+			echo esc_attr( $duration );
 		}
 		if ( 'minimum_capacity' === $column ) {
 			echo esc_attr( get_post_meta( $post_id, 'minimum_capacity', true ) );
@@ -363,6 +406,29 @@ class AdminTableView {
 		if ( current_user_can( 'publish_shop_orders' ) && 'create_order' === $column ) {
 			echo self::render_create_order_button( $post_id ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		}
+
+		if ( 'venue' === $column ) {
+			echo get_field( 'field_63881b84798a5', $post_id ); //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		} elseif ( 'start_date' === $column ) {
+			echo get_field( 'field_63881aee31478', $post_id ); //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			echo ' ' . get_field( 'field_63881b0531479', $post_id ); //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		} elseif ( 'organizer' === $column ) {
+			$centres = get_field( 'field_63881beb798a7', $post_id ); //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			if ( is_array( $centres ) && count( $centres ) ) {
+				echo implode( ', ', $centres ); //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			}
+		} elseif ( 'places_available' === $column ) {
+			$product = wc_get_product( $post_id );
+
+			$order_ids = ProductUtils::get_orders_ids_by_product_id( $post_id, [ 'wc-completed', 'wc-on-hold', 'wc-processing' ] );
+			$sales     = ProductUtils::get_total_items( $order_ids );
+			$total     = $product->get_stock_quantity();
+			echo $total . ( 0 === $total ? ' <span class="text-red">(Full)</span>' : '' ); //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		} elseif ( 'places_booked' === $column ) {
+			$order_ids = ProductUtils::get_orders_ids_by_product_id( $post_id, [ 'wc-completed', 'wc-on-hold', 'wc-processing' ] );
+			$sales     = ProductUtils::get_total_items( $order_ids );
+			echo "<span class='text-green'>$sales</span>"; //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		}//end if
 	}
 
 	private static function render_group_quota( int $product_id ): string {

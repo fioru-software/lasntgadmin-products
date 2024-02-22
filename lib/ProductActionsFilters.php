@@ -51,14 +51,13 @@ class ProductActionsFilters {
 
 		add_action(
 			'wp_print_scripts',
-			function ( $handles ) {
+			[ self::class, 'wp_print_scripts' ]
+		);
 
-				wp_dequeue_script( 'wp-tinymce-lists' );
-				wp_deregister_script( 'wp-tinymce-lists' );
-
-				wp_dequeue_script( 'wp-block-library' );
-				wp_deregister_script( 'wp-block-library' );
-			}
+		// Overrides code styling to accommodate for a third dropdown filter.
+		add_action(
+			'admin_footer',
+			[ self::class, 'admin_footer' ]
 		);
 	}
 
@@ -372,11 +371,19 @@ class ProductActionsFilters {
 				'terms' => $user_groups,
 			)
 		);
-		// Overrides code styling to accommodate for a third dropdown filter.
-		add_action(
-			'admin_footer',
-			function () {
-				?>
+	}
+
+	public static function wp_print_scripts() {
+
+		wp_dequeue_script( 'wp-tinymce-lists' );
+		wp_deregister_script( 'wp-tinymce-lists' );
+
+		wp_dequeue_script( 'wp-block-library' );
+		wp_deregister_script( 'wp-block-library' );
+	}
+
+	public static function admin_footer() {
+		?>
 			<style>
 				.media-modal-content .media-frame select.attachment-filters {
 					max-width: -webkit-calc(33% - 12px);
@@ -388,8 +395,6 @@ class ProductActionsFilters {
 				}
 			</style>
 				<?php
-			}
-		);
 	}
 
 	public static function show_groups_attachments( $query ) {

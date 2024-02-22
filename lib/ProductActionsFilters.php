@@ -51,7 +51,7 @@ class ProductActionsFilters {
 
 		add_action(
 			'admin_print_scripts',
-			[ self::class, 'wp_print_scripts' ]
+			[ self::class, 'remove_unused_scripts' ]
 		);
 
 		// Overrides code styling to accommodate for a third dropdown filter.
@@ -373,13 +373,14 @@ class ProductActionsFilters {
 		);
 	}
 
-	public static function wp_print_scripts() {
-
-		wp_dequeue_script( 'wp-tinymce-lists' );
-		wp_deregister_script( 'wp-tinymce-lists' );
-
-		wp_dequeue_script( 'wp-block-library' );
-		wp_deregister_script( 'wp-block-library' );
+	public static function remove_unused_scripts( ) {             
+    if( 'product' === get_post_type() ) {                                 
+			$handles = [ 'wp-tinymce-root', 'wp-tinymce', 'wp-tinymce-lists' ];
+			foreach( $handles as $handle) {
+				wp_dequeue_script( $handle );
+				wp_deregister_script( $handle );
+			}
+		}
 	}
 
 	public static function admin_footer() {

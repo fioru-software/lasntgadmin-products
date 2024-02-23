@@ -7,7 +7,7 @@ ARG GITHUB_TOKEN
 
 RUN a2enmod rewrite                                                                                                                                                                           
 RUN apt update; \
-    apt install -y default-mysql-client vim libzip-dev unzip libpng-dev libmagickwand-dev libicu-dev subversion ssl-cert
+    apt install -y default-mysql-client vim libzip-dev unzip libpng-dev libmagickwand-dev libicu-dev subversion ssl-cert git
 
 RUN pecl install --configureoptions='with-imagick="autodetect"' imagick; \
     docker-php-ext-enable imagick

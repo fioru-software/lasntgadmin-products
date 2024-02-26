@@ -1,6 +1,4 @@
 jQuery(document).ready(function ($) {
-   tinymce.get('editor_id').getDoc().designMode = 'Off'; 
-   tinymce.get('editor_id').controlManager.get('bold').setDisabled(true);
    $('.set-all-zero').click(function(e){
       e.preventDefault();
       

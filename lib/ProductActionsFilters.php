@@ -36,7 +36,6 @@ class ProductActionsFilters {
 		add_action( 'admin_menu', [ self::class, 'remove_woocommerce_products_taxonomy' ], 99 );
 		add_action( 'admin_enqueue_scripts', [ self::class, 'admin_enqueue_scripts' ], 99 );
 		add_action( 'edit_form_after_title', [ self::class, 'hidden_status' ] );
-		add_action( 'init', [ self::class, 'register_custom_product_statuses' ], 0 );
 
 		add_action( 'wp_enqueue_media', [ self::class, 'wp_enqueue_media' ] );
 
@@ -44,6 +43,7 @@ class ProductActionsFilters {
 		add_action( 'add_meta_boxes', [ self::class, 'remove_short_description' ], 999 );
 		add_action( 'posts_where', [ self::class, 'remove_template_products' ], 10, 2 );
 		add_action( 'init', [ self::class, 'remove_editor' ] );
+		add_action( 'init', [ self::class, 'register_custom_product_statuses' ], 0 );
 
 		add_action( 'init', [ self::class, 'disable_course_add_button' ] );
 		add_action( 'add_meta_boxes', array( self::class, 'add_product_boxes_sort_order' ), 99 );
@@ -62,41 +62,49 @@ class ProductActionsFilters {
 	}
 
 	public static function add_filters(): void {
-		add_filter( 'wp_insert_post_data', [ self::class, 'filter_post_data' ], 99, 2 );
-		add_filter( 'wp_insert_post', [ self::class, 'cancel_orders' ], 10, 3 );
-		add_filter( 'post_updated_messages', [ self::class, 'post_updated_messages_filter' ], 500 );
+		if ( is_admin() ) {
+			add_filter( 'wp_insert_post_data', [ self::class, 'filter_post_data' ], 99, 2 );
+			add_filter( 'wp_insert_post', [ self::class, 'cancel_orders' ], 10, 3 );
+			add_filter( 'post_updated_messages', [ self::class, 'post_updated_messages_filter' ], 500 );
+			add_filter( 'woocommerce_products_admin_list_table_filters', [ self::class, 'remove_products_filter' ] );
 
-		add_filter( 'woocommerce_product_meta_start', [ self::class, 'woocommerce_get_availability_text' ], 10, 2 );
-		add_filter( 'woocommerce_is_purchasable', [ self::class, 'product_is_in_stock' ], 15, 2 );
-		add_filter( 'woocommerce_is_purchasable', [ self::class, 'set_product_to_purchasable' ], 1, 2 );
+			// media library.
+			add_filter( 'ajax_query_attachments_args', [ self::class, 'show_groups_attachments' ] );
+		}
 
-		add_filter( 'woocommerce_product_query', [ self::class, 'woocommerce_product_query' ], 15, 1 );
+		if ( ! is_admin() ) {
+			// show products in private client group to anonymous shoppers.
+			add_filter( 'groups_post_access_posts_where_apply', [ self::class, 'filter_products_apply' ], 20, 3 );
+			add_filter( 'woocommerce_product_is_visible', [ self::class, 'product_is_visible' ], 11, 2 );
 
-		// media library.
-		add_filter( 'ajax_query_attachments_args', [ self::class, 'show_groups_attachments' ] );
+			add_filter( 'do_meta_boxes', [ self::class, 'wpse33063_move_meta_box' ] );
+			add_filter( 'user_has_cap', [ self::class, 'temporarily_disable_cap_administer_group' ], 10, 3 );
+			add_filter( 'woocommerce_product_tabs', [ self::class, 'remove_product_tab' ], 9999 );
 
-		// show products in private client group to anonymous shoppers.
-		add_filter( 'groups_post_access_posts_where_apply', [ self::class, 'filter_products_apply' ], 20, 3 );
-		add_filter( 'woocommerce_product_is_visible', [ self::class, 'product_is_visible' ], 11, 2 );
+			add_filter( 'woocommerce_product_meta_start', [ self::class, 'woocommerce_get_availability_text' ], 10, 2 );
+			add_filter( 'woocommerce_is_purchasable', [ self::class, 'product_is_in_stock' ], 15, 2 );
+			add_filter( 'woocommerce_is_purchasable', [ self::class, 'set_product_to_purchasable' ], 1, 2 );
+			add_filter( 'woocommerce_product_query', [ self::class, 'woocommerce_product_query' ], 15, 1 );
+		}
+	}
 
-		add_filter( 'woocommerce_products_admin_list_table_filters', [ self::class, 'remove_products_filter' ] );
-		add_filter( 'woocommerce_product_tabs', [ self::class, 'remove_product_tab' ], 9999 );
-		add_filter( 'do_meta_boxes', [ self::class, 'wpse33063_move_meta_box' ] );
-		add_filter( 'user_has_cap', [ self::class, 'temporarily_disable_cap_administer_group' ], 10, 3 );
+	public static function frontend_filters() {
 	}
 
 	public static function temporarily_disable_cap_administer_group( $allcaps, $caps, $args ) {
 		if ( in_array( 'groups_admin_groups', $args ) !== true ) {
 			return $allcaps;
 		}
-		if ( ! is_search() && is_admin() && function_exists( 'get_current_screen' ) ) {
+		if ( is_admin() && function_exists( 'get_current_screen' ) ) {
 			$screen = get_current_screen();
 			if ( ! is_null( $screen ) ) {
-				if ( current_user_can( 'manage_options' ) ) {
-					return $allcaps;
-				}
-				if ( 'product' === $screen->post_type && 'product' === $screen->id && 'edit' === $screen->parent_base ) {
-					$allcaps['groups_admin_groups'] = false;
+				if ( ! is_search() ) {
+					if ( current_user_can( 'manage_options' ) ) {
+						return $allcaps;
+					}
+					if ( 'product' === $screen->post_type && 'product' === $screen->id && 'edit' === $screen->parent_base ) {
+						$allcaps['groups_admin_groups'] = false;
+					}
 				}
 			}
 		}
@@ -373,10 +381,10 @@ class ProductActionsFilters {
 		);
 	}
 
-	public static function remove_unused_scripts( ) {             
-    if( 'product' === get_post_type() ) {                                 
-			$handles = [ 'wp-tinymce-root', 'wp-tinymce', 'wp-tinymce-lists' ];
-			foreach( $handles as $handle) {
+	public static function remove_unused_scripts() {
+		if ( 'product' === get_post_type() ) {
+			$handles = [];
+			foreach ( $handles as $handle ) {
 				wp_dequeue_script( $handle );
 				wp_deregister_script( $handle );
 			}
@@ -597,6 +605,7 @@ class ProductActionsFilters {
 	 * @return void
 	 */
 	public static function register_custom_product_statuses(): void {
+
 		foreach ( ProductUtils::$statuses as $tag => $status ) {
 			register_post_status(
 				$tag,
@@ -624,11 +633,12 @@ class ProductActionsFilters {
 	public static function admin_enqueue_scripts(): void {
 		global $post;
 		$post_type = property_exists( get_current_screen(), 'post_type' ) ? get_current_screen()->post_type : false;
+
 		if ( 'product' !== $post_type ) {
 			return;
 		}
 		$assets_dir = untrailingslashit( plugin_dir_url( __FILE__ ) ) . '/../assets/';
-		wp_enqueue_script( 'lasntgadmin-products-admin-js', ( $assets_dir . 'js/lasntgadmin-admin.js' ), array( 'jquery' ), '1.8.2', true );
+		wp_enqueue_script( 'lasntgadmin-products-admin-js', ( $assets_dir . 'js/lasntgadmin-admin.js' ), array( 'jquery' ), '1.8.3', true );
 
 		wp_enqueue_style( 'product-css', $assets_dir . 'styles/product-admin.css', [], '1.0.2' );
 		wp_localize_script(

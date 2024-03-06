@@ -16,7 +16,7 @@ class AdminEditView {
 	}
 
 	private static function add_actions() {
-		if( is_admin() ) {
+		if ( is_admin() ) {
 			add_action( 'closed_product', [ self::class, 'update_course_closed_timestamp' ], 10, 2 );
 		}
 	}

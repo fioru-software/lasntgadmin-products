@@ -3,6 +3,7 @@
 namespace Lasntg\Admin\Products;
 
 use Lasntg\Admin\Group\GroupUtils;
+use WP_Post;
 
 /**
  * Product edit page.
@@ -15,12 +16,18 @@ class AdminEditView {
 	}
 
 	private static function add_actions() {
+		if ( is_admin() ) {
+			add_action( 'closed_product', [ self::class, 'update_course_closed_timestamp' ], 10, 2 );
+		}
 	}
 
 	private static function add_filters() {
-
 		// Product edit page groups metabox filter.
 		add_filter( 'groups_access_meta_boxes_groups_get_groups_options', [ self::class, 'get_group_options_for_product_visbility_restriction_metabox' ] );
+	}
+
+	public static function update_course_closed_timestamp( int $post_id, WP_Post $post ) {
+		update_post_meta( $post_id, 'course_closed_timestamp', time() );
 	}
 
 	/**

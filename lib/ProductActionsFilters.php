@@ -756,7 +756,7 @@ class ProductActionsFilters {
 		if ( '0' === $postarr['_regular_price'] || empty( $postarr['_regular_price'] ) ) {
 			$errors[] = __( 'Course cost is required.', 'lasntgadmin' );
 		} elseif ( $postarr['_regular_price'] > 5000 ) {
-			$errors[] = __( 'Course cost is required.', 'lasntgadmin' );
+			$errors[] = __( 'Course cost can not be higher than €5,000.', 'lasntgadmin' );
 		}
 
 		$data['post_status'] = $postarr['lasntgadmin_status'];

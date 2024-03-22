@@ -36,7 +36,6 @@ class ProductActionsFilters {
 		add_action( 'admin_menu', [ self::class, 'remove_woocommerce_products_taxonomy' ], 99 );
 		add_action( 'admin_enqueue_scripts', [ self::class, 'admin_enqueue_scripts' ], 99 );
 		add_action( 'edit_form_after_title', [ self::class, 'hidden_status' ] );
-		add_action( 'init', [ self::class, 'register_custom_product_statuses' ], 0 );
 
 		add_action( 'wp_enqueue_media', [ self::class, 'wp_enqueue_media' ] );
 
@@ -44,60 +43,68 @@ class ProductActionsFilters {
 		add_action( 'add_meta_boxes', [ self::class, 'remove_short_description' ], 999 );
 		add_action( 'posts_where', [ self::class, 'remove_template_products' ], 10, 2 );
 		add_action( 'init', [ self::class, 'remove_editor' ] );
+		add_action( 'init', [ self::class, 'register_custom_product_statuses' ], 0 );
 
 		add_action( 'init', [ self::class, 'disable_course_add_button' ] );
 		add_action( 'add_meta_boxes', array( self::class, 'add_product_boxes_sort_order' ), 99 );
 		add_action( 'load-post.php', [ self::class, 'edit_product' ] );
 
+		// Overrides code styling to accommodate for a third dropdown filter.
 		add_action(
-			'wp_print_scripts',
-			function ( $handles ) {
-
-				wp_dequeue_script( 'wp-tinymce-lists' );
-				wp_deregister_script( 'wp-tinymce-lists' );
-
-				wp_dequeue_script( 'wp-block-library' );
-				wp_deregister_script( 'wp-block-library' );
-			}
+			'admin_footer',
+			[ self::class, 'admin_footer' ]
 		);
 	}
 
 	public static function add_filters(): void {
-		add_filter( 'wp_insert_post_data', [ self::class, 'filter_post_data' ], 99, 2 );
-		add_filter( 'wp_insert_post', [ self::class, 'cancel_orders' ], 10, 3 );
-		add_filter( 'post_updated_messages', [ self::class, 'post_updated_messages_filter' ], 500 );
+		if ( is_admin() ) {
+			add_filter( 'wp_insert_post_data', [ self::class, 'filter_post_data' ], 99, 2 );
+			add_filter( 'wp_insert_post', [ self::class, 'cancel_orders' ], 10, 3 );
+			add_filter( 'post_updated_messages', [ self::class, 'post_updated_messages_filter' ], 500 );
+			add_filter( 'woocommerce_products_admin_list_table_filters', [ self::class, 'remove_products_filter' ] );
 
-		add_filter( 'woocommerce_product_meta_start', [ self::class, 'woocommerce_get_availability_text' ], 10, 2 );
-		add_filter( 'woocommerce_is_purchasable', [ self::class, 'product_is_in_stock' ], 15, 2 );
-		add_filter( 'woocommerce_is_purchasable', [ self::class, 'set_product_to_purchasable' ], 1, 2 );
+			// media library.
+			add_filter( 'ajax_query_attachments_args', [ self::class, 'show_groups_attachments' ] );
+		}
 
-		add_filter( 'woocommerce_product_query', [ self::class, 'woocommerce_product_query' ], 15, 1 );
+		if ( ! is_admin() ) {
+			// show products in private client group to anonymous shoppers.
+			add_filter( 'groups_post_access_posts_where_apply', [ self::class, 'filter_products_apply' ], 20, 3 );
+			add_filter( 'woocommerce_product_is_visible', [ self::class, 'product_is_visible' ], 11, 2 );
 
-		// media library.
-		add_filter( 'ajax_query_attachments_args', [ self::class, 'show_groups_attachments' ] );
+			add_filter( 'do_meta_boxes', [ self::class, 'wpse33063_move_meta_box' ] );
+			add_filter( 'user_has_cap', [ self::class, 'temporarily_disable_cap_administer_group' ], 10, 3 );
+			add_filter( 'woocommerce_product_tabs', [ self::class, 'remove_product_tab' ], 9999 );
 
-		// show products in private client group to anonymous shoppers.
-		add_filter( 'groups_post_access_posts_where_apply', [ self::class, 'filter_products_apply' ], 20, 3 );
-		add_filter( 'woocommerce_product_is_visible', [ self::class, 'product_is_visible' ], 11, 2 );
+			add_filter( 'woocommerce_product_meta_start', [ self::class, 'woocommerce_get_availability_text' ], 10, 2 );
+			add_filter( 'woocommerce_is_purchasable', [ self::class, 'product_is_in_stock' ], 15, 2 );
+			add_filter( 'woocommerce_is_purchasable', [ self::class, 'set_product_to_purchasable' ], 1, 2 );
+			add_filter( 'woocommerce_product_query', [ self::class, 'woocommerce_product_query' ], 15, 1 );
+		}
+		add_filter( 'use_block_editor_for_post', [ self::class, 'remove_block_editor' ], 50, 2 );
+	}
 
-		add_filter( 'woocommerce_products_admin_list_table_filters', [ self::class, 'remove_products_filter' ] );
-		add_filter( 'woocommerce_product_tabs', [ self::class, 'remove_product_tab' ], 9999 );
-		add_filter( 'do_meta_boxes', [ self::class, 'wpse33063_move_meta_box' ] );
-		add_filter( 'user_has_cap', [ self::class, 'temporarily_disable_cap_administer_group' ], 10, 3 );
+	public static function remove_block_editor( bool $use_block_editor, WP_Post $post ) {
+		if ( 'product' === $post->post_type ) {
+			return false;
+		}
+		return $use_block_editor;
 	}
 
 	public static function temporarily_disable_cap_administer_group( $allcaps, $caps, $args ) {
 		if ( in_array( 'groups_admin_groups', $args ) !== true ) {
 			return $allcaps;
 		}
-		if ( ! is_search() && is_admin() && function_exists( 'get_current_screen' ) ) {
+		if ( is_admin() && function_exists( 'get_current_screen' ) ) {
 			$screen = get_current_screen();
 			if ( ! is_null( $screen ) ) {
-				if ( current_user_can( 'manage_options' ) ) {
-					return $allcaps;
-				}
-				if ( 'product' === $screen->post_type && 'product' === $screen->id && 'edit' === $screen->parent_base ) {
-					$allcaps['groups_admin_groups'] = false;
+				if ( ! is_search() ) {
+					if ( current_user_can( 'manage_options' ) ) {
+						return $allcaps;
+					}
+					if ( 'product' === $screen->post_type && 'product' === $screen->id && 'edit' === $screen->parent_base ) {
+						$allcaps['groups_admin_groups'] = false;
+					}
 				}
 			}
 		}
@@ -372,11 +379,10 @@ class ProductActionsFilters {
 				'terms' => $user_groups,
 			)
 		);
-		// Overrides code styling to accommodate for a third dropdown filter.
-		add_action(
-			'admin_footer',
-			function () {
-				?>
+	}
+
+	public static function admin_footer() {
+		?>
 			<style>
 				.media-modal-content .media-frame select.attachment-filters {
 					max-width: -webkit-calc(33% - 12px);
@@ -388,8 +394,6 @@ class ProductActionsFilters {
 				}
 			</style>
 				<?php
-			}
-		);
 	}
 
 	public static function show_groups_attachments( $query ) {
@@ -591,6 +595,7 @@ class ProductActionsFilters {
 	 * @return void
 	 */
 	public static function register_custom_product_statuses(): void {
+
 		foreach ( ProductUtils::$statuses as $tag => $status ) {
 			register_post_status(
 				$tag,
@@ -618,13 +623,14 @@ class ProductActionsFilters {
 	public static function admin_enqueue_scripts(): void {
 		global $post;
 		$post_type = property_exists( get_current_screen(), 'post_type' ) ? get_current_screen()->post_type : false;
+
 		if ( 'product' !== $post_type ) {
 			return;
 		}
 		$assets_dir = untrailingslashit( plugin_dir_url( __FILE__ ) ) . '/../assets/';
-		wp_enqueue_script( 'lasntgadmin-products-admin-js', ( $assets_dir . 'js/lasntgadmin-admin.js' ), array( 'jquery' ), '1.8.2', true );
+		wp_enqueue_script( 'lasntgadmin-products-admin-js', ( $assets_dir . 'js/lasntgadmin-admin.js' ), array( 'jquery' ), PluginUtils::get_version(), true );
 
-		wp_enqueue_style( 'product-css', $assets_dir . 'styles/product-admin.css', [], '1.0.2' );
+		wp_enqueue_style( 'product-css', $assets_dir . 'styles/product-admin.css', [], PluginUtils::get_version() );
 		wp_localize_script(
 			'lasntgadmin-products-admin-js',
 			'lasntgadmin_products_admin_localize',
@@ -739,6 +745,8 @@ class ProductActionsFilters {
 
 		if ( '0' === $postarr['_regular_price'] || empty( $postarr['_regular_price'] ) ) {
 			$errors[] = __( 'Course cost is required.', 'lasntgadmin' );
+		} elseif ( $postarr['_regular_price'] > 5000 ) {
+			$errors[] = __( 'Course cost can not be higher than €5,000.', 'lasntgadmin' );
 		}
 
 		$data['post_status'] = $postarr['lasntgadmin_status'];

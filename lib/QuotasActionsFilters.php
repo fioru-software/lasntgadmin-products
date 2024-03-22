@@ -82,8 +82,8 @@ class QuotasActionsFilters {
 		woocommerce_wp_text_input(
 			array(
 				'id'                => '_stock',
-				'label'             => __( 'Course Capacity', 'lasntgadmin' ),
-				'placeholder'       => __( 'Course Capacity', 'lasntgadmin' ),
+				'label'             => __( 'Spaces Available', 'lasntgadmin' ),
+				'placeholder'       => __( 'Spaces Available', 'lasntgadmin' ),
 				'desc_tip'          => 'true',
 				'value'             => $product ? $product->get_stock_quantity() : 0,
 				'type'              => 'number',

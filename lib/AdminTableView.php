@@ -295,10 +295,11 @@ class AdminTableView {
 	}
 
 	public static function modify_existing_columns( array $columns ): array {
-
-		$columns['places_available'] = __( 'Places Available', 'lasntgadmin' );
-		$columns['places_booked']    = __( 'Places Booked', 'lasntgadmin' );
-		$columns['venue']            = __( 'Venue', 'lasntgadmin' );
+		if ( ! wc_current_user_has_role( 'training_officer' ) ) {
+			$columns['places_available'] = __( 'Places Available', 'lasntgadmin' );
+			$columns['places_booked']    = __( 'Places Booked', 'lasntgadmin' );
+		}
+		$columns['venue'] = __( 'Venue', 'lasntgadmin' );
 
 		$columns['start_date']      = __( 'Start Date', 'lasntgadmin' );
 		$columns['course_duration'] = __( 'Duration', 'lasntgadmin' );

@@ -49,11 +49,6 @@ class ProductActionsFilters {
 		add_action( 'add_meta_boxes', array( self::class, 'add_product_boxes_sort_order' ), 99 );
 		add_action( 'load-post.php', [ self::class, 'edit_product' ] );
 
-		add_action(
-			'admin_print_scripts',
-			[ self::class, 'remove_unused_scripts' ]
-		);
-
 		// Overrides code styling to accommodate for a third dropdown filter.
 		add_action(
 			'admin_footer',
@@ -86,9 +81,14 @@ class ProductActionsFilters {
 			add_filter( 'woocommerce_is_purchasable', [ self::class, 'set_product_to_purchasable' ], 1, 2 );
 			add_filter( 'woocommerce_product_query', [ self::class, 'woocommerce_product_query' ], 15, 1 );
 		}
+		add_filter( 'use_block_editor_for_post', [ self::class, 'remove_block_editor' ], 50, 2 );
 	}
 
-	public static function frontend_filters() {
+	public static function remove_block_editor( bool $use_block_editor, WP_Post $post ) {
+		if ( 'product' === $post->post_type ) {
+			return false;
+		}
+		return $use_block_editor;
 	}
 
 	public static function temporarily_disable_cap_administer_group( $allcaps, $caps, $args ) {
@@ -381,16 +381,6 @@ class ProductActionsFilters {
 		);
 	}
 
-	public static function remove_unused_scripts() {
-		if ( 'product' === get_post_type() ) {
-			$handles = [];
-			foreach ( $handles as $handle ) {
-				wp_dequeue_script( $handle );
-				wp_deregister_script( $handle );
-			}
-		}
-	}
-
 	public static function admin_footer() {
 		?>
 			<style>
@@ -638,9 +628,9 @@ class ProductActionsFilters {
 			return;
 		}
 		$assets_dir = untrailingslashit( plugin_dir_url( __FILE__ ) ) . '/../assets/';
-		wp_enqueue_script( 'lasntgadmin-products-admin-js', ( $assets_dir . 'js/lasntgadmin-admin.js' ), array( 'jquery' ), '1.8.3', true );
+		wp_enqueue_script( 'lasntgadmin-products-admin-js', ( $assets_dir . 'js/lasntgadmin-admin.js' ), array( 'jquery' ), PluginUtils::get_version(), true );
 
-		wp_enqueue_style( 'product-css', $assets_dir . 'styles/product-admin.css', [], '1.0.2' );
+		wp_enqueue_style( 'product-css', $assets_dir . 'styles/product-admin.css', [], PluginUtils::get_version() );
 		wp_localize_script(
 			'lasntgadmin-products-admin-js',
 			'lasntgadmin_products_admin_localize',

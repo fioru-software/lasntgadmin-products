@@ -14,14 +14,29 @@ class AcfFields {
 	}
 
 	private static function add_filters() {
+		add_filter( 'acf/load_field', [ self::class, 'set_course_template_fields_optional' ] );
+		add_filter( 'acf/validate_value', [ self::class, 'validate_product_template' ], 10, 4 );
+		add_filter( 'acf/load_field/name=funding_sources', [ self::class, 'populate_funding_source_select_options' ], 10 );
+		add_filter( 'acf/load_field/name=grant_year', [ self::class, 'populate_grant_year_select_options' ], 10 );
+		add_filter( 'acf/load_field/name=training_centre', [ self::class, 'populate_training_centre_select_options' ], 10 );
 	}
 
 	private static function add_actions() {
-		// Apply to all fields.
-		add_action( 'acf/load_field/name=funding_sources', [ self::class, 'populate_funding_source_select_options' ], 10 );
-		add_action( 'acf/load_field/name=grant_year', [ self::class, 'populate_grant_year_select_options' ], 10 );
-		add_action( 'acf/load_field/name=training_centre', [ self::class, 'populate_training_centre_select_options' ], 10 );
-		add_action( 'acf/load_field', [ self::class, 'set_course_template_fields_optional' ] );
+	}
+
+	/**
+	 * When editing a course template
+	 * then all fields are optional
+	 */
+	public static function validate_product_template( $valid, $value, $field, $input_name ) {
+		if ( is_admin() ) {
+			if ( isset( $_POST['post_type'] ) && isset( $_POST['post_id'] ) && isset( $_POST['post_status'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
+				if ( 'product' === $_POST['post_type'] && 'template' === $_POST['post_status'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
+					$valid = true;
+				}
+			}
+		}
+		return $valid;
 	}
 
 	/**

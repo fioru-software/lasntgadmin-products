@@ -723,11 +723,22 @@ class ProductActionsFilters {
 		}
 
 		$errors = [];
-		if ( '' === $postarr['_stock'] ) {
-			$errors[] = __( 'Capacity is required.', 'lasntgadmin' );
-		} elseif ( ! empty( $postarr['_stock'] ) && 0 > (int) $postarr['_stock'] ) {
-			$errors[] = __( 'Capacity cannot be negative.', 'lasntgadmin' );
-		}
+
+		/**
+		 * Course templates do not require cost or capacity.
+		 */
+		if ( 'template' !== $postarr['lasntgadmin_status'] ) {
+			if ( '' === $postarr['_stock'] ) {
+				$errors[] = __( 'Capacity is required.', 'lasntgadmin' );
+			} elseif ( ! empty( $postarr['_stock'] ) && 0 > (int) $postarr['_stock'] ) {
+				$errors[] = __( 'Capacity cannot be negative.', 'lasntgadmin' );
+			}
+			if ( '0' === $postarr['_regular_price'] || empty( $postarr['_regular_price'] ) ) {
+				$errors[] = __( 'Course cost is required.', 'lasntgadmin' );
+			} elseif ( $postarr['_regular_price'] > 5000 ) {
+				$errors[] = __( 'Course cost can not be higher than €5,000.', 'lasntgadmin' );
+			}
+		}//end if
 
 		if ( empty( $postarr['tax_input'] ) ) {
 			$errors[] = __( 'Category is required.', 'lasntgadmin' );
@@ -741,12 +752,6 @@ class ProductActionsFilters {
 
 		if ( empty( $postarr['post_title'] ) ) {
 			$errors[] = __( 'Name is required.', 'lasntgadmin' );
-		}
-
-		if ( '0' === $postarr['_regular_price'] || empty( $postarr['_regular_price'] ) ) {
-			$errors[] = __( 'Course cost is required.', 'lasntgadmin' );
-		} elseif ( $postarr['_regular_price'] > 5000 ) {
-			$errors[] = __( 'Course cost can not be higher than €5,000.', 'lasntgadmin' );
 		}
 
 		$data['post_status'] = $postarr['lasntgadmin_status'];

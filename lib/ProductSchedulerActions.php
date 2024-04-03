@@ -57,7 +57,12 @@ class ProductSchedulerActions {
 			if ( $already_closed ) {
 				continue;
 			}
-			$product = wc_get_product( $product_id );
+			try {
+				$product = wc_get_product( $product_id );
+			} catch ( \Exception $e ) {
+				error_log( "Couldn't find product with ID: " + $product_id );
+				continue;
+			}
 			$product->set_status( 'enrollment_closed' );
 			$product->save();
 			update_post_meta( $product_id, $meta_key, 1 );
@@ -89,8 +94,13 @@ class ProductSchedulerActions {
 		$now->setTimezone( self::get_timezone() );
 		foreach ( $posts as $post ) {
 			$product_id = $post->ID;
-			$product    = wc_get_product( $product_id );
-			$last_sent  = get_post_meta( $product_id, $key, true );
+			try {
+				$product = wc_get_product( $product_id );
+			} catch ( \Exception $e ) {
+				error_log( "Couldn't find product with ID: " + $product_id );
+				continue;
+			}
+			$last_sent = get_post_meta( $product_id, $key, true );
 
 			if ( $last_sent && $last_sent > strtotime( '-1 week' ) ) {
 				continue;

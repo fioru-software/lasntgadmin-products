@@ -5,7 +5,8 @@ namespace Lasntg\Admin\Products;
 use Lasntg\Admin\Group\GroupUtils;
 use Lasntg\Admin\Orders\OrderUtils;
 
-use WC_Product;
+use Groups_Group;
+use WC_Product, DateTime;
 
 /**
  * ProductUtils
@@ -68,11 +69,11 @@ class ProductUtils {
 	/**
 	 * Get products with specific group membership.
 	 *
-	 * @param int    $group_id The group id.
-	 * @param string $status The course status eg. open_for_enrollment.
+	 * @param int      $group_id The group id.
+	 * @param string[] $status The course status eg. [ 'open_for_enrollment' ].
 	 * @return WC_Product[]
 	 */
-	public static function get_products_visible_to_group( int $group_id, string $status ): array {
+	public static function get_products_visible_to_group( int $group_id, array $status ): array {
 		$post_ids = self::get_product_ids_visible_to_group( $group_id, $status );
 		$products = array_map( fn( $post_id ) => wc_get_product( $post_id ), $post_ids );
 		return $products;
@@ -83,28 +84,62 @@ class ProductUtils {
 	 * @param string|string[] $status Product status.
 	 * @return int[] Course ids.
 	 */
-	public static function get_product_ids_visible_to_group( int $group_id, $status ): array {
-		$post_ids = get_posts(
-			[
-				'fields'         => 'ids',
-				'post_status'    => $status,
-				'post_type'      => 'product',
-				'posts_per_page' => -1,
-				'meta_query'     => [
-					'relation' => 'OR',
-					[ // phpcs:ignore Universal.Arrays.MixedKeyedUnkeyedArray.Found, Universal.Arrays.MixedArrayKeyTypes.ImplicitNumericKey
-						'key'     => 'groups-read',
-						'compare' => '=',
-						'type'    => 'NUMERIC',
-						'value'   => $group_id,
-					],
-					[ // phpcs:ignore Universal.Arrays.MixedKeyedUnkeyedArray.Found
-						'key'     => 'groups-read',
-						'compare' => 'NOT EXISTS',
-					],
+	public static function get_product_ids_visible_to_group( int $group_id, array $status ): array {
+		$group    = ( new Groups_Group( $group_id ) )->group;
+		$options  = [
+			'fields'         => 'ids',
+			'post_status'    => $status,
+			'post_type'      => 'product',
+			'posts_per_page' => -1,
+			'meta_query'     => [
+				'relation' => 'OR',
+				[ // phpcs:ignore Universal.Arrays.MixedKeyedUnkeyedArray.Found, Universal.Arrays.MixedArrayKeyTypes.ImplicitNumericKey
+					'key'     => 'groups-read',
+					'compare' => 'IN',
+					'type'    => 'NUMERIC',
+					// Training centre group id needs to be added for local authorities.
+					'value'   => ! empty( $group->parent_id ) ? [ $group->group_id, $group->parent_id ] : [ $group->group_id ],
 				],
-			]
-		);
+				[ // phpcs:ignore Universal.Arrays.MixedKeyedUnkeyedArray.Found
+					'key'     => 'groups-read',
+					'compare' => 'NOT EXISTS',
+				],
+			],
+		];
+		$post_ids = get_posts( $options );
+		return $post_ids;
+	}
+
+	public static function get_product_ids_for_courses_closed_in_grant_year_and_month( int $group_id, int $grant_year, int $month ): array {
+		$status         = [ 'closed' ];
+		$start_datetime = DateTime::createFromFormat( 'j/n/Y H:i', sprintf( '1/%d/%d 00:00', $month, $grant_year ), wp_timezone() );
+		$end_datetime   = DateTime::createFromFormat( 'j/n/Y H:i', sprintf( '31/%d/%d 23:59', $month, $grant_year ), wp_timezone() );
+		$course_ids     = self::get_product_ids_visible_to_group( $group_id, $status );
+
+		// The order of options seem to matter.
+		$options  = [
+			'post__in'       => $course_ids,
+			'post_status'    => $status,
+			'post_type'      => 'product',
+			'posts_per_page' => -1,
+			'fields'         => 'ids',
+			'meta_query'     => [
+				'relation' => 'AND',
+				[ // phpcs:ignore Universal.Arrays.MixedKeyedUnkeyedArray.Found, Universal.Arrays.MixedArrayKeyTypes.ImplicitNumericKey
+					'key'     => 'course_closed_timestamp',
+					'compare' => '>=',
+					'type'    => 'NUMERIC',
+					'value'   => $start_datetime->format( 'U' ),
+				],
+				[ // phpcs:ignore Universal.Arrays.MixedKeyedUnkeyedArray.Found
+					'key'     => 'course_closed_timestamp',
+					'compare' => '<=',
+					'type'    => 'NUMERIC',
+					'value'   => $end_datetime->format( 'U' ),
+				],
+			],
+		];
+		$post_ids = get_posts( $options );
 		return $post_ids;
 	}
 

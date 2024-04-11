@@ -57,7 +57,12 @@ class ProductSchedulerActions {
 			if ( $already_closed ) {
 				continue;
 			}
-			$product = wc_get_product( $product_id );
+			try {
+				$product = wc_get_product( $product_id );
+			} catch ( \Exception $e ) {
+				error_log( "Couldn't find product with ID: " + $product_id );
+				continue;
+			}
 			$product->set_status( 'enrollment_closed' );
 			$product->save();
 			update_post_meta( $product_id, $meta_key, 1 );
@@ -89,8 +94,13 @@ class ProductSchedulerActions {
 		$now->setTimezone( self::get_timezone() );
 		foreach ( $posts as $post ) {
 			$product_id = $post->ID;
-			$product    = wc_get_product( $product_id );
-			$last_sent  = get_post_meta( $product_id, $key, true );
+			try {
+				$product = wc_get_product( $product_id );
+			} catch ( \Exception $e ) {
+				error_log( "Couldn't find product with ID: " + $product_id );
+				continue;
+			}
+			$last_sent = get_post_meta( $product_id, $key, true );
 
 			if ( $last_sent && $last_sent > strtotime( '-1 week' ) ) {
 				continue;
@@ -147,9 +157,9 @@ class ProductSchedulerActions {
 	public static function queue_async_action() {
 		if ( function_exists( 'as_has_scheduled_action' ) ) {
 			if ( false === as_has_scheduled_action( 'lasntgadmin_close_courses' ) ) {
-				as_schedule_recurring_action( strtotime( '+5 minutes' ), MINUTE_IN_SECONDS, 'lasntgadmin_close_courses' );
+				as_schedule_recurring_action( strtotime( '+1 hour' ), HOUR_IN_SECONDS, 'lasntgadmin_close_courses', [], '', true );
 			}if ( false === as_has_scheduled_action( 'lasntgadmin_close_notify' ) ) {
-				as_schedule_recurring_action( strtotime( '+5 minutes' ), MINUTE_IN_SECONDS, 'lasntgadmin_close_notify' );
+				as_schedule_recurring_action( strtotime( '+1 hour' ), HOUR_IN_SECONDS, 'lasntgadmin_close_notify', [], '', true );
 			}
 		}
 	}

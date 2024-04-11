@@ -3,7 +3,7 @@
 namespace Lasntg\Admin\Products;
 
 use Lasntg\Admin\Group\GroupUtils;
-use WP_Post;
+use WP_Post, DateTime;
 
 /**
  * Product edit page.
@@ -27,7 +27,8 @@ class AdminEditView {
 	}
 
 	public static function update_course_closed_timestamp( int $post_id, WP_Post $post ) {
-		update_post_meta( $post_id, 'course_closed_timestamp', time() );
+		$datetime = new DateTime( 'now', wp_timezone() );
+		update_post_meta( $post_id, 'course_closed_timestamp', $datetime->format( 'U' ) );
 	}
 
 	/**

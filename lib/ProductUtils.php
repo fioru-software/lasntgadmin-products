@@ -116,7 +116,7 @@ class ProductUtils {
 		$end_datetime   = DateTime::createFromFormat( 'j/n/Y H:i', sprintf( '31/%d/%d 23:59', $month, $grant_year ), wp_timezone() );
 
 		// The order of options seem to matter.
-		$options  = [
+		$options = [
 			'post_status'    => $status,
 			'post_type'      => 'product',
 			'posts_per_page' => -1,
@@ -137,8 +137,8 @@ class ProductUtils {
 				],
 			],
 		];
-		if( $group_id > 0 ) {
-			$course_ids     = self::get_product_ids_visible_to_group( $group_id, $status );
+		if ( $group_id > 0 ) {
+			$course_ids          = self::get_product_ids_visible_to_group( $group_id, $status );
 			$options['post__in'] = $course_ids;
 		}
 

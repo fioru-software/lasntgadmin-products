@@ -77,10 +77,10 @@ class ProductActionsFilters {
 			add_filter( 'woocommerce_product_tabs', [ self::class, 'remove_product_tab' ], 9999 );
 
 			add_filter( 'woocommerce_product_meta_start', [ self::class, 'woocommerce_get_availability_text' ], 10, 2 );
-			add_filter( 'woocommerce_is_purchasable', [ self::class, 'product_is_in_stock' ], 15, 2 );
-			add_filter( 'woocommerce_is_purchasable', [ self::class, 'set_product_to_purchasable' ], 1, 2 );
 			add_filter( 'woocommerce_product_query', [ self::class, 'woocommerce_product_query' ], 15, 1 );
 		}
+		add_filter( 'woocommerce_is_purchasable', [ self::class, 'product_is_in_stock' ], 15, 2 );
+		add_filter( 'woocommerce_is_purchasable', [ self::class, 'set_product_to_purchasable' ], 1, 2 );
 		add_filter( 'use_block_editor_for_post', [ self::class, 'remove_block_editor' ], 50, 2 );
 	}
 

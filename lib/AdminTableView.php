@@ -75,7 +75,7 @@ class AdminTableView {
 		return $columns;
 	}
 	public static function modify_edit_product_link( string $link, int $post_id, string $context ): string {
-		if ( wc_current_user_has_role( 'training_officer' ) || wc_current_user_has_role( 'fire_training_officer' ) ) {
+		if ( 'product' === get_post_type() && ( wc_current_user_has_role( 'training_officer' ) || wc_current_user_has_role( 'fire_training_officer' ) ) ) {
 			$link = '#';
 		}
 		return $link;
@@ -86,7 +86,7 @@ class AdminTableView {
 		 * Training officers require the edit_others_products cap, when removing attendee from paid order,
 		 * which also increments product stock, but we don't want them to edit products via the UI.
 		 */
-		if ( wc_current_user_has_role( 'training_officer' ) || wc_current_user_has_role( 'fire_training_officer' ) ) {
+		if ( 'product' === get_post_type() && ( wc_current_user_has_role( 'training_officer' ) || wc_current_user_has_role( 'fire_training_officer' ) ) ) {
 			unset( $actions['edit'] );
 		}
 		return $actions;
@@ -353,7 +353,9 @@ class AdminTableView {
 	}
 
 	public static function modify_product_row_actions( array $actions ): array {
-		unset( $actions['inline hide-if-no-js'] );
+		if ( 'product' === get_post_type() ) {
+			unset( $actions['inline hide-if-no-js'] );
+		}
 		return $actions;
 	}
 

@@ -419,6 +419,8 @@ class AdminTableView {
 			$centres = get_field( 'field_63881beb798a7', $post_id ); //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			if ( is_array( $centres ) && count( $centres ) ) {
 				echo implode( ', ', $centres ); //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			} else {
+				echo esc_attr( $centres );
 			}
 		} elseif ( 'places_available' === $column ) {
 			$product = wc_get_product( $post_id );

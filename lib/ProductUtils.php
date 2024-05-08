@@ -111,7 +111,7 @@ class ProductUtils {
 	}
 
 	/**
-	 * @param int             $group_id Group product is visible to.
+	 * @param int             $training_centre_group_id Training centre group id.
 	 * @param string|string[] $status Product status.
 	 * @return int[] Course ids.
 	 */

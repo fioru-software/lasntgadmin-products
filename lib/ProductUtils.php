@@ -127,8 +127,8 @@ class ProductUtils {
 					'compare' => '=',
 					'type'    => 'NUMERIC',
 					// Training centre group id needs to be added for local authorities.
-					'value'   => $training_centre_group_id
-				]
+					'value'   => $training_centre_group_id,
+				],
 			],
 		];
 		$post_ids = get_posts( $options );
@@ -143,15 +143,16 @@ class ProductUtils {
 
 		/**
 		 * Passing an empty array to post__in will return has_posts() as true (and all posts will be returned). Logic should be used before hand to determine if WP_Query should be used in the event that the array being passed to post__in is empty.
+		 *
 		 * @see https://core.trac.wordpress.org/ticket/28099
 		 */
-		if( empty( $course_ids ) ) {
+		if ( empty( $course_ids ) ) {
 			return [];
 		}
 
 		// The order of options seem to matter.
-		$options = [
-			'post__in' => $course_ids,
+		$options  = [
+			'post__in'       => $course_ids,
 			'post_status'    => $status,
 			'post_type'      => 'product',
 			'posts_per_page' => -1,
@@ -170,7 +171,7 @@ class ProductUtils {
 					'type'    => 'NUMERIC',
 					'value'   => $end_datetime->format( 'U' ),
 				],
-			]
+			],
 		];
 		$post_ids = get_posts( $options );
 		return $post_ids;

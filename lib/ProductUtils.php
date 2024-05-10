@@ -110,7 +110,82 @@ class ProductUtils {
 		return $post_ids;
 	}
 
+	/**
+	 * @param int             $training_centre_group_id Training centre group id.
+	 * @param string|string[] $status Product status.
+	 * @return int[] Course ids.
+	 */
+	public static function get_product_ids_for_training_centre( int $training_centre_group_id, array $status ): array {
+		$options  = [
+			'fields'         => 'ids',
+			'post_status'    => $status,
+			'post_type'      => 'product',
+			'posts_per_page' => -1,
+			'meta_query'     => [
+				[ // phpcs:ignore Universal.Arrays.MixedKeyedUnkeyedArray.Found, Universal.Arrays.MixedArrayKeyTypes.ImplicitNumericKey
+					'key'     => 'training_centre',
+					'compare' => '=',
+					'type'    => 'NUMERIC',
+					// Training centre group id needs to be added for local authorities.
+					'value'   => $training_centre_group_id,
+				],
+			],
+		];
+		$post_ids = get_posts( $options );
+		return $post_ids;
+	}
+
+	public static function get_product_ids_for_courses_closed_in_grant_year_and_month_for_training_centre( int $grant_year, int $month, int $training_centre_group_id ): array {
+		$status         = [ 'closed' ];
+		$start_datetime = DateTime::createFromFormat( 'j/n/Y H:i', sprintf( '1/%d/%d 00:00', $month, $grant_year ), wp_timezone() );
+		$end_datetime   = DateTime::createFromFormat( 'j/n/Y H:i', sprintf( '31/%d/%d 23:59', $month, $grant_year ), wp_timezone() );
+		$course_ids     = self::get_product_ids_for_training_centre( $training_centre_group_id, $status );
+
+		/**
+		 * Passing an empty array to post__in will return has_posts() as true (and all posts will be returned). Logic should be used before hand to determine if WP_Query should be used in the event that the array being passed to post__in is empty.
+		 *
+		 * @see https://core.trac.wordpress.org/ticket/28099
+		 */
+		if ( empty( $course_ids ) ) {
+			return [];
+		}
+
+		// The order of options seem to matter.
+		$options  = [
+			'post__in'       => $course_ids,
+			'post_status'    => $status,
+			'post_type'      => 'product',
+			'posts_per_page' => -1,
+			'fields'         => 'ids',
+			'meta_query'     => [
+				'relation' => 'AND',
+				[ // phpcs:ignore Universal.Arrays.MixedKeyedUnkeyedArray.Found, Universal.Arrays.MixedArrayKeyTypes.ImplicitNumericKey
+					'key'     => 'course_closed_timestamp',
+					'compare' => '>=',
+					'type'    => 'NUMERIC',
+					'value'   => $start_datetime->format( 'U' ),
+				],
+				[ // phpcs:ignore Universal.Arrays.MixedKeyedUnkeyedArray.Found
+					'key'     => 'course_closed_timestamp',
+					'compare' => '<=',
+					'type'    => 'NUMERIC',
+					'value'   => $end_datetime->format( 'U' ),
+				],
+			],
+		];
+		$post_ids = get_posts( $options );
+		return $post_ids;
+	}
+
+	/**
+	 * @deprecated Renamed to be more descriptive.
+	 * @see self::get_product_ids_for_courses_closed_in_grant_year_and_month_visible_to_group()
+	 */
 	public static function get_product_ids_for_courses_closed_in_grant_year_and_month( int $grant_year, int $month, int $group_id = 0 ): array {
+		return self::get_product_ids_for_courses_closed_in_grant_year_and_month_visible_to_group( $grant_year, $month, $group_id );
+	}
+
+	public static function get_product_ids_for_courses_closed_in_grant_year_and_month_visible_to_group( int $grant_year, int $month, int $group_id = 0 ): array {
 		$status         = [ 'closed' ];
 		$start_datetime = DateTime::createFromFormat( 'j/n/Y H:i', sprintf( '1/%d/%d 00:00', $month, $grant_year ), wp_timezone() );
 		$end_datetime   = DateTime::createFromFormat( 'j/n/Y H:i', sprintf( '31/%d/%d 23:59', $month, $grant_year ), wp_timezone() );

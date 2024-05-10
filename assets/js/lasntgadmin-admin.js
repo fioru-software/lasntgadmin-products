@@ -17,12 +17,7 @@ jQuery(document).ready(function ($) {
       })
       return false;
    })
-   const wrapper = $('.product-data-wrapper');
 
-   if (wrapper.length) {
-      $('#_virtual').prop('checked', true);
-      wrapper.hide();
-   }
    // turn product categories checklist to radio buttons.
    $('#product_catchecklist li input[type="checkbox"]').each(function () {
       $(this).prop('type', 'radio')
@@ -31,7 +26,6 @@ jQuery(document).ready(function ($) {
          $(this).remove()
       }
    });
-
 
    //
    if ('product' !== lasntgadmin_products_admin_localize.post_type) {

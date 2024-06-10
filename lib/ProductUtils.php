@@ -42,6 +42,13 @@ class ProductUtils {
 		return isset( self::$statuses[ $status ] ) ? self::$statuses[ $status ] : $status;
 	}
 
+	public static function get_total_capacity( WC_Product $product ): int {
+		$order_ids = self::get_orders_ids_by_product_id( $product->get_id(), [ 'wc-completed', 'wc-on-hold', 'wc-processing' ] );
+		$sales     = self::get_total_items( $order_ids );
+		$total     = $product->get_stock_quantity() + $sales;
+		return $total;
+	}
+
 	/**
 	 * Redirect back
 	 *

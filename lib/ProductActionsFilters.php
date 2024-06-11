@@ -54,6 +54,10 @@ class ProductActionsFilters {
 			'admin_footer',
 			[ self::class, 'admin_footer' ]
 		);
+
+		if ( is_admin() ) {
+			add_action( 'woocommerce_product_duplicate_before_save', [ self::class, 'duplicate_product' ], 10, 2 );
+		}
 	}
 
 	public static function add_filters(): void {
@@ -82,6 +86,10 @@ class ProductActionsFilters {
 		add_filter( 'woocommerce_is_purchasable', [ self::class, 'product_is_in_stock' ], 15, 2 );
 		add_filter( 'woocommerce_is_purchasable', [ self::class, 'set_product_to_purchasable' ], 1, 2 );
 		add_filter( 'use_block_editor_for_post', [ self::class, 'remove_block_editor' ], 50, 2 );
+	}
+
+	public static function duplicate_product( WC_Product $duplicate, WC_Product $product ): void {
+		$duplicate->set_parent_id( $product->get_id() );
 	}
 
 	public static function remove_block_editor( bool $use_block_editor, WP_Post $post ) {

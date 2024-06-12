@@ -9,6 +9,7 @@ use WP_Post;
 use Groups_Group;
 use WP_Query;
 use Lasntg\Admin\Group\GroupUtils;
+use WC_Product, WC_Product_Simple;
 
 /**
  * Handle Actions anf filters for products
@@ -88,7 +89,7 @@ class ProductActionsFilters {
 		add_filter( 'use_block_editor_for_post', [ self::class, 'remove_block_editor' ], 50, 2 );
 	}
 
-	public static function duplicate_product( WC_Product $duplicate, WC_Product $product ): void {
+	public static function duplicate_product( WC_Product_Simple $duplicate, WC_Product_Simple $product ): void {
 		$duplicate->set_parent_id( $product->get_id() );
 	}
 

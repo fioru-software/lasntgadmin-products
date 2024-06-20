@@ -83,10 +83,9 @@ class AdminTableView {
 
 	public static function modify_product_bulk_actions( array $actions ): array {
 		/**
-		 * Training officers require the edit_others_products cap, when removing attendee from paid order,
-		 * which also increments product stock, but we don't want them to edit products via the UI.
+		 * Completely remoe the edit as it does quick edit.
 		 */
-		if ( 'product' === get_post_type() && ( wc_current_user_has_role( 'training_officer' ) || wc_current_user_has_role( 'fire_training_officer' ) ) ) {
+		if ( 'product' === get_post_type() ) {
 			unset( $actions['edit'] );
 		}
 		return $actions;

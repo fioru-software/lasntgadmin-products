@@ -95,6 +95,9 @@ class Capabilities {
 
 			'upload_files',
 			'woocommerce_duplicate_product_capability',
+
+			// have to duplicate templates.
+			'publish_products',
 		];
 	}
 

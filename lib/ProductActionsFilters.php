@@ -365,6 +365,9 @@ class ProductActionsFilters {
 	 * @see https://github.com/itthinx/groups/blob/master/lib/access/class-groups-post-access.php#L223
 	 */
 	public static function filter_products_apply( $bool, $where, $query ) {
+		if ( ! function_exists( 'is_shop' ) ) {
+			return $bool;
+		}
 		if ( ! is_admin() && ( ( is_singular() && $query->get( 'post_type' ) === 'product' ) || is_shop() ) ) {
 			$bool = false;
 		}

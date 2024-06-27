@@ -1,6 +1,7 @@
 #catalog-visibility,
 #preview-action,
 #visibility,
-.misc-pub-curtime{
+.misc-pub-curtime,
+#minor-publishing-actions{
     display: none;
 }

@@ -7,7 +7,7 @@ use Lasntg\Admin\Products\{ QuotaUtils, AdminTableUtils };
 
 use DOMDocument, stdClass;
 
-use WP_User, WP_Query;
+use WP_User, WP_Query, WP_Post;
 
 /**
  * Product list page.
@@ -30,7 +30,7 @@ class AdminTableView {
 		add_filter( 'manage_product_posts_columns', [ self::class, 'add_order_create_column' ], 20 );
 		add_filter( 'manage_product_posts_columns', [ self::class, 'add_group_quota_column' ], 15 );
 		add_filter( 'manage_product_posts_columns', [ self::class, 'modify_existing_columns' ], 15 );
-		add_filter( 'post_row_actions', [ self::class, 'modify_product_row_actions' ] );
+		add_filter( 'post_row_actions', [ self::class, 'modify_product_row_actions' ], 99, 2 );
 		add_filter( 'login_redirect', [ self::class, 'redirect_to_product_list' ], 10, 3 );
 		add_filter( 'woocommerce_duplicate_product_capability', [ self::class, 'woocommerce_duplicate_product_capability' ] );
 
@@ -39,7 +39,7 @@ class AdminTableView {
 		 * which also increments product stock, but we don't want them to edit products via the UI.
 		 */
 		add_filter( 'post_row_actions', [ self::class, 'modify_list_row_actions' ], 10, 2 );
-		add_filter( 'bulk_actions-edit-product', [ self::class, 'modify_product_bulk_actions' ] );
+		add_filter( 'bulk_actions-edit-product', [ self::class, 'modify_product_bulk_actions' ], 99, 1 );
 		add_filter( 'get_edit_post_link', [ self::class, 'modify_edit_product_link' ], 10, 3 );
 
 		/**
@@ -61,12 +61,21 @@ class AdminTableView {
 		add_filter( 'manage_edit-product_sortable_columns', [ self::class, 'sortable_venue' ] );
 	}
 
+	public static function modify_product_row_actions( array $actions, WP_Post $post ): array {
+		if ( 'product' === get_post_type() ) {
+			unset( $actions['inline hide-if-no-js'] );
+			if ( 'template' !== $post->post_status ) {
+				unset( $actions['duplicate'] );
+			}
+		}
+		return $actions;
+	}
+
 	public static function add_columns_css( $defaults ) {
 		$assets_dir = untrailingslashit( plugin_dir_url( __FILE__ ) ) . '/../assets/';
 		wp_enqueue_style( 'admin-columns', $assets_dir . 'styles/admin-column.css', [], '1.1.1' );
 		return $defaults;
 	}
-
 
 	public static function sortable_venue( $columns ) {
 		$columns['venue']      = __( 'Venue', 'lasntgadmin' );
@@ -83,7 +92,7 @@ class AdminTableView {
 
 	public static function modify_product_bulk_actions( array $actions ): array {
 		/**
-		 * Completely remoe the edit as it does quick edit.
+		 * Completely remove the edit as it does quick edit.
 		 */
 		if ( 'product' === get_post_type() ) {
 			unset( $actions['edit'] );
@@ -349,13 +358,6 @@ class AdminTableView {
 			}
 		}
 		return $columns;
-	}
-
-	public static function modify_product_row_actions( array $actions ): array {
-		if ( 'product' === get_post_type() ) {
-			unset( $actions['inline hide-if-no-js'] );
-		}
-		return $actions;
 	}
 
 	public static function render_product_column( string $column, int $post_id ): void {

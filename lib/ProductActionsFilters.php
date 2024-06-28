@@ -70,6 +70,7 @@ class ProductActionsFilters {
 
 			// media library.
 			add_filter( 'ajax_query_attachments_args', [ self::class, 'show_groups_attachments' ] );
+			add_filter( 'user_has_cap', [ self::class, 'allow_template_editing' ], 10, 4 );
 		}
 
 		if ( ! is_admin() ) {
@@ -88,7 +89,43 @@ class ProductActionsFilters {
 		add_filter( 'woocommerce_is_purchasable', [ self::class, 'set_product_to_purchasable' ], 1, 2 );
 		add_filter( 'use_block_editor_for_post', [ self::class, 'remove_block_editor' ], 50, 2 );
 	}
+	/**
+	 * Undocumented function
+	 *
+	 * @param array   $allcaps All Caps.
+	 * @param array   $caps    Caps.
+	 * @param array   $args    Args.
+	 * @param WP_User $user    User.
+	 * @return array
+	 */
+	public static function allow_template_editing( $allcaps, $caps, $args, $user ) {
 
+		// If not editing, return.
+		if ( 'edit_post' != $args[0] ) {
+			return $allcaps;
+		}
+
+		$post = get_post( (int) $args[0] );
+		if ( ! $post || 'product' !== $post->post_type ) {
+			return $allcaps;
+		}
+
+		if ( $args[1] == $post->post_author ) {
+			return $allcaps;
+		}
+		if ( 'template' !== $post->post_status ) {
+			return $allcaps;
+		}
+		if (
+			wc_current_user_has_role( 'national_manager' ) ||
+			wc_current_user_has_role( 'administrator' )
+		) {
+				return $allcaps;
+		}
+		$allcaps['edit_products'] = false;
+
+		return $allcaps;
+	}
 	public static function duplicate_product( WC_Product_Simple $duplicate, WC_Product_Simple $product ): void {
 		$duplicate->set_parent_id( $product->get_id() );
 	}

@@ -40,7 +40,10 @@ class AdminTableView {
 		 */
 		add_filter( 'post_row_actions', [ self::class, 'modify_list_row_actions' ], 10, 2 );
 		add_filter( 'bulk_actions-edit-product', [ self::class, 'modify_product_bulk_actions' ], 99, 1 );
-		add_filter( 'get_edit_post_link', [ self::class, 'modify_edit_product_link' ], 10, 3 );
+
+		if ( is_admin() ) {
+			add_filter( 'get_edit_post_link', [ self::class, 'modify_edit_product_link' ], 10, 3 );
+		}
 
 		/**
 		 * RTC Managers need the Group plugin's Administer Groups permission, so that they can assign groups when creating users.
@@ -84,8 +87,16 @@ class AdminTableView {
 		return $columns;
 	}
 	public static function modify_edit_product_link( string $link, int $post_id, string $context ): string {
-		if ( 'product' === get_post_type() && ( wc_current_user_has_role( 'training_officer' ) || wc_current_user_has_role( 'fire_training_officer' ) ) ) {
-			$link = '#';
+		if ( 'product' === get_post_type( $post_id ) ) {
+			if ( wc_current_user_has_role( 'administrator' ) ) {
+				return $link;
+			}
+			if ( ! wc_current_user_has_role( 'national_manager' ) && 'template' === get_post_status( $post_id ) ) {
+				$link = '#';
+			}
+			if ( wc_current_user_has_role( 'training_officer' ) || wc_current_user_has_role( 'fire_training_officer' ) ) {
+				$link = '#';
+			}
 		}
 		return $link;
 	}

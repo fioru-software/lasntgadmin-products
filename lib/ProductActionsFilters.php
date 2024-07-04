@@ -70,7 +70,7 @@ class ProductActionsFilters {
 
 			// media library.
 			add_filter( 'ajax_query_attachments_args', [ self::class, 'show_groups_attachments' ] );
-			add_filter( 'user_has_cap', [ self::class, 'allow_template_editing' ], 10, 4 );
+			add_filter( 'user_has_cap', [ self::class, 'allow_template_editing' ], 1000, 4 );
 		}
 
 		if ( ! is_admin() ) {
@@ -123,6 +123,7 @@ class ProductActionsFilters {
 				return $allcaps;
 		}
 		$allcaps['edit_products'] = false;
+		$allcaps[ $caps[0] ]      = false;
 
 		return $allcaps;
 	}

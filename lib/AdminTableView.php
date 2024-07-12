@@ -364,6 +364,7 @@ class AdminTableView {
 		if ( current_user_can( 'publish_shop_orders' ) && 'group_quota' === $column ) {
 			echo self::render_group_quota( $post_id ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		}
+
 		if ( 'course_info' === $column ) {
 			echo esc_attr( get_post_meta( $post_id, 'course_info', true ) );
 		}

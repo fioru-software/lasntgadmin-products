@@ -21,4 +21,8 @@ jQuery(document).ready(function ($) {
 		});
 		}
 	}
+	// hide arrow for duplicates
+	$('td.column-name').html(function (i, t) {
+		return t.replace('&nbsp;&nbsp;←', '')
+	})
 });

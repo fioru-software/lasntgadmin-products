@@ -1,0 +1,16 @@
+.subsubsub li.draft,
+.subsubsub li.open_for_enrollment,
+.subsubsub li.template,
+.subsubsub li.enrollment_closed,
+.subsubsub li.date_passed,
+.subsubsub li.cancelled,
+.subsubsub li.pending,
+.subsubsub li.closed,
+.subsubsub li.archived
+{
+    display: inline-block;
+}
+.subsubsub li
+{
+    display: none;
+}

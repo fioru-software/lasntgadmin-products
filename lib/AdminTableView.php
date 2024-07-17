@@ -73,7 +73,10 @@ class AdminTableView {
 
 	public static function add_columns_css( $defaults ) {
 		$assets_dir = untrailingslashit( plugin_dir_url( __FILE__ ) ) . '/../assets/';
-		wp_enqueue_style( 'admin-columns', $assets_dir . 'styles/admin-column.css', [], '1.1.1' );
+		wp_enqueue_style( 'admin-columns', $assets_dir . 'styles/admin-column.css', [], PluginUtils::get_version() );
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_enqueue_style( 'non-admin-table-view', $assets_dir . 'styles/non-admin-table-view.css', [], 123 );
+		}
 		return $defaults;
 	}
 
@@ -364,6 +367,7 @@ class AdminTableView {
 		if ( current_user_can( 'publish_shop_orders' ) && 'group_quota' === $column ) {
 			echo self::render_group_quota( $post_id ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		}
+
 		if ( 'course_info' === $column ) {
 			echo esc_attr( get_post_meta( $post_id, 'course_info', true ) );
 		}

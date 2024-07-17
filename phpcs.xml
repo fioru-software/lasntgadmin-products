@@ -20,7 +20,7 @@
 	<arg name="extensions" value="php"/>
 	<arg name="parallel" value="8"/><!-- Enables parallel processing when available for faster results. -->
 
-    !-- Rules: Check PHP version compatibility -->
+    <!-- Rules: Check PHP version compatibility -->
 	<!-- https://github.com/PHPCompatibility/PHPCompatibility#sniffing-your-code-for-compatibility-with-specific-php-versions -->
 	<config name="testVersion" value="7.4-"/>
 	<!-- https://github.com/PHPCompatibility/PHPCompatibilityWP -->

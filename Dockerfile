@@ -1,4 +1,4 @@
-FROM php:7-apache
+FROM php:8.3-apache
 
 ARG USER_ID
 ARG WP_VERSION
@@ -7,12 +7,9 @@ ARG GITHUB_TOKEN
 
 RUN a2enmod rewrite                                                                                                                                                                           
 RUN apt update; \
-    apt install -y default-mysql-client vim libzip-dev unzip libpng-dev libmagickwand-dev libicu-dev subversion ssl-cert git
+    apt install -y default-mysql-client vim libzip-dev unzip libpng-dev libicu-dev subversion ssl-cert git
 
-RUN pecl install --configureoptions='with-imagick="autodetect"' imagick; \
-    docker-php-ext-enable imagick
-
-RUN docker-php-ext-install mysqli zip gd intl exif
+RUN docker-php-ext-install mysqli zip gd intl exif 
 
 RUN chown -R www-data:www-data /var/www /usr/local/src; \
     usermod -u $USER_ID www-data; \

@@ -49,11 +49,15 @@ class AcfFields {
 			if ( ! is_null( $screen ) ) {
 				if ( 'product' === $screen->post_type && 'edit' === $screen->parent_base && 'product' === $screen->id ) {
 					if ( isset( $_GET['post'] ) ) {
+						// Editing a template.
 						$post_id = intval( $_GET['post'] );
 						$post    = get_post( $post_id );
 						if ( 'template' === $post->post_status ) {
 							$field['required'] = 0;
 						}
+					} elseif ( wc_current_user_has_role( 'national_manager' ) && array_key_exists( 'name', $field ) && 'location' === $field['name'] ) {
+						// Creating a new template from scratch.
+						$field['required'] = 0;
 					}
 				}
 			}

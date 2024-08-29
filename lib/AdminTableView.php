@@ -309,6 +309,7 @@ class AdminTableView {
 		if ( ! wc_current_user_has_role( 'training_officer' ) ) {
 			$columns['places_available'] = __( 'Places Available', 'lasntgadmin' );
 			$columns['places_booked']    = __( 'Places Booked', 'lasntgadmin' );
+			$columns['reserved_stock']   = __( 'Places Reserved', 'lasntgadmin' );
 		}
 		$columns['venue'] = __( 'Venue', 'lasntgadmin' );
 
@@ -363,7 +364,13 @@ class AdminTableView {
 		return $columns;
 	}
 
+
 	public static function render_product_column( string $column, int $post_id ): void {
+
+		if ( 'reserved_stock' === $column ) {
+			echo esc_attr( self::render_reserved_stock( $post_id ) );
+		}
+
 		if ( current_user_can( 'publish_shop_orders' ) && 'group_quota' === $column ) {
 			echo self::render_group_quota( $post_id ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		}
@@ -429,16 +436,17 @@ class AdminTableView {
 			}
 		} elseif ( 'places_available' === $column ) {
 			$product = wc_get_product( $post_id );
-
-			$order_ids = ProductUtils::get_orders_ids_by_product_id( $post_id, [ 'wc-completed', 'wc-on-hold', 'wc-processing' ] );
-			$sales     = ProductUtils::get_total_items( $order_ids );
-			$total     = $product->get_stock_quantity();
+			$total   = $product->get_stock_quantity() - wc_get_held_stock_quantity( $product );
 			echo $total . ( 0 === $total ? ' <span class="text-red">(Full)</span>' : '' ); //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		} elseif ( 'places_booked' === $column ) {
 			$order_ids = ProductUtils::get_orders_ids_by_product_id( $post_id, [ 'wc-completed', 'wc-on-hold', 'wc-processing' ] );
 			$sales     = ProductUtils::get_total_items( $order_ids );
 			echo "<span class='text-green'>$sales</span>"; //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		}//end if
+	}
+
+	private static function render_reserved_stock( int $product_id ): string {
+		return wc_get_held_stock_quantity( wc_get_product( $product_id ) );
 	}
 
 	private static function render_group_quota( int $product_id ): string {

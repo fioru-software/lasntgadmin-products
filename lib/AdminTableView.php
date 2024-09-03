@@ -230,7 +230,16 @@ class AdminTableView {
 	 */
 	public static function views_edit_product( array $views ): array {
 		unset( $views['all'] );
+		$statuses = ProductUtils::$statuses;
 
+		$statuses['draft'] = 'Draft';
+		$keys              = array_keys( $statuses );
+		// remove unwanted statuses from the table view.
+		foreach ( $views as $name => $view ) {
+			if ( ! in_array( $name, $keys ) ) {
+				unset( $views[ $name ] );
+			}
+		}
 		if ( isset( $views[ ProductUtils::$publish_status ] ) ) {
 			$first = $views[ ProductUtils::$publish_status ];
 			unset( $views[ ProductUtils::$publish_status ] );
@@ -248,6 +257,7 @@ class AdminTableView {
 				$views
 			);
 		}
+
 		return $views;
 	}
 

@@ -31,6 +31,13 @@ jQuery(document).ready(function ($) {
    if ('product' !== lasntgadmin_products_admin_localize.post_type) {
       return;
    }
+   const post_status_el = $('#post_status');
+   if( post_status_el.length ){
+      const pending = post_status_el.find("option[value='pending']");
+      if( pending.length ){
+         pending.remove()
+      }
+   }
    const sel1 = $('[name="groups-read[]"]').selectize();
    sel1[0].selectize.removeOption(1);
    sel1[0].selectize.refreshOptions(false);

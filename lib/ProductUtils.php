@@ -24,6 +24,7 @@ class ProductUtils {
 		'archived'            => 'Archived',
 	];
 
+
 	public static function is_open_for_enrollment( WC_Product $product ): bool {
 		return $product->get_status() === self::$publish_status || 'date_passed' === $product->get_status();
 	}

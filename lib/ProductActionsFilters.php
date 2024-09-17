@@ -88,16 +88,6 @@ class ProductActionsFilters {
 		add_filter( 'woocommerce_is_purchasable', [ self::class, 'product_is_in_stock' ], 15, 2 );
 		add_filter( 'woocommerce_is_purchasable', [ self::class, 'set_product_to_purchasable' ], 1, 2 );
 		add_filter( 'use_block_editor_for_post', [ self::class, 'remove_block_editor' ], 50, 2 );
-
-		add_filter(
-			'wc_product_statuses',
-			function ( $post_status, $post ) {
-				die( 'test' );
-				return 'private';
-			},
-			10,
-			2
-		);
 	}
 	/**
 	 * Undocumented function

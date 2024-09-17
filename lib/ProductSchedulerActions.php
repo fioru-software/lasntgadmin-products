@@ -112,9 +112,13 @@ class ProductSchedulerActions {
 				continue;
 			}
 
-			$groups       = GroupUtils::get_read_group_ids( $product_id );
-			$end_date     = get_post_meta( $product_id, 'end_date', true );
-			$end_time     = get_post_meta( $product_id, 'end_time', true );
+			$groups   = GroupUtils::get_read_group_ids( $product_id );
+			$end_date = get_post_meta( $product_id, 'end_date', true );
+			$end_time = get_post_meta( $product_id, 'end_time', true );
+			if ( ! $end_time ) {
+				$end_time = '00:00:00';
+			}
+
 			$end_date_str = "$end_date $end_time";
 			$end_date     = DateTime::createFromFormat( 'Ymd H:i:s', $end_date_str );
 			if ( ! $end_date ) {

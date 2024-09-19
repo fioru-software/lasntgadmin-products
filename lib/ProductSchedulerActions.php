@@ -70,33 +70,9 @@ class ProductSchedulerActions {
 	}
 
 	public static function notify_to_check_course_status(): void {
-		$key = 'lasntg_last_notified';
-
-		$from_now = new DateTime( 'now' );
-		$from_now->setTimezone( self::get_timezone() );
-		$from_now->modify( '-3 week' );
-
-		$posts = get_posts(
-			array(
-				'post_type'   => 'product',
-				'post_status' => 'enrollment_closed',
-				'meta_query'  => array(
-					'relation' => 'AND',
-					array( // phpcs:ignore Universal.Arrays.MixedArrayKeyTypes.ImplicitNumericKey, Universal.Arrays.MixedKeyedUnkeyedArray.Found
-						'key'     => 'end_date',
-						'value'   => ' ',
-						'compare' => '!=',
-					),
-					array( // phpcs:ignore Universal.Arrays.MixedKeyedUnkeyedArray.Found
-						'key'     => 'end_date',
-						'value'   => $from_now->format( 'Ymd' ),
-						'compare' => '<=',
-					),
-
-				),
-			)
-		);
-		$now = new DateTime();
+		$key   = 'lasntg_last_notified';
+		$posts = self::get_enrolments_closed();
+		$now   = new DateTime();
 		$now->setTimezone( self::get_timezone() );
 		foreach ( $posts as $post ) {
 			$product_id = $post->ID;
@@ -154,7 +130,37 @@ class ProductSchedulerActions {
 			update_post_meta( $product_id, $key, strtotime( 'now' ) );
 		}//end foreach
 	}
+	/**
+	 * Get Enrolments closed that that have passed 3 weeks from now.
+	 *
+	 * @return array
+	 */
+	private static function get_enrolments_closed() {
+		$from_now = new DateTime( 'now' );
+		$from_now->setTimezone( self::get_timezone() );
+		$from_now->modify( '-3 week' );
 
+		return get_posts(
+			array(
+				'post_type'   => 'product',
+				'post_status' => 'enrollment_closed',
+				'meta_query'  => array(
+					'relation' => 'AND',
+					array( // phpcs:ignore Universal.Arrays.MixedArrayKeyTypes.ImplicitNumericKey, Universal.Arrays.MixedKeyedUnkeyedArray.Found
+						'key'     => 'end_date',
+						'value'   => ' ',
+						'compare' => '!=',
+					),
+					array( // phpcs:ignore Universal.Arrays.MixedKeyedUnkeyedArray.Found
+						'key'     => 'end_date',
+						'value'   => $from_now->format( 'Ymd' ),
+						'compare' => '<=',
+					),
+
+				),
+			)
+		);
+	}
 	private static function send_notification_mail( $product, $user, $weeks ): void {
 		$name    = $product->get_name();
 		$email   = $user->user_email;

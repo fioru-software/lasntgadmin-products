@@ -498,6 +498,7 @@ class AdminTableView {
 			$plugin_data['Version']
 		);
 		wp_enqueue_script( $name );
+		wp_localize_script( $name, 'table_view', array( 'post_status_isset' => isset( $_GET['post_status'] ) ? 1 : 0 ) );
 
 		// Load our style.css.
 		wp_register_style(

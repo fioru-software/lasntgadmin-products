@@ -24,5 +24,9 @@ jQuery(document).ready(function ($) {
 	// hide arrow for duplicates
 	$('td.column-name').html(function (i, t) {
 		return t.replace('&nbsp;&nbsp;←', '')
-	})
+	});
+	if(table_view && table_view.post_status_isset == 0){
+		$('#posts-filter').find('input[name="post_status"]').val('open_for_enrollment')
+	}
+
 });

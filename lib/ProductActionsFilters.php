@@ -59,6 +59,7 @@ class ProductActionsFilters {
 		if ( is_admin() ) {
 			add_action( 'woocommerce_product_duplicate_before_save', [ self::class, 'duplicate_product' ], 10, 2 );
 		}
+		add_action( 'admin_menu', [ self::class, 'make_open_for_enrollment_default_status' ], 99999 );
 	}
 
 	public static function add_filters(): void {
@@ -89,6 +90,30 @@ class ProductActionsFilters {
 		add_filter( 'woocommerce_is_purchasable', [ self::class, 'set_product_to_purchasable' ], 1, 2 );
 		add_filter( 'use_block_editor_for_post', [ self::class, 'remove_block_editor' ], 50, 2 );
 	}
+	/**
+	 * Make open_for_enrollment default status when viewing courses.
+	 *
+	 * @return void
+	 */
+	public static function make_open_for_enrollment_default_status() {
+		global $submenu;
+		$menus = $submenu['edit.php?post_type=product'];
+		if ( ! $menus ) {
+			return;
+		}
+		$menus                                 = array_map(
+			function ( $menu ) {
+				if ( 'edit_products' == $menu[1] ) {
+					$menu[2] = 'edit.php?post_type=product&post_status=open_for_enrollment';
+				}
+				return $menu;
+			},
+			$menus
+		);
+		$submenu['edit.php?post_type=product'] = $menus; //phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+	}
+
+
 	/**
 	 * Undocumented function
 	 *

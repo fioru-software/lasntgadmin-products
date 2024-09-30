@@ -59,6 +59,23 @@ class AdminTableView {
 		add_filter( 'wp_dropdown_cats', [ self::class, 'dropdown_cats' ], 10, 2 );
 
 		add_filter( 'manage_edit-product_sortable_columns', [ self::class, 'sortable_venue' ] );
+		add_filter( 'views_edit-product', [ self::class, 'hide_unwanted_views' ] );
+	}
+
+
+
+	public static function hide_unwanted_views( $views ) {
+
+		if ( ( wc_current_user_has_role( 'training_officer' ) || wc_current_user_has_role( 'fire_training_officer' ) ) ) {
+			$remove_views = [ 'draft', 'template' ];
+		}
+
+		foreach ( (array) $remove_views as $view ) {
+			if ( isset( $views[ $view ] ) ) {
+				unset( $views[ $view ] );
+			}
+		}
+		return $views;
 	}
 
 	public static function modify_product_row_actions( array $actions, WP_Post $post ): array {

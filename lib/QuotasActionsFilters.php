@@ -95,22 +95,6 @@ class QuotasActionsFilters {
 			)
 		);
 
-		woocommerce_wp_text_input(
-			array(
-				'id'                => '_minimum_capacity',
-				'label'             => __( 'Minimum Capacity', 'lasntgadmin' ),
-				'placeholder'       => __( 'Minimum Capacity', 'lasntgadmin' ),
-				'desc_tip'          => 'true',
-				'value'             => $product ? get_post_meta( $product->get_ID(), '_minimum_capacity', true ) : 0,
-				'type'              => 'number',
-				'custom_attributes' => array(
-					'step' => '1',
-					'min'  => '0',
-					'type' => 'number',
-				),
-			)
-		);
-
 		if ( $product ) {
 			$total_capacity = ProductUtils::get_total_capacity( $product );
 			woocommerce_wp_text_input(

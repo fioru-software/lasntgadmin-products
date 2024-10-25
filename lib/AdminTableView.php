@@ -60,14 +60,35 @@ class AdminTableView {
 
 		add_filter( 'manage_edit-product_sortable_columns', [ self::class, 'sortable_venue' ] );
 		add_filter( 'views_edit-product', [ self::class, 'hide_unwanted_views' ] );
+		add_filter( 'pre_get_posts', [ self::class, 'only_training_centre' ] );
 	}
 
-
+	public static function only_training_centre( $query ) {
+		if ( is_admin() && function_exists( 'get_current_screen' ) ) {
+			$screen = get_current_screen();
+			if ( $screen ) {
+				if ( 'product' === $screen->post_type && 'edit-product' === $screen->id && 'product' === $query->query_vars['post_type'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+					if ( isset( $query->query_vars['post_type'] ) && 'product' == $query->query_vars['post_type'] ) {
+						$query->set(
+							'meta_query',
+							array(
+								array(
+									'key'     => 'training_centre',
+									'value'   => GroupUtils::get_current_users_group_ids_deep(),
+									'compare' => 'IN',
+								),
+							)
+						);
+					}
+				}
+			}
+		}
+	}
 
 	public static function hide_unwanted_views( $views ) {
 		if ( ( wc_current_user_has_role( 'training_officer' ) || wc_current_user_has_role( 'fire_training_officer' ) ) ) {
 			$remove_views = [ 'draft', 'template' ];
-			
+
 			foreach ( (array) $remove_views as $view ) {
 				if ( isset( $views[ $view ] ) ) {
 					unset( $views[ $view ] );

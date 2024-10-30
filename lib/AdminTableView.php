@@ -87,8 +87,8 @@ class AdminTableView {
 						);
 					}
 				}
-			}
-		}
+			}//end if
+		}//end if
 	}
 
 	public static function hide_unwanted_views( $views ) {

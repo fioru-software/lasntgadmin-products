@@ -72,17 +72,23 @@ class AdminTableView {
 						$query->set(
 							'meta_query',
 							array(
-								array(
+								'relation' => 'OR',
+								array( //phpcs:ignore Universal.Arrays.MixedArrayKeyTypes.ImplicitNumericKey, Universal.Arrays.MixedKeyedUnkeyedArray.Found
 									'key'     => 'training_centre',
 									'value'   => GroupUtils::get_current_users_group_ids_deep(),
 									'compare' => 'IN',
+								),
+								array( //phpcs:ignore Universal.Arrays.MixedKeyedUnkeyedArray.Found
+									'key'     => 'training_centre',
+									'compare' => 'NOT EXISTS',
+									'value'   => 'null',
 								),
 							)
 						);
 					}
 				}
-			}
-		}
+			}//end if
+		}//end if
 	}
 
 	public static function hide_unwanted_views( $views ) {

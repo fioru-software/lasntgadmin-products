@@ -83,10 +83,15 @@ class AdminTableView {
 									'compare' => 'NOT EXISTS',
 									'value'   => 'null',
 								),
+								array( //phpcs:ignore Universal.Arrays.MixedKeyedUnkeyedArray.Found
+									'key'     => 'training_centre',
+									'compare' => '',
+									'value'   => '',
+								),
 							)
 						);
-					}
-				}
+					}//end if
+				}//end if
 			}//end if
 		}//end if
 	}

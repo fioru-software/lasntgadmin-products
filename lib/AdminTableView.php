@@ -64,6 +64,10 @@ class AdminTableView {
 	}
 
 	public static function only_training_centre( $query ) {
+		// if it's template RTC should see all.
+		if ( isset( $_GET['post_status'] ) && 'template' == $_GET['post_status'] ) {
+			return;
+		}
 		if ( is_admin() && function_exists( 'get_current_screen' ) ) {
 			$screen = get_current_screen();
 			if ( $screen ) {

@@ -64,15 +64,24 @@ class AdminTableView {
 	}
 
 	public static function only_training_centre( $query ) {
+		if ( ! is_admin() ) {
+			return;
+		}
 		// if it's template RTC should see all.
 		if ( isset( $_GET['post_status'] ) && 'template' == $_GET['post_status'] ) {
 			return;
 		}
-		if ( is_admin() && function_exists( 'get_current_screen' ) ) {
+		// National Managers and admins can see all.
+		if (
+			wc_current_user_has_role( 'national_manager' ) ||
+			wc_current_user_has_role( 'administrator' )
+		) {
+				return;
+		}
+		if ( function_exists( 'get_current_screen' ) ) {
 			$screen = get_current_screen();
-			if ( $screen ) {
-				if ( 'product' === $screen->post_type && 'edit-product' === $screen->id && 'product' === $query->query_vars['post_type'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-					if ( isset( $query->query_vars['post_type'] ) && 'product' == $query->query_vars['post_type'] ) {
+			if ( $screen && 'product' === $screen->post_type && 'edit-product' === $screen->id && 'product' === $query->query_vars['post_type'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+
 						$query->set(
 							'meta_query',
 							array(
@@ -94,8 +103,6 @@ class AdminTableView {
 								),
 							)
 						);
-					}//end if
-				}//end if
 			}//end if
 		}//end if
 	}

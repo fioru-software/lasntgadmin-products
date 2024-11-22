@@ -358,6 +358,12 @@ class AdminTableView {
 					esc_url( admin_url( sprintf( 'edit.php?post_type=shop_order&product_id=%d', $post->ID ) ) ),
 					esc_html( __( 'Orders', 'lasntgadmin' ) )
 				);
+
+				$actions['enrolment_logs'] = sprintf(
+					'<a href="%1$s">%2$s</a>',
+					esc_url( admin_url( sprintf( 'edit.php?post_type=enrolment_log&product_id=%d', $post->ID ) ) ),
+					esc_html( __( 'Enrolment Logs', 'lasntgadmin' ) )
+				);
 			}
 		}//end if
 		return $actions;

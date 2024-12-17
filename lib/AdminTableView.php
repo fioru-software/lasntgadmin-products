@@ -64,19 +64,15 @@ class AdminTableView {
 	}
 
 	public static function only_training_centre( $query ) {
-		if ( ! is_admin() ) {
+		// Only applies to RTC managers.
+		if ( ! is_admin() || ! wc_current_user_has_role( 'regional_training_centre_manager' ) ) {
 			return;
 		}
 		// if it's template RTC should see all.
 		if ( isset( $_GET['post_status'] ) && 'template' == $_GET['post_status'] ) {
 			return;
 		}
-		// Only applies to RTC managers.
-		if (
-		wc_current_user_has_role( 'regional_training_centre_manager' )
-		) {
-				return;
-		}
+
 		if ( function_exists( 'get_current_screen' ) ) {
 			$screen = get_current_screen();
 			if ( $screen && 'product' === $screen->post_type && 'edit-product' === $screen->id && 'product' === $query->query_vars['post_type'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended

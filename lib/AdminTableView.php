@@ -71,10 +71,9 @@ class AdminTableView {
 		if ( isset( $_GET['post_status'] ) && 'template' == $_GET['post_status'] ) {
 			return;
 		}
-		// National Managers and admins can see all.
+		// Only applies to RTC managers.
 		if (
-			wc_current_user_has_role( 'national_manager' ) ||
-			wc_current_user_has_role( 'administrator' )
+		wc_current_user_has_role( 'regional_training_centre_manager' )
 		) {
 				return;
 		}

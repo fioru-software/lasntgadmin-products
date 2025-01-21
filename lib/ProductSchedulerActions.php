@@ -22,13 +22,10 @@ class ProductSchedulerActions {
 	}
 
 	public static function close_courses(): void {
-		$from_now_date = new DateTime( 'now' );
-		$from_now_date->setTimezone( self::get_timezone() );
-		$from_now_date->modify( '+8 hours' );
+		$tz = self::get_timezone();
 
-		$from_now_time = $from_now_date->format( 'H:i:s' );
-
-		$posts = get_posts(
+		$from_now_date = new DateTime( 'now', $tz );
+		$posts         = get_posts(
 			array(
 				'numberposts' => -1,
 				'post_type'   => 'product',
@@ -40,22 +37,32 @@ class ProductSchedulerActions {
 						'value'   => $from_now_date->format( 'Ymd' ),
 						'compare' => '<=',
 					),
-					array( //phpcs:ignore Universal.Arrays.MixedArrayKeyTypes.ImplicitNumericKey, Universal.Arrays.MixedKeyedUnkeyedArray.Found
-						'key'     => 'start_time',
-						'value'   => $from_now_time,
-						'compare' => '<=',
-					),
 
 				),
 			)
 		);
-
 		foreach ( $posts as $post ) {
 			$product_id     = $post->ID;
 			$meta_key       = 'lasntg_enrollment_closed_' . $product_id;
 			$already_closed = get_post_meta( $product_id, $meta_key, true );
+
 			if ( $already_closed ) {
 				continue;
+			}
+			$start_date          = get_post_meta( $product_id, 'start_date', true );
+			$start_time          = get_post_meta( $product_id, 'start_time', true );
+			$start_date_time_str = $start_date . ' ' . $start_time;
+
+			$start_date_time = DateTime::createFromFormat( 'Ymd H:i:s', $start_date_time_str, $tz );
+
+			$diff = $from_now_date->diff( $start_date_time );
+
+			$hours = $diff->h + ( $diff->days * 24 );
+
+			if ( $start_date_time > $from_now_date ) {
+				if ( $hours > 8 ) {
+					continue;
+				}
 			}
 			try {
 				$product = wc_get_product( $product_id );
@@ -66,7 +73,7 @@ class ProductSchedulerActions {
 			$product->set_status( 'enrollment_closed' );
 			$product->save();
 			update_post_meta( $product_id, $meta_key, 1 );
-		}
+		}//end foreach
 	}
 
 	public static function notify_to_check_course_status(): void {

@@ -49,12 +49,17 @@ class ProductSchedulerActions {
 			if ( $already_closed ) {
 				continue;
 			}
-			$start_date          = get_post_meta( $product_id, 'start_date', true );
-			$start_time          = get_post_meta( $product_id, 'start_time', true );
+			$start_date = get_post_meta( $product_id, 'start_date', true );
+			$start_time = get_post_meta( $product_id, 'start_time', true );
+			if ( ! $start_date || $start_time ) {
+				continue;
+			}
 			$start_date_time_str = $start_date . ' ' . $start_time;
 
 			$start_date_time = DateTime::createFromFormat( 'Ymd H:i:s', $start_date_time_str, $tz );
-
+			if ( ! $start_date_time ) {
+				continue;
+			}
 			$diff = $from_now_date->diff( $start_date_time );
 
 			$hours = $diff->h + ( $diff->days * 24 );

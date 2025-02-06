@@ -16,6 +16,27 @@ class ProductApi {
 	const PATH_PREFIX = 'lasntgadmin/products/v1';
 
 	protected function __construct() {
+
+		register_rest_route(
+			self::PATH_PREFIX,
+			'/product/(?P<product_id>\d+)',
+			[
+				'methods'             => WP_REST_Server::READABLE,
+				'callback'            => [ self::class, 'get_product_by_id' ],
+				'permission_callback' => '__return_true',
+			]
+		);
+
+		register_rest_route(
+			self::PATH_PREFIX,
+			'/product/group-quota/?',
+			[
+				'methods'             => WP_REST_Server::READABLE,
+				'callback'            => [ self::class, 'get_product_group_quota' ],
+				'permission_callback' => '__return_true',
+			]
+		);
+
 		register_rest_route(
 			self::PATH_PREFIX,
 			'/products/?',
@@ -55,7 +76,7 @@ class ProductApi {
 	}
 
 	public static function get_api_path(): string {
-		return sprintf( '/%s/products', self::PATH_PREFIX );
+		return sprintf( '/%s', self::PATH_PREFIX );
 	}
 
 	public static function verify_group_membership( WP_REST_Request $req ) {
@@ -94,4 +115,27 @@ class ProductApi {
 		$products = ProductUtils::get_products_with_status( $status );
 		return array_map( fn( $product ) => $product->get_data(), $products );
 	}
+
+	public static function get_product_by_id( WP_REST_Request $req ): array {
+		$product_id = intval( $req->get_param( 'product_id' ) );
+		$product = wc_get_product( $product_id );
+		return [
+			'id' => $product_id,
+			'name' => html_entity_decode( $product->get_name() ),
+			'reserved_stock_quantity' => wc_get_held_stock_quantity( $product ),
+			'price' => $product->get_price(),
+			'stock_quantity' => $product->get_stock_quantity()
+		];
+	}
+
+	/**
+	 * @return Empty string means no quota
+	 */
+	public static function get_product_group_quota( WP_REST_Request $req ): string {
+		$product_id = intval( $req->get_param( 'product_id' ) );
+		$group_id = intval( $req->get_param( 'group_id' ) );
+		$quota = QuotaUtils::remaining_quota( $product_id, $group_id );
+		return $quota;
+	}
+
 }

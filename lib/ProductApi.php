@@ -118,13 +118,13 @@ class ProductApi {
 
 	public static function get_product_by_id( WP_REST_Request $req ): array {
 		$product_id = intval( $req->get_param( 'product_id' ) );
-		$product = wc_get_product( $product_id );
+		$product    = wc_get_product( $product_id );
 		return [
-			'id' => $product_id,
-			'name' => html_entity_decode( $product->get_name() ),
+			'id'                      => $product_id,
+			'name'                    => html_entity_decode( $product->get_name() ),
 			'reserved_stock_quantity' => wc_get_held_stock_quantity( $product ),
-			'price' => $product->get_price(),
-			'stock_quantity' => $product->get_stock_quantity()
+			'price'                   => $product->get_price(),
+			'stock_quantity'          => $product->get_stock_quantity(),
 		];
 	}
 
@@ -133,9 +133,8 @@ class ProductApi {
 	 */
 	public static function get_product_group_quota( WP_REST_Request $req ): string {
 		$product_id = intval( $req->get_param( 'product_id' ) );
-		$group_id = intval( $req->get_param( 'group_id' ) );
-		$quota = QuotaUtils::remaining_quota( $product_id, $group_id );
+		$group_id   = intval( $req->get_param( 'group_id' ) );
+		$quota      = QuotaUtils::remaining_quota( $product_id, $group_id );
 		return $quota;
 	}
-
 }

@@ -129,9 +129,6 @@ class QuotasActionsFilters {
 		echo '<div id="product_tab_data" class="panel woocommerce_options_panel" style="padding-left: 5px">';
 		// Get action. For new product it's add.
 		$action = get_current_screen()->action;
-		$tree   = Groups_Utility::get_group_tree();
-		unset( $tree[1] );
-		unset( $tree[33] );
 
 		$allowed_groups = GroupUtils::formatted_current_user_tree();
 

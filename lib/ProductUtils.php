@@ -229,14 +229,8 @@ class ProductUtils {
 		return $post_ids;
 	}
 
-	/**
-	 * Get products with the same group memberships as my user.
-	 *
-	 * @see https://github.com/woocommerce/woocommerce/wiki/wc_get_products-and-WC_Product_Query
-	 * @return WC_Product[]
-	 */
-	public static function get_visible_products(): array {
-		$post_ids = get_posts(
+	public static function get_visible_product_ids_for_current_user(): array {
+		$product_ids = get_posts(
 			[
 				'fields'         => 'ids',
 				'post_status'    => [ self::$publish_status, 'date_passed' ],
@@ -257,8 +251,20 @@ class ProductUtils {
 				],
 			]
 		);
+		return $product_ids;
+	}
+
+	/**
+	 * Get products with the same group memberships as my user.
+	 *
+	 * @see https://github.com/woocommerce/woocommerce/wiki/wc_get_products-and-WC_Product_Query
+	 * @return WC_Product[]
+	 */
+	public static function get_visible_products(): array {
+		$post_ids = self::get_visible_product_ids_for_current_user();
 		$products = array_map(
 			function ( $post_id ) {
+
 				$product = wc_get_product( $post_id );
 				$product->update_meta_data( 'reserved_stock_quantity', wc_get_held_stock_quantity( $product ) );
 				return $product;

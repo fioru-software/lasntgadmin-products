@@ -103,7 +103,7 @@ class ProductUtils {
 			$status
 		);
 		$product_ids = $wpdb->get_col( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
-		return $product_ids;
+		return array_map( 'intval', $product_ids );
 	}
 
 	/**
@@ -122,7 +122,7 @@ class ProductUtils {
 			$product_ids
 		);
 		$product_ids = $wpdb->get_col( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
-		return $product_ids;
+		return array_map( 'intval', $product_ids );
 	}
 
 	/**
@@ -140,7 +140,7 @@ class ProductUtils {
 			$product_ids
 		);
 		$product_ids = $wpdb->get_col( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
-		return $product_ids;
+		return array_map( 'intval', $product_ids );
 	}
 
 	/**
@@ -148,26 +148,15 @@ class ProductUtils {
 	 * @see https://github.com/WordPress/WordPress-Coding-Standards/blob/dc2f21771cb2b5336a7e6bb6616abcdfa691d7de/WordPress/Tests/DB/PreparedSQLPlaceholdersUnitTest.inc#L70-L124
 	 */
 	public static function get_limited_product_ids_visible_to_all_groups( array $product_ids_for_grant_year ): array {
-		global $wpdb;
 		$product_ids_with_any_group_restriction = self::get_limited_product_ids_with_any_group_restriction( $product_ids_for_grant_year );
-		$sql                                    = $wpdb->prepare(
-			sprintf(
-				'SELECT DISTINCT post_id FROM `%s` WHERE post_id IN ( %s ) AND post_id NOT IN ( %s )',
-				$wpdb->postmeta,
-				implode( ',', array_fill( 0, count( $product_ids_for_grant_year ), '%d' ) ),
-				implode( ',', array_fill( 0, count( $product_ids_with_any_group_restriction ), '%d' ) )
-			),
-			array_merge( $product_ids_for_grant_year, $product_ids_with_any_group_restriction )
-		);
-		$product_ids                            = $wpdb->get_col( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
-		return $product_ids;
+		return array_diff( $product_ids_for_grant_year, $product_ids_with_any_group_restriction );
 	}
 
 	/**
 	 * @see https://core.trac.wordpress.org/ticket/54042
 	 * @see https://github.com/WordPress/WordPress-Coding-Standards/blob/dc2f21771cb2b5336a7e6bb6616abcdfa691d7de/WordPress/Tests/DB/PreparedSQLPlaceholdersUnitTest.inc#L70-L124
 	 */
-	public static function get_limited_product_ids_visible_to_group( array $group_ids, array $product_ids ): array {
+	public static function get_limited_product_ids_visible_to_groups( array $group_ids, array $product_ids ): array {
 		global $wpdb;
 
 		$sql         = $wpdb->prepare(
@@ -179,8 +168,9 @@ class ProductUtils {
 			),
 			array_merge( $group_ids, $product_ids )
 		);
+
 		$product_ids = $wpdb->get_col( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
-		return $product_ids;
+		return array_map( 'intval', $product_ids );
 	}
 
 	/**
@@ -208,11 +198,11 @@ class ProductUtils {
 		// Products without group visibility restriction with status and for grant year.
 		$product_ids_visible_to_all = self::get_limited_product_ids_visible_to_all_groups( $product_ids_for_grant_year );
 		// Products with a group visibilty restriction with status and grant year.
-		$product_ids_visible_to_group = self::get_limited_product_ids_visible_to_group( $group_ids, $product_ids_for_grant_year );
+		$product_ids_visible_to_group = self::get_limited_product_ids_visible_to_groups( $group_ids, $product_ids_for_grant_year );
 
 		$product_ids = array_merge( $product_ids_visible_to_all, $product_ids_visible_to_group );
 
-		return $product_ids;
+		return array_map( 'intval', $product_ids );
 	}
 
 	/**

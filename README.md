@@ -32,13 +32,22 @@ docker-compose build # optionally override Dockerfile build arguments by appendi
 docker-compose up wordpress 
 ```
 
-Run the tests
+Run the unit tests
+
+```sh
+cd /usr/local/src
+wp scaffold plugin-tests lasntgadmin-products --path=/var/www/html
+bin/install-wp-tests.sh wordpress_test root '' db latest
+composer test
+```
+
+Run the WordPress coding standards sniffer
 
 ```sh
 docker exec -ti -u www-data lasntg-plugin_template_wordpress_1 bash
 cd wp-content/plugins/$WP_PLUGIN
 composer install
-composer all
+composer check
 ```
 
 __Note:__ Most WordPress coding convention errors can be automatically fixed by running `composer fix`
@@ -75,6 +84,8 @@ git push -u origin 0.1.4
 
 ## Plugins
 
+- [Writing WordPress Unit Tests](https://make.wordpress.org/core/handbook/testing/automated-testing/writing-phpunit-tests/)
+- [WP_UnitTest_Factory](https://core.trac.wordpress.org/browser/trunk/tests/phpunit/includes/factory/class-wp-unittest-factory.php)
 - [Creating your first WooCommerce extension](https://developer.woocommerce.com/extension-developer-guide/creating-your-first-extension/)
 - [Create your first app with Gutenberg data](https://developer.wordpress.org/block-editor/how-to-guides/data-basics/1-data-basics-setup/)
 - [Introduction to WordPress Plugin Development](https://developer.wordpress.org/plugins/intro/)

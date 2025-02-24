@@ -159,7 +159,7 @@ class ProductUtils {
 	public static function get_limited_product_ids_visible_to_groups( array $group_ids, array $product_ids ): array {
 		global $wpdb;
 
-		$sql         = $wpdb->prepare(
+		$sql = $wpdb->prepare(
 			sprintf(
 				"SELECT DISTINCT post_id FROM `%s` WHERE meta_key = 'groups-read' AND meta_value IN ( %s ) AND post_id IN ( %s )",
 				$wpdb->postmeta,
@@ -206,11 +206,9 @@ class ProductUtils {
 	}
 
 	/**
-	 * @param int             $training_centre_group_id Training centre group id.
-	 * @param string|string[] $status Product status.
 	 * @return int[] Course ids.
 	 */
-	public static function get_product_ids_for_training_centre( int $training_centre_group_id, array $status ): array {
+	public static function get_product_ids_for_training_centre( int $training_centre_group_id, string $grant_year, array $status ): array {
 		$options  = [
 			'fields'         => 'ids',
 			'post_status'    => $status,
@@ -224,6 +222,13 @@ class ProductUtils {
 					// Training centre group id needs to be added for local authorities.
 					'value'   => $training_centre_group_id,
 				],
+				[ // phpcs:ignore Universal.Arrays.MixedKeyedUnkeyedArray.Found, Universal.Arrays.MixedArrayKeyTypes.ImplicitNumericKey
+					'key'     => 'grant_year',
+					'compare' => '=',
+					'type'    => 'NUMERIC',
+					// Training centre group id needs to be added for local authorities.
+					'value'   => $grant_year,
+				],
 			],
 		];
 		$post_ids = get_posts( $options );
@@ -234,7 +239,7 @@ class ProductUtils {
 		$status         = [ 'closed' ];
 		$start_datetime = DateTime::createFromFormat( 'j/n/Y H:i', sprintf( '1/%d/%d 00:00', $month, $grant_year ), wp_timezone() );
 		$end_datetime   = DateTime::createFromFormat( 'j/n/Y H:i', sprintf( '31/%d/%d 23:59', $month, $grant_year ), wp_timezone() );
-		$course_ids     = self::get_product_ids_for_training_centre( $training_centre_group_id, $status );
+		$course_ids     = self::get_product_ids_for_training_centre( $training_centre_group_id, $grant_year, $status );
 
 		/**
 		 * Passing an empty array to post__in will return has_posts() as true (and all posts will be returned). Logic should be used before hand to determine if WP_Query should be used in the event that the array being passed to post__in is empty.
@@ -307,8 +312,9 @@ class ProductUtils {
 				],
 			],
 		];
+
 		if ( $group_id > 0 ) {
-			$course_ids          = self::get_product_ids_visible_to_group( $group_id, $status );
+			$course_ids          = self::get_product_ids_visible_to_group( $group_id, $grant_year, $status );
 			$options['post__in'] = $course_ids;
 		}
 

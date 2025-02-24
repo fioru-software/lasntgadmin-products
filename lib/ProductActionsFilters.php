@@ -182,12 +182,14 @@ class ProductActionsFilters {
 		}
 		return $allcaps;
 	}
+
 	public static function set_product_to_purchasable( $is_in_stock, $product ): bool {
 		if ( ProductUtils::$publish_status === $product->get_status() ) {
 			return true;
 		}
 		return false;
 	}
+
 	public static function edit_product() {
 		if ( ! wc_current_user_has_role( 'regional_training_centre_manager' ) ) {
 			return;

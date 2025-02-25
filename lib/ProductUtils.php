@@ -188,15 +188,25 @@ class ProductUtils {
 		global $wpdb;
 
 		$group = ( new Groups_Group( $group_id ) )->group;
+
 		// Include training centre id when applicable.
 		$group_ids = ! empty( $group->parent_id ) ? [ $group->group_id, $group->parent_id ] : [ $group->group_id ];
 
 		// Limit products to statuses.
 		$product_ids_with_status = self::get_product_ids_with_status( $status );
+		if ( ! $product_ids_with_status ) {
+			return [];
+		}
+
 		// Further limit products to grant year.
 		$product_ids_for_grant_year = self::get_limited_product_ids_for_grant_year( $grant_year, $product_ids_with_status );
+		if ( ! $product_ids_for_grant_year ) {
+			return [];
+		}
+
 		// Products without group visibility restriction with status and for grant year.
 		$product_ids_visible_to_all = self::get_limited_product_ids_visible_to_all_groups( $product_ids_for_grant_year );
+
 		// Products with a group visibilty restriction with status and grant year.
 		$product_ids_visible_to_group = self::get_limited_product_ids_visible_to_groups( $group_ids, $product_ids_for_grant_year );
 

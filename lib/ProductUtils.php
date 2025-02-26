@@ -6,7 +6,7 @@ use Lasntg\Admin\Group\GroupUtils;
 use Lasntg\Admin\Orders\OrderUtils;
 
 use Groups_Group;
-use WC_Product, DateTime;
+use WC_Product, DateTime, WP_Query;
 
 /**
  * ProductUtils
@@ -88,42 +88,137 @@ class ProductUtils {
 	}
 
 	/**
-	 * @param int             $group_id Group product is visible to.
-	 * @param string|string[] $status Product status.
-	 * @return int[] Course ids.
+	 * @see https://core.trac.wordpress.org/ticket/54042
+	 * @see https://github.com/WordPress/WordPress-Coding-Standards/blob/dc2f21771cb2b5336a7e6bb6616abcdfa691d7de/WordPress/Tests/DB/PreparedSQLPlaceholdersUnitTest.inc#L70-L124
 	 */
-	public static function get_product_ids_visible_to_group( int $group_id, array $status ): array {
-		$group    = ( new Groups_Group( $group_id ) )->group;
-		$options  = [
-			'fields'         => 'ids',
-			'post_status'    => $status,
-			'post_type'      => 'product',
-			'posts_per_page' => -1,
-			'meta_query'     => [
-				'relation' => 'OR',
-				[ // phpcs:ignore Universal.Arrays.MixedKeyedUnkeyedArray.Found, Universal.Arrays.MixedArrayKeyTypes.ImplicitNumericKey
-					'key'     => 'groups-read',
-					'compare' => 'IN',
-					'type'    => 'NUMERIC',
-					// Training centre group id needs to be added for local authorities.
-					'value'   => ! empty( $group->parent_id ) ? [ $group->group_id, $group->parent_id ] : [ $group->group_id ],
-				],
-				[ // phpcs:ignore Universal.Arrays.MixedKeyedUnkeyedArray.Found
-					'key'     => 'groups-read',
-					'compare' => 'NOT EXISTS',
-				],
-			],
-		];
-		$post_ids = get_posts( $options );
-		return $post_ids;
+	public static function get_product_ids_with_status( array $status ): array {
+		global $wpdb;
+		// Get all product ids with post statuses.
+		$sql         = $wpdb->prepare(
+			sprintf(
+				"SELECT ID FROM `%s` WHERE post_type = 'product' AND post_status IN ( %s )",
+				$wpdb->posts,
+				implode( ',', array_fill( 0, count( $status ), '%s' ) )
+			),
+			$status
+		);
+		$product_ids = $wpdb->get_col( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+		return array_map( 'intval', $product_ids );
 	}
 
 	/**
-	 * @param int             $training_centre_group_id Training centre group id.
-	 * @param string|string[] $status Product status.
+	 * @see https://core.trac.wordpress.org/ticket/54042
+	 * @see https://github.com/WordPress/WordPress-Coding-Standards/blob/dc2f21771cb2b5336a7e6bb6616abcdfa691d7de/WordPress/Tests/DB/PreparedSQLPlaceholdersUnitTest.inc#L70-L124
+	 */
+	public static function get_limited_product_ids_for_grant_year( int $grant_year, array $product_ids ): array {
+		global $wpdb;
+		$sql         = $wpdb->prepare(
+			sprintf(
+				"SELECT DISTINCT post_id FROM `%s` WHERE meta_key = 'grant_year' AND meta_value = %d AND post_id IN ( %s )",
+				$wpdb->postmeta,
+				$grant_year,  // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+				implode( ',', array_fill( 0, count( $product_ids ), '%d' ) )
+			),
+			$product_ids
+		);
+		$product_ids = $wpdb->get_col( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+		return array_map( 'intval', $product_ids );
+	}
+
+	/**
+	 * @see https://core.trac.wordpress.org/ticket/54042
+	 * @see https://github.com/WordPress/WordPress-Coding-Standards/blob/dc2f21771cb2b5336a7e6bb6616abcdfa691d7de/WordPress/Tests/DB/PreparedSQLPlaceholdersUnitTest.inc#L70-L124
+	 */
+	public static function get_limited_product_ids_with_any_group_restriction( array $product_ids ): array {
+		global $wpdb;
+		$sql         = $wpdb->prepare(
+			sprintf(
+				"SELECT DISTINCT post_id FROM `%s` WHERE meta_key = 'groups-read' AND post_id IN ( %s )",
+				$wpdb->postmeta,
+				implode( ',', array_fill( 0, count( $product_ids ), '%d' ) )
+			),
+			$product_ids
+		);
+		$product_ids = $wpdb->get_col( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+		return array_map( 'intval', $product_ids );
+	}
+
+	/**
+	 * @see https://core.trac.wordpress.org/ticket/54042
+	 * @see https://github.com/WordPress/WordPress-Coding-Standards/blob/dc2f21771cb2b5336a7e6bb6616abcdfa691d7de/WordPress/Tests/DB/PreparedSQLPlaceholdersUnitTest.inc#L70-L124
+	 */
+	public static function get_limited_product_ids_visible_to_all_groups( array $product_ids_for_grant_year ): array {
+		$product_ids_with_any_group_restriction = self::get_limited_product_ids_with_any_group_restriction( $product_ids_for_grant_year );
+		return array_diff( $product_ids_for_grant_year, $product_ids_with_any_group_restriction );
+	}
+
+	/**
+	 * @see https://core.trac.wordpress.org/ticket/54042
+	 * @see https://github.com/WordPress/WordPress-Coding-Standards/blob/dc2f21771cb2b5336a7e6bb6616abcdfa691d7de/WordPress/Tests/DB/PreparedSQLPlaceholdersUnitTest.inc#L70-L124
+	 */
+	public static function get_limited_product_ids_visible_to_groups( array $group_ids, array $product_ids ): array {
+		global $wpdb;
+
+		$sql = $wpdb->prepare(
+			sprintf(
+				"SELECT DISTINCT post_id FROM `%s` WHERE meta_key = 'groups-read' AND meta_value IN ( %s ) AND post_id IN ( %s )",
+				$wpdb->postmeta,
+				implode( ',', array_fill( 0, count( $group_ids ), '%d' ) ),
+				implode( ',', array_fill( 0, count( $product_ids ), '%d' ) ),
+			),
+			array_merge( $group_ids, $product_ids )
+		);
+
+		$product_ids = $wpdb->get_col( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+		return array_map( 'intval', $product_ids );
+	}
+
+	/**
+	 * Get all course ids that are:
+	 *  - open to anyone
+	 *  - has the same local authority group as the order or it's training centre
+	 *  - has the same training centre group as the order
+	 *  - has status in [ 'open_for_enrollment', 'enrollment_closed', 'date_passed' ]
+	 *  - for a grant year
+	 *
+	 * @return int[] Product ids.
+	 */
+	public static function get_product_ids_visible_to_group( int $group_id, int $grant_year, array $status ): array {
+
+		global $wpdb;
+
+		$group = ( new Groups_Group( $group_id ) )->group;
+
+		// Include training centre id when applicable.
+		$group_ids = ! empty( $group->parent_id ) ? [ $group->group_id, $group->parent_id ] : [ $group->group_id ];
+
+		// Limit products to statuses.
+		$product_ids_with_status = self::get_product_ids_with_status( $status );
+		if ( ! $product_ids_with_status ) {
+			return [];
+		}
+
+		// Further limit products to grant year.
+		$product_ids_for_grant_year = self::get_limited_product_ids_for_grant_year( $grant_year, $product_ids_with_status );
+		if ( ! $product_ids_for_grant_year ) {
+			return [];
+		}
+
+		// Products without group visibility restriction with status and for grant year.
+		$product_ids_visible_to_all = self::get_limited_product_ids_visible_to_all_groups( $product_ids_for_grant_year );
+
+		// Products with a group visibilty restriction with status and grant year.
+		$product_ids_visible_to_group = self::get_limited_product_ids_visible_to_groups( $group_ids, $product_ids_for_grant_year );
+
+		$product_ids = array_merge( $product_ids_visible_to_all, $product_ids_visible_to_group );
+
+		return array_map( 'intval', $product_ids );
+	}
+
+	/**
 	 * @return int[] Course ids.
 	 */
-	public static function get_product_ids_for_training_centre( int $training_centre_group_id, array $status ): array {
+	public static function get_product_ids_for_training_centre( int $training_centre_group_id, string $grant_year, array $status ): array {
 		$options  = [
 			'fields'         => 'ids',
 			'post_status'    => $status,
@@ -137,6 +232,13 @@ class ProductUtils {
 					// Training centre group id needs to be added for local authorities.
 					'value'   => $training_centre_group_id,
 				],
+				[ // phpcs:ignore Universal.Arrays.MixedKeyedUnkeyedArray.Found, Universal.Arrays.MixedArrayKeyTypes.ImplicitNumericKey
+					'key'     => 'grant_year',
+					'compare' => '=',
+					'type'    => 'NUMERIC',
+					// Training centre group id needs to be added for local authorities.
+					'value'   => $grant_year,
+				],
 			],
 		];
 		$post_ids = get_posts( $options );
@@ -147,7 +249,7 @@ class ProductUtils {
 		$status         = [ 'closed' ];
 		$start_datetime = DateTime::createFromFormat( 'j/n/Y H:i', sprintf( '1/%d/%d 00:00', $month, $grant_year ), wp_timezone() );
 		$end_datetime   = DateTime::createFromFormat( 'j/n/Y H:i', sprintf( '31/%d/%d 23:59', $month, $grant_year ), wp_timezone() );
-		$course_ids     = self::get_product_ids_for_training_centre( $training_centre_group_id, $status );
+		$course_ids     = self::get_product_ids_for_training_centre( $training_centre_group_id, $grant_year, $status );
 
 		/**
 		 * Passing an empty array to post__in will return has_posts() as true (and all posts will be returned). Logic should be used before hand to determine if WP_Query should be used in the event that the array being passed to post__in is empty.
@@ -220,8 +322,9 @@ class ProductUtils {
 				],
 			],
 		];
+
 		if ( $group_id > 0 ) {
-			$course_ids          = self::get_product_ids_visible_to_group( $group_id, $status );
+			$course_ids          = self::get_product_ids_visible_to_group( $group_id, $grant_year, $status );
 			$options['post__in'] = $course_ids;
 		}
 

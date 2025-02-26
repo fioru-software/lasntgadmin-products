@@ -1,9 +1,7 @@
-version: "3.7"
-
 services:
 
     wordpress:
-      build: 
+      build:
         context: .
         args:
         - USER_ID=1000

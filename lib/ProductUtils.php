@@ -223,7 +223,7 @@ class ProductUtils {
 			'fields'         => 'ids',
 			'post_status'    => $status,
 			'post_type'      => 'product',
-			'posts_per_page' => -1,
+			'numberposts' => -1,
 			'meta_query'     => [
 				[ // phpcs:ignore Universal.Arrays.MixedKeyedUnkeyedArray.Found, Universal.Arrays.MixedArrayKeyTypes.ImplicitNumericKey
 					'key'     => 'training_centre',
@@ -265,7 +265,7 @@ class ProductUtils {
 			'post__in'       => $course_ids,
 			'post_status'    => $status,
 			'post_type'      => 'product',
-			'posts_per_page' => -1,
+			'numberposts' => -1,
 			'fields'         => 'ids',
 			'meta_query'     => [
 				'relation' => 'AND',
@@ -338,7 +338,7 @@ class ProductUtils {
 				'fields'         => 'ids',
 				'post_status'    => [ self::$publish_status, 'date_passed' ],
 				'post_type'      => 'product',
-				'posts_per_page' => -1,
+				'numberposts' => -1,
 				'meta_query'     => [
 					'relation' => 'OR',
 					[ // phpcs:ignore Universal.Arrays.MixedKeyedUnkeyedArray.Found, Universal.Arrays.MixedArrayKeyTypes.ImplicitNumericKey
@@ -391,7 +391,7 @@ class ProductUtils {
 					'fields'         => 'ids',
 					'post_status'    => trim( $status ),
 					'post_type'      => 'product',
-					'posts_per_page' => -1,
+					'numberposts' => -1,
 				]
 			);
 			$products = array_map( fn( $post_id ) => wc_get_product( $post_id ), $post_ids );

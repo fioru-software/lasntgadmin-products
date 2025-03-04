@@ -27,7 +27,7 @@ class ProductSchedulerActions {
 		$from_now_date = new DateTime( 'now', $tz );
 		$posts         = get_posts(
 			array(
-				'numberposts' => -1,
+				'posts_per_page' => -1,
 				'post_type'   => 'product',
 				'post_status' => ProductUtils::$publish_status,
 				'meta_query'  => array(
@@ -154,7 +154,7 @@ class ProductSchedulerActions {
 
 		return get_posts(
 			array(
-				'numberposts' => -1,
+				'posts_per_page' => -1,
 				'post_type'   => 'product',
 				'post_status' => 'enrollment_closed',
 				'meta_query'  => array(

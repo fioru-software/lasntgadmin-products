@@ -154,6 +154,7 @@ class ProductSchedulerActions {
 
 		return get_posts(
 			array(
+				'numberposts' => -1,
 				'post_type'   => 'product',
 				'post_status' => 'enrollment_closed',
 				'meta_query'  => array(

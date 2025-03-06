@@ -32,12 +32,12 @@ class ProductSchedulerActions {
 				'post_status'    => ProductUtils::$publish_status,
 				'meta_query'     => array(
 					'relation' => 'AND',
-					array(
+					array( //phpcs:ignore Universal.Arrays.MixedArrayKeyTypes.ImplicitNumericKey,Universal.Arrays.MixedKeyedUnkeyedArray.Found
 						'key'     => 'start_date',
 						'value'   => $from_now_date->format( 'Ymd' ),
 						'compare' => '<=',
 					),
-					array(
+					array( //phpcs:ignore Universal.Arrays.MixedKeyedUnkeyedArray.Found
 						'key'     => 'lastg_enrollment_closed_',
 						'compare' => 'NOT LIKE',
 						'value'   => '%',

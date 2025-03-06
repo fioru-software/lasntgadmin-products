@@ -22,8 +22,29 @@ class AcfFields {
 	}
 
 	private static function add_actions() {
+		add_action( 'acf/save_post', [self::class, 'check_save_product'], 20 );
 	}
-
+	/**
+	 * There's a bug where start_date and start_time are empty when they are required.
+	 * This action makes sure they are not empty.
+	 *
+	 * @param [type] $post_id
+	 * @return void
+	 */
+	public static function check_save_product( $post_id ) {
+		// Ensure this is the correct post type
+		if ( get_post_type( $post_id ) == 'product' ) {
+			// Check specific fields (add your own logic here for the fields)
+			$field_value1 = get_field( 'field_63881aee31478', $post_id );
+			$field_value2 = get_field( 'field_63881aee31478', $post_id );
+			
+			// Example of handling required field logic after save
+			if ( empty( $field_value1 ) || empty( $field_value2 ) ) {
+				// Add custom error message or handle the missing fields accordingly
+				wp_die( 'Please fill in the required fields.' );
+			}
+		}
+	}
 	/**
 	 * When editing a course template
 	 * then all fields are optional
@@ -33,6 +54,12 @@ class AcfFields {
 			if ( isset( $_POST['post_type'] ) && isset( $_POST['post_id'] ) && isset( $_POST['post_status'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
 				if ( 'product' === $_POST['post_type'] && 'template' === $_POST['post_status'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
 					$valid = true;
+				}
+
+				if( 'product' === $_POST['post_type'] && in_array( $field['key'], ['field_63881aee31478', 'field_63881aee31478'] )){
+					if ( $field['required'] && empty( $value ) ) {
+						$valid = 'This field is required.';
+					}
 				}
 			}
 		}

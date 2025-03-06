@@ -25,7 +25,7 @@ class ProductSchedulerActions {
 		$tz = self::get_timezone();
 
 		$from_now_date = new DateTime( 'now', $tz );
-		$posts = get_posts(
+		$posts         = get_posts(
 			array(
 				'posts_per_page' => 30,
 				'post_type'      => 'product',
@@ -34,7 +34,7 @@ class ProductSchedulerActions {
 					'relation' => 'AND',
 					array(
 						'key'     => 'start_date',
-						'value'   => $from_now_date->format('Ymd'),
+						'value'   => $from_now_date->format( 'Ymd' ),
 						'compare' => '<=',
 					),
 					array(
@@ -46,10 +46,10 @@ class ProductSchedulerActions {
 			)
 		);
 		foreach ( $posts as $post ) {
-			$product_id     = $post->ID;
+			$product_id = $post->ID;
 
-			$meta_key       = 'lasntg_enrollment_closed_' . $product_id;
-			
+			$meta_key = 'lasntg_enrollment_closed_' . $product_id;
+
 			$start_date = get_post_meta( $product_id, 'start_date', true );
 			$start_time = get_post_meta( $product_id, 'start_time', true );
 			if ( ! $start_date || $start_time ) {
@@ -156,9 +156,9 @@ class ProductSchedulerActions {
 		return get_posts(
 			array(
 				'posts_per_page' => -1,
-				'post_type'   => 'product',
-				'post_status' => 'enrollment_closed',
-				'meta_query'  => array(
+				'post_type'      => 'product',
+				'post_status'    => 'enrollment_closed',
+				'meta_query'     => array(
 					'relation' => 'AND',
 					array( // phpcs:ignore Universal.Arrays.MixedArrayKeyTypes.ImplicitNumericKey, Universal.Arrays.MixedKeyedUnkeyedArray.Found
 						'key'     => 'end_date',

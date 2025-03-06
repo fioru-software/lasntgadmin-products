@@ -22,7 +22,7 @@ class AcfFields {
 	}
 
 	private static function add_actions() {
-		add_action( 'acf/save_post', [self::class, 'check_save_product'], 20 );
+		add_action( 'acf/save_post', [ self::class, 'check_save_product' ], 20 );
 	}
 	/**
 	 * There's a bug where start_date and start_time are empty when they are required.
@@ -37,7 +37,7 @@ class AcfFields {
 			// Check specific fields (add your own logic here for the fields)
 			$field_value1 = get_field( 'field_63881aee31478', $post_id );
 			$field_value2 = get_field( 'field_63881aee31478', $post_id );
-			
+
 			// Example of handling required field logic after save
 			if ( empty( $field_value1 ) || empty( $field_value2 ) ) {
 				// Add custom error message or handle the missing fields accordingly
@@ -56,7 +56,7 @@ class AcfFields {
 					$valid = true;
 				}
 
-				if( 'product' === $_POST['post_type'] && in_array( $field['key'], ['field_63881aee31478', 'field_63881aee31478'] )){
+				if ( 'product' === $_POST['post_type'] && in_array( $field['key'], [ 'field_63881aee31478', 'field_63881aee31478' ] ) ) {
 					if ( $field['required'] && empty( $value ) ) {
 						$valid = 'This field is required.';
 					}

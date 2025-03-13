@@ -99,10 +99,16 @@ class ProductApi {
 	 * @return array|WP_Error
 	 */
 	public static function get_products_in_group( WP_REST_Request $req ): array {
-		$group_id = $req->get_param( 'group_id' );
+		$group_id = intval( $req->get_param( 'group_id' ) );
 		$status   = ProductUtils::$publish_status;
-		$products = ProductUtils::get_products_visible_to_group( $group_id, [ $status ] );
-		return array_map( fn( $product ) => $product->get_data(), $products );
+		/**
+		 * Products in the private client group is public and should not be restricted.
+		 */
+		if ( defined( 'REST_REQUEST' ) && 33 == $group_id ) {
+			remove_filter( 'posts_where', [ 'Groups_Post_Access', 'posts_where' ] );
+		}
+		$products = ProductUtils::get_cached_minimal_products_visible_to_group( $group_id, [ $status ] );
+		return $products;
 	}
 
 	public static function get_products_visible_to_current_user( WP_REST_Request $req ): array {

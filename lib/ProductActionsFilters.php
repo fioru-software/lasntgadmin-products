@@ -89,7 +89,34 @@ class ProductActionsFilters {
 		add_filter( 'woocommerce_is_purchasable', [ self::class, 'product_is_in_stock' ], 15, 2 );
 		add_filter( 'woocommerce_is_purchasable', [ self::class, 'set_product_to_purchasable' ], 1, 2 );
 		add_filter( 'use_block_editor_for_post', [ self::class, 'remove_block_editor' ], 50, 2 );
+		add_filter( 'woocommerce_product_data_store_cpt_get_products_query', [ self::class, 'handle_filter_products_by_group_id' ], 10, 2 );
 	}
+
+	/**
+	 * Extends wc_get_products() to filter by local authority group
+	 * #see https://github.com/woocommerce/woocommerce/wiki/wc_get_products-and-WC_Product_Query#adding-custom-parameter-support
+	 */
+	public static function handle_filter_products_by_group_id( $query, $query_vars ) {
+		if ( ! empty( $query_vars['group_id'] ) ) {
+			$group                 = ( new Groups_Group( esc_attr( $query_vars['group_id'] ) ) )->group;
+			$query['meta_query'][] = [
+				'relation' => 'OR',
+				[ // phpcs:ignore Universal.Arrays.MixedKeyedUnkeyedArray.Found, Universal.Arrays.MixedArrayKeyTypes.ImplicitNumericKey
+					'key'     => 'groups-read',
+					'compare' => 'IN',
+					'type'    => 'NUMERIC',
+					// Training centre group id needs to be added for local authorities.
+					'value'   => ! empty( $group->parent_id ) ? [ $group->group_id, $group->parent_id ] : [ $group->group_id ],
+				],
+				[ // phpcs:ignore Universal.Arrays.MixedKeyedUnkeyedArray.Found
+					'key'     => 'groups-read',
+					'compare' => 'NOT EXISTS',
+				],
+			];
+		}
+		return $query;
+	}
+
 	/**
 	 * Make open_for_enrollment default status when viewing courses.
 	 *

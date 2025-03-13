@@ -60,7 +60,13 @@ class AdminTableView {
 
 		add_filter( 'manage_edit-product_sortable_columns', [ self::class, 'sortable_venue' ] );
 		add_filter( 'views_edit-product', [ self::class, 'hide_unwanted_views' ] );
-		add_filter( 'pre_get_posts', [ self::class, 'only_training_centre' ] );
+
+		/**
+		 * This function causes timeouts for RTC managers.
+		 *
+		 * @todo Optimize this.
+		 * add_filter( 'pre_get_posts', [ self::class, 'only_training_centre' ] );
+		 */
 	}
 
 	public static function only_training_centre( $query ) {

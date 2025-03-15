@@ -81,44 +81,18 @@ class ProductUtils {
 	 * @param string[] $status The course status eg. [ 'open_for_enrollment' ].
 	 * @return WC_Product[]
 	 */
-	public static function get_cached_minimal_products_visible_to_group( int $group_id, array $status ): array {
+	public static function get_products_visible_to_group( int $group_id, array $status ): array {
 
-		$cache_key = sprintf(
-			'method=get_products_visible_to_group&group_id=%d&status[]=%s',
-			intval( $group_id ),
-			join( '&status[]=', $status )
+		$args     = [
+			'status'   => $status,
+			'limit'    => -1,
+			'group_id' => $group_id,
+		];
+		$products = wc_get_products( $args );
+		return array_map(
+			fn( $product ) => $product->get_data(),
+			$products
 		);
-
-		$minimal_products = get_transient( $cache_key );
-
-		if ( false === $minimal_products ) {
-			$args     = [
-				'status'   => $status,
-				'limit'    => -1,
-				'group_id' => $group_id,
-			];
-			$products = wc_get_products( $args );
-			/**
-			 * Returning the least required information
-			 */
-			$minimal_products = array_map(
-				function ( $product ) {
-					return (object) [
-						'name'      => $product->get_name(),
-						'meta_data' => [
-							'start_date'      => $product->get_meta( 'start_date' ),
-							'duration'        => $product->get_meta( 'duration' ),
-							'training_group'  => $product->get_meta( 'training_group' ),
-							'training_centre' => $product->get_meta( 'training_centre' ),
-						],
-					];
-				},
-				$products
-			);
-			unset( $products );
-			set_transient( $cache_key, $minimal_products, HOUR_IN_SECONDS );
-		}//end if
-		return $minimal_products;
 	}
 
 	/**

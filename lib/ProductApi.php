@@ -101,13 +101,24 @@ class ProductApi {
 	public static function get_products_in_group( WP_REST_Request $req ): array {
 		$group_id = intval( $req->get_param( 'group_id' ) );
 		$status   = ProductUtils::$publish_status;
+
 		/**
 		 * Products in the private client group is public and should not be restricted.
 		 */
 		if ( defined( 'REST_REQUEST' ) && 33 == $group_id ) {
 			remove_filter( 'posts_where', [ 'Groups_Post_Access', 'posts_where' ] );
 		}
-		$products = ProductUtils::get_cached_minimal_products_visible_to_group( $group_id, [ $status ] );
+		$cache_key = sprintf(
+			'method=get_products_visible_to_group&group_id=%d&status[]=%s',
+			intval( $group_id ),
+			$status
+		);
+
+		$products = get_transient( $cache_key );
+		if ( false === $products ) {
+			$products = ProductUtils::get_products_visible_to_group( $group_id, [ $status ] );
+			set_transient( $cache_key, $products, HOUR_IN_SECONDS );
+		}
 		return $products;
 	}
 

@@ -289,35 +289,32 @@ class QuotasActionsFilters {
 	}
 
 	/**
-         * Check if product is in stock for private client.
-         *
-         * @param  bool   $is_in_stock Ignored.
-         * @param  object $product WC_Product.
-         * @return bool
-         */
-        public static function product_is_in_stock( bool $is_in_stock, WC_Product $product ): bool {
-                global $woocommerce;
+	 * Check if product is in stock for private client.
+	 *
+	 * @see https://tree.taiga.io/project/charlesmulder-lasntg/us/77
+	 */
+	public static function product_is_in_stock( bool $is_in_stock, WC_Product $product ): bool {
+			global $woocommerce;
 
-                /**
-                 * @see https://developer.woocommerce.com/docs/conditional-tags-in-woocommerce/
-                 */
-                if( $is_in_stock && is_product() ) {
-                        $product_id = $product->get_ID();
-                        $orders     = QuotaUtils::get_product_quota( $product_id );
-                        if ( ! is_null( $woocommerce->cart ) ) {
-                                $items = $woocommerce->cart->get_cart();
-                                foreach ( $items as $values ) {
-                                        $orders = QuotaUtils::get_product_quota( $values['data']->get_id() );
-                                        if ( $values['data']->get_id() !== $product_id ) {
-                                                return false;
-                                        }
-                                }
-                        }
-                        return $orders > 0;
-                }
-                return $is_in_stock;
-
-        }
+			/**
+			 * @see https://developer.woocommerce.com/docs/conditional-tags-in-woocommerce/
+			 */
+		if ( $is_in_stock && is_product() ) {
+				$product_id = $product->get_ID();
+				$orders     = QuotaUtils::get_product_quota( $product_id );
+			if ( ! is_null( $woocommerce->cart ) ) {
+				$items = $woocommerce->cart->get_cart();
+				foreach ( $items as $values ) {
+						$orders = QuotaUtils::get_product_quota( $values['data']->get_id() );
+					if ( $values['data']->get_id() !== $product_id ) {
+						return false;
+					}
+				}
+			}
+				return $orders > 0;
+		}
+			return $is_in_stock;
+	}
 
 
 	/**

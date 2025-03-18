@@ -6,8 +6,8 @@
 namespace Lasntg\Admin\Products;
 
 use Lasntg\Admin\Products\QuotaUtils;
-use Groups_Utility;
-use Groups_Group;
+use Groups_Utility, Groups_Group;
+use WC_Product;
 use Lasntg\Admin\Group\GroupUtils;
 /**
  * Handles Actions and Filters related to Quota functions
@@ -289,30 +289,36 @@ class QuotasActionsFilters {
 	}
 
 	/**
-	 * Check if product is in stock for private client.
-	 *
-	 * @param  bool   $is_in_stock Ignored.
-	 * @param  object $product WC_Product.
-	 * @return bool
-	 */
-	public static function product_is_in_stock( $is_in_stock, $product ): bool {
-		global $woocommerce;
-		if ( ! $is_in_stock ) {
-			return $is_in_stock;
-		}
-		$product_id = $product->get_ID();
-		$orders     = QuotaUtils::get_product_quota( $product_id );
-		if ( ! is_null( $woocommerce->cart ) ) {
-			$items = $woocommerce->cart->get_cart();
-			foreach ( $items as $values ) {
-				$orders = QuotaUtils::get_product_quota( $values['data']->get_id() );
-				if ( $values['data']->get_id() !== $product_id ) {
-					return false;
-				}
-			}
-		}
-		return $orders > 0;
-	}
+         * Check if product is in stock for private client.
+         *
+         * @param  bool   $is_in_stock Ignored.
+         * @param  object $product WC_Product.
+         * @return bool
+         */
+        public static function product_is_in_stock( bool $is_in_stock, WC_Product $product ): bool {
+                global $woocommerce;
+
+                /**
+                 * @see https://developer.woocommerce.com/docs/conditional-tags-in-woocommerce/
+                 */
+                if( $is_in_stock && is_product() ) {
+                        $product_id = $product->get_ID();
+                        $orders     = QuotaUtils::get_product_quota( $product_id );
+                        if ( ! is_null( $woocommerce->cart ) ) {
+                                $items = $woocommerce->cart->get_cart();
+                                foreach ( $items as $values ) {
+                                        $orders = QuotaUtils::get_product_quota( $values['data']->get_id() );
+                                        if ( $values['data']->get_id() !== $product_id ) {
+                                                return false;
+                                        }
+                                }
+                        }
+                        return $orders > 0;
+                }
+                return $is_in_stock;
+
+        }
+
 
 	/**
 	 * Shold the product be added to cart

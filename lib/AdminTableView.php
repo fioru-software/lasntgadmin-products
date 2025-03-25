@@ -61,12 +61,7 @@ class AdminTableView {
 		add_filter( 'manage_edit-product_sortable_columns', [ self::class, 'sortable_venue' ] );
 		add_filter( 'views_edit-product', [ self::class, 'hide_unwanted_views' ] );
 
-		/**
-		 * This function causes timeouts for RTC managers.
-		 *
-		 * @todo Optimize this.
-		 * add_filter( 'pre_get_posts', [ self::class, 'only_training_centre' ] );
-		 */
+		add_filter( 'pre_get_posts', [ self::class, 'only_training_centre' ] );
 	}
 
 	public static function only_training_centre( $query ) {
@@ -91,16 +86,6 @@ class AdminTableView {
 									'key'     => 'training_centre',
 									'value'   => GroupUtils::get_current_users_group_ids_deep(),
 									'compare' => 'IN',
-								),
-								array( //phpcs:ignore Universal.Arrays.MixedKeyedUnkeyedArray.Found
-									'key'     => 'training_centre',
-									'compare' => 'NOT EXISTS',
-									'value'   => 'null',
-								),
-								array( //phpcs:ignore Universal.Arrays.MixedKeyedUnkeyedArray.Found
-									'key'     => 'training_centre',
-									'compare' => '',
-									'value'   => '',
 								),
 							)
 						);

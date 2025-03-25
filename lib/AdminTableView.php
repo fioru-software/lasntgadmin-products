@@ -208,7 +208,7 @@ class AdminTableView {
 	 * @see https://github.com/fioru-software/lasntgadmin-itthinx-groups/blob/master/lib/access/class-groups-post-access.php#L223
 	 */
 	public static function apply_default_product_list_filter_by_group_membership( bool $apply, string $where, WP_Query $query ): bool {
-		if ( is_admin() && function_exists( 'get_current_screen' ) && wc_current_user_has_role( 'regional_training_centre_manager' ) ) {
+		if ( is_admin() && is_archive() && function_exists( 'get_current_screen' ) && wc_current_user_has_role( 'regional_training_centre_manager' ) ) {
 			$screen = get_current_screen();
 			if ( ! is_null( $screen ) ) {
 				if ( 'product' === $screen->post_type && 'edit-product' === $screen->id && 'product' === $query->query_vars['post_type'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
@@ -240,7 +240,7 @@ class AdminTableView {
 
 					$post_status = $query->get( 'post_status' );
 
-					if ( ! is_search() ) {
+					if ( ! array_key_exists( 'product_search', $query->query_vars ) ) {
 						if ( empty( $post_status ) ) {
 							// Not filtered.
 							$where .= sprintf(

@@ -61,12 +61,7 @@ class AdminTableView {
 		add_filter( 'manage_edit-product_sortable_columns', [ self::class, 'sortable_venue' ] );
 		add_filter( 'views_edit-product', [ self::class, 'hide_unwanted_views' ] );
 
-		/**
-		 * This function causes timeouts for RTC managers.
-		 *
-		 * @todo Optimize this.
-		 * add_filter( 'pre_get_posts', [ self::class, 'only_training_centre' ] );
-		 */
+		add_filter( 'pre_get_posts', [ self::class, 'only_training_centre' ] );
 	}
 
 	public static function only_training_centre( $query ) {
@@ -91,16 +86,6 @@ class AdminTableView {
 									'key'     => 'training_centre',
 									'value'   => GroupUtils::get_current_users_group_ids_deep(),
 									'compare' => 'IN',
-								),
-								array( //phpcs:ignore Universal.Arrays.MixedKeyedUnkeyedArray.Found
-									'key'     => 'training_centre',
-									'compare' => 'NOT EXISTS',
-									'value'   => 'null',
-								),
-								array( //phpcs:ignore Universal.Arrays.MixedKeyedUnkeyedArray.Found
-									'key'     => 'training_centre',
-									'compare' => '',
-									'value'   => '',
 								),
 							)
 						);
@@ -208,7 +193,7 @@ class AdminTableView {
 	 * @see https://github.com/fioru-software/lasntgadmin-itthinx-groups/blob/master/lib/access/class-groups-post-access.php#L223
 	 */
 	public static function apply_default_product_list_filter_by_group_membership( bool $apply, string $where, WP_Query $query ): bool {
-		if ( is_admin() && function_exists( 'get_current_screen' ) && wc_current_user_has_role( 'regional_training_centre_manager' ) ) {
+		if ( is_admin() && is_archive() && function_exists( 'get_current_screen' ) && wc_current_user_has_role( 'regional_training_centre_manager' ) ) {
 			$screen = get_current_screen();
 			if ( ! is_null( $screen ) ) {
 				if ( 'product' === $screen->post_type && 'edit-product' === $screen->id && 'product' === $query->query_vars['post_type'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
@@ -240,7 +225,7 @@ class AdminTableView {
 
 					$post_status = $query->get( 'post_status' );
 
-					if ( ! is_search() ) {
+					if ( ! array_key_exists( 'product_search', $query->query_vars ) ) {
 						if ( empty( $post_status ) ) {
 							// Not filtered.
 							$where .= sprintf(

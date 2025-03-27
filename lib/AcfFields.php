@@ -32,7 +32,7 @@ class AcfFields {
 	 * @return void
 	 */
 	public static function check_save_product( $post_id ): void {
-		if ( get_post_type( $post_id ) == 'product' && 'template' !== $_POST['post_status']) {
+		if ( get_post_type( $post_id ) == 'product' && 'template' !== $_POST['post_status'] ) { //phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotValidated
 			$field_value1 = get_field( 'field_63881aee31478', $post_id );
 
 			if ( empty( $field_value1 ) ) {

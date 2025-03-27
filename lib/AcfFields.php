@@ -32,10 +32,11 @@ class AcfFields {
 	 * @return void
 	 */
 	public static function check_save_product( $post_id ): void {
-		if ( get_post_type( $post_id ) == 'product' && 'template' !== $_POST['post_status'] ) { //phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotValidated
+		if ( get_post_type( $post_id ) == 'product' ) { //phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotValidated
+			$post         = get_post( $post_id );
 			$field_value1 = get_field( 'field_63881aee31478', $post_id );
 
-			if ( empty( $field_value1 ) ) {
+			if ( 'template' != $post->post_status && empty( $field_value1 ) ) {
 				wp_die( 'Please fill in the required fields.' );
 			}
 		}

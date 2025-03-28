@@ -46,6 +46,7 @@ class Capabilities {
 	 */
 	public static function get_national_manager_capabilities(): array {
 		return array(
+			'edit_posts',
 			'view_admin_dashboard',
 			'read',
 			'read_product',

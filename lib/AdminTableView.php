@@ -94,10 +94,10 @@ class AdminTableView {
 	}
 
 	public static function hide_unwanted_views( $views ) {
-		if( ! current_user_can('view_course_templates' ) ) {
-			unset( $views['template'] )
+		if ( ! current_user_can( 'view_course_templates' ) ) {
+			unset( $views['template'] );
 		}
-		if( ! current_user_can('view_course_drafts') ) {
+		if ( ! current_user_can( 'view_course_drafts' ) ) {
 			unset( $views['draft'] );
 		}
 		return $views;

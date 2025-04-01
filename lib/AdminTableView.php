@@ -94,16 +94,12 @@ class AdminTableView {
 	}
 
 	public static function hide_unwanted_views( $views ) {
-		if ( ( wc_current_user_has_role( 'training_officer' ) || wc_current_user_has_role( 'fire_training_officer' ) ) ) {
-			$remove_views = [ 'draft', 'template' ];
-
-			foreach ( (array) $remove_views as $view ) {
-				if ( isset( $views[ $view ] ) ) {
-					unset( $views[ $view ] );
-				}
-			}
+		if ( ! current_user_can( 'view_course_templates' ) ) {
+			unset( $views['template'] );
 		}
-
+		if ( ! current_user_can( 'view_course_drafts' ) ) {
+			unset( $views['draft'] );
+		}
 		return $views;
 	}
 

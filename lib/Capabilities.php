@@ -38,6 +38,10 @@ class Capabilities {
 			'groups_restrict_access',
 
 			'upload_files',
+
+			// course list page template and draft filters.
+			'view_course_templates',
+			'view_course_drafts',
 		];
 	}
 
@@ -73,6 +77,10 @@ class Capabilities {
 			'upload_files',
 
 			'woocommerce_duplicate_product_capability',
+
+			// course list page template and draft filters.
+			'view_course_templates',
+			'view_course_drafts',
 		);
 	}
 
@@ -99,6 +107,10 @@ class Capabilities {
 
 			// have to duplicate templates.
 			'publish_products',
+
+			// course list page template and draft filters.
+			'view_course_templates',
+			'view_course_drafts',
 		];
 	}
 

@@ -54,29 +54,34 @@ class AdminTableView {
 		add_filter( 'groups_admin_posts_restrict_manage_posts_get_groups_options', [ self::class, 'get_group_options_for_product_list_page_filter' ] );
 
 		add_filter( 'parse_query', [ self::class, 'handle_filter_request' ] );
-		add_filter( 'views_edit-product', [ self::class, 'views_edit_product' ] );
+		add_filter( 'views_edit-product', [ self::class, 'views_edit_product' ], 10, 1 );
 
 		add_filter( 'wp_dropdown_cats', [ self::class, 'dropdown_cats' ], 10, 2 );
 
 		add_filter( 'manage_edit-product_sortable_columns', [ self::class, 'sortable_venue' ] );
-		add_filter( 'views_edit-product', [ self::class, 'hide_unwanted_views' ] );
+		add_filter( 'views_edit-product', [ self::class, 'hide_unwanted_views' ], 11, 1 );
 
 		add_filter( 'pre_get_posts', [ self::class, 'only_training_centre' ] );
 	}
 
-	public static function only_training_centre( $query ) {
-		// Only applies to RTC managers.
+	public static function only_training_centre( WP_Query $query ) {
+
 		if ( ! is_admin() || ! wc_current_user_has_role( 'regional_training_centre_manager' ) ) {
 			return;
 		}
+
 		// if it's template RTC should see all.
 		if ( isset( $_GET['post_status'] ) && 'template' == $_GET['post_status'] ) {
 			return;
 		}
 
+		if ( property_exists( $query, 'query' ) && array_key_exists( 'post_status', $query->query ) && 'template' == $query->query['post_status'] ) {
+			return;
+		}
+
 		if ( function_exists( 'get_current_screen' ) ) {
 			$screen = get_current_screen();
-			if ( $screen && 'product' === $screen->post_type && 'edit-product' === $screen->id && 'product' === $query->query_vars['post_type'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			if ( ! is_null( $screen ) && 'product' === $screen->post_type && 'edit-product' === $screen->id && 'product' === $query->query_vars['post_type'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
 						$query->set(
 							'meta_query',
@@ -94,12 +99,14 @@ class AdminTableView {
 	}
 
 	public static function hide_unwanted_views( $views ) {
+
 		if ( ! current_user_can( 'view_course_templates' ) ) {
 			unset( $views['template'] );
 		}
 		if ( ! current_user_can( 'view_course_drafts' ) ) {
 			unset( $views['draft'] );
 		}
+
 		return $views;
 	}
 
@@ -271,6 +278,7 @@ class AdminTableView {
 	 * Remove "All" link and make "Open for Enrolment" the default.
 	 */
 	public static function views_edit_product( array $views ): array {
+
 		unset( $views['all'] );
 		$statuses = ProductUtils::$statuses;
 

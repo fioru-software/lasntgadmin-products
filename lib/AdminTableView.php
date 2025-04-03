@@ -64,36 +64,35 @@ class AdminTableView {
 		add_filter( 'pre_get_posts', [ self::class, 'only_training_centre' ] );
 	}
 
-	public static function only_training_centre( WP_Query $query ) {
+	public static function only_training_centre( WP_Query $query ): void {
 
-		if ( ! is_admin() || ! wc_current_user_has_role( 'regional_training_centre_manager' ) ) {
-			return;
-		}
-
-		// if it's template RTC should see all.
-		if ( isset( $_GET['post_status'] ) && 'template' == $_GET['post_status'] ) {
-			return;
-		}
-
-		if ( property_exists( $query, 'query' ) && array_key_exists( 'post_status', $query->query ) && 'template' == $query->query['post_status'] ) {
-			return;
-		}
-
-		if ( function_exists( 'get_current_screen' ) ) {
+		// Only applicable to RTC managers.
+		if ( is_admin() && function_exists( 'get_current_screen' ) && wc_current_user_has_role( 'regional_training_centre_manager' ) ) {
 			$screen = get_current_screen();
+
+			// Only applicable to course list page.
 			if ( ! is_null( $screen ) && 'product' === $screen->post_type && 'edit-product' === $screen->id && 'product' === $query->query_vars['post_type'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
-						$query->set(
-							'meta_query',
-							array(
-								'relation' => 'OR',
-								array( //phpcs:ignore Universal.Arrays.MixedArrayKeyTypes.ImplicitNumericKey, Universal.Arrays.MixedKeyedUnkeyedArray.Found
-									'key'     => 'training_centre',
-									'value'   => GroupUtils::get_current_users_group_ids_deep(),
-									'compare' => 'IN',
-								),
-							)
-						);
+				// if it's template RTC should see all.
+				if ( isset( $_GET['post_status'] ) && 'template' == $_GET['post_status'] ) {
+					return;
+				}
+				if ( property_exists( $query, 'query' ) && array_key_exists( 'post_status', $query->query ) && 'template' == $query->query['post_status'] ) {
+					return;
+				}
+
+				// Otherwise include courses held at RTC managers training centre.
+				$query->set(
+					'meta_query',
+					array(
+						'relation' => 'OR',
+						array( //phpcs:ignore Universal.Arrays.MixedArrayKeyTypes.ImplicitNumericKey, Universal.Arrays.MixedKeyedUnkeyedArray.Found
+							'key'     => 'training_centre',
+							'value'   => GroupUtils::get_current_users_group_ids_deep(),
+							'compare' => 'IN',
+						),
+					)
+				);
 			}//end if
 		}//end if
 	}

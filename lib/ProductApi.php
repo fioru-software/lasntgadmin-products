@@ -128,9 +128,24 @@ class ProductApi {
 	}
 
 	public static function get_products_with_status( WP_REST_Request $req ): array {
-		$status   = trim( $req->get_param( 'status' ) );
-		$products = ProductUtils::get_products_with_status( $status );
-		return array_map( fn( $product ) => $product->get_data(), $products );
+		$status           = trim( $req->get_param( 'status' ) );
+		$cache_key        = "lasntgadmin_minimal_products_with_status_$status";
+		$minimal_products = get_transient( $cache_key );
+
+		if ( false === $minimal_products ) {
+			$products         = ProductUtils::get_products_with_status( $status );
+			$minimal_products = array_map(
+				function ( $product ) {
+					return (object) [
+						'id'   => $product->get_id(),
+						'name' => $product->get_name(),
+					];
+				},
+				$products
+			);
+			set_transient( $cache_key, $minimal_products, 10 * MINUTE_IN_SECONDS );
+		}
+		return $minimal_products;
 	}
 
 	public static function get_product_by_id( WP_REST_Request $req ): array {

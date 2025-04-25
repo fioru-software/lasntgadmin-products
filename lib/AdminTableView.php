@@ -490,19 +490,10 @@ class AdminTableView {
 		if ( 'venue' === $column ) {
 			echo esc_attr( get_field( 'location', $post_id ) );
 		} elseif ( 'start_date' === $column ) {
-			/**
-			 * Manually prime post meta cache.
-			 *
-			 * When Redis is used as a persistent object cache (via WP_Object_Cache),
-			 * ACF’s reliance on wp_cache_get() can result in stale or missing cache data,
-			 * especially in the WordPress admin area or for custom post types like products.
-			 *
-			 * @see https://developer.wordpress.org/reference/functions/update_meta_cache/
-			 */
-			update_meta_cache( 'product', [ $post_id ] );
-			$start_date = get_field( 'start_date', $post_id );
-			$start_time = get_field( 'start_time', $post_id );
-			echo esc_attr( "$start_date $start_time" );
+			$start_date     = get_post_meta( $post_id, 'start_date', true );
+			$start_time     = get_post_meta( $post_id, 'start_time', true );
+			$start_datetime = date_create_from_format( 'Ymd h:i:s', "$start_date $start_time", wp_timezone() );
+			echo esc_attr( date_format( $start_datetime, 'd/m/Y H:i a' ) );
 		} elseif ( 'organizer' === $column ) {
 			$centres = get_field( 'training_centre', $post_id );
 			if ( is_array( $centres ) && count( $centres ) ) {

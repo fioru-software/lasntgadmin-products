@@ -492,8 +492,8 @@ class AdminTableView {
 		} elseif ( 'start_date' === $column ) {
 			$start_date     = get_post_meta( $post_id, 'start_date', true );
 			$start_time     = get_post_meta( $post_id, 'start_time', true );
-			$start_datetime = date_create_from_format( 'Ymd h:i:s', "$start_date $start_time", wp_timezone() );
-			echo esc_attr( date_format( $start_datetime, 'd/m/Y H:i a' ) );
+			$start_datetime = date_create_from_format( 'Ymd H:i:s', "$start_date $start_time", wp_timezone() );
+			echo esc_attr( date_format( $start_datetime, 'd/m/Y h:i a' ) );
 		} elseif ( 'organizer' === $column ) {
 			$centres = get_field( 'training_centre', $post_id );
 			if ( is_array( $centres ) && count( $centres ) ) {

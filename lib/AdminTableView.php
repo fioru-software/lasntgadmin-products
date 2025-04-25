@@ -444,7 +444,7 @@ class AdminTableView {
 			echo esc_attr( get_post_meta( $post_id, 'course_info', true ) );
 		}
 		if ( 'course_duration' === $column ) {
-			$duration = esc_attr( get_field( 'field_63881b63798a4', $post_id ) );
+			$duration = esc_attr( get_field( 'duration', $post_id ) );
 			if ( $duration ) {
 				$duration .= ' Days';
 			}
@@ -488,12 +488,14 @@ class AdminTableView {
 		}
 
 		if ( 'venue' === $column ) {
-			echo get_field( 'field_63881b84798a5', $post_id ); //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			echo esc_attr( get_field( 'location', $post_id ) );
 		} elseif ( 'start_date' === $column ) {
-			echo get_field( 'field_63881aee31478', $post_id ); //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-			echo ' ' . get_field( 'field_63881b0531479', $post_id ); //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			$start_date     = get_post_meta( $post_id, 'start_date', true );
+			$start_time     = get_post_meta( $post_id, 'start_time', true );
+			$start_datetime = date_create_from_format( 'Ymd H:i:s', "$start_date $start_time", wp_timezone() );
+			echo esc_attr( date_format( $start_datetime, 'd/m/Y h:i a' ) );
 		} elseif ( 'organizer' === $column ) {
-			$centres = get_field( 'field_63881beb798a7', $post_id ); //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			$centres = get_field( 'training_centre', $post_id );
 			if ( is_array( $centres ) && count( $centres ) ) {
 				echo implode( ', ', $centres ); //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			} elseif ( is_string( $centres ) ) {

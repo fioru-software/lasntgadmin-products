@@ -444,7 +444,7 @@ class AdminTableView {
 			echo esc_attr( get_post_meta( $post_id, 'course_info', true ) );
 		}
 		if ( 'course_duration' === $column ) {
-			$duration = esc_attr( get_field( 'field_63881b63798a4', $post_id ) );
+			$duration = esc_attr( get_field( 'duration', $post_id ) );
 			if ( $duration ) {
 				$duration .= ' Days';
 			}
@@ -488,12 +488,23 @@ class AdminTableView {
 		}
 
 		if ( 'venue' === $column ) {
-			echo get_field( 'field_63881b84798a5', $post_id ); //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			echo esc_attr( get_field( 'location', $post_id ) );
 		} elseif ( 'start_date' === $column ) {
-			echo get_field( 'field_63881aee31478', $post_id ); //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-			echo ' ' . get_field( 'field_63881b0531479', $post_id ); //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			/**
+			 * Manually prime post meta cache.
+			 *
+			 * When Redis is used as a persistent object cache (via WP_Object_Cache),
+			 * ACF’s reliance on wp_cache_get() can result in stale or missing cache data,
+			 * especially in the WordPress admin area or for custom post types like products.
+			 *
+			 * @see https://developer.wordpress.org/reference/functions/update_meta_cache/
+			 */
+			update_meta_cache( 'product', [ $post_id ] );
+			$start_date = get_field( 'start_date', $post_id );
+			$start_time = get_field( 'start_time', $post_id );
+			echo esc_attr( "$start_date $start_time" );
 		} elseif ( 'organizer' === $column ) {
-			$centres = get_field( 'field_63881beb798a7', $post_id ); //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			$centres = get_field( 'training_centre', $post_id );
 			if ( is_array( $centres ) && count( $centres ) ) {
 				echo implode( ', ', $centres ); //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			} elseif ( is_string( $centres ) ) {

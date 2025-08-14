@@ -137,14 +137,26 @@ class ProductApi {
 			$minimal_products = array_map(
 				function ( $product ) {
 					return (object) [
-						'id'   => $product->get_id(),
-						'name' => $product->get_name(),
+						'id'        => $product->get_id(),
+						'name'      => $product->get_name(),
+						'meta_data' => [
+							'training_group'          => $product->get_meta( 'training_group' ),
+							'training_aim'            => $product->get_meta( 'training_aim' ),
+							'award'                   => $product->get_meta( 'award' ),
+							'applicable_regulation'   => $product->get_meta( 'applicable_regulation' ),
+							'duration'                => $product->get_meta( 'duration' ),
+							'expiry'                  => $product->get_meta( 'expiry' ),
+							'renewal_method'          => $product->get_meta( 'renewal_method' ),
+							'primary_target_grade'    => $product->get_meta( 'primary_target_grade' ),
+							'other_grades_applicable' => $product->get_meta( 'other_grades_applicable' ),
+							'entry_requirements_file' => $product->get_meta( 'entry_requirements_file' ),
+						],
 					];
 				},
 				$products
 			);
 			set_transient( $cache_key, $minimal_products, 10 * MINUTE_IN_SECONDS );
-		}
+		}//end if
 		return $minimal_products;
 	}
 
